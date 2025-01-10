@@ -1,4 +1,19 @@
-This this Team-3 mini project
+# Team-3 Mini Project
 
-To do: add more details
- 
+This is Team-3 mini project.
+
+## Getting Started
+
+### Prerequisites
+
+- [Docker](https://www.docker.com/products/docker-desktop) (Download Docker)
+- [Docker Compose](https://docs.docker.com/compose/install/) (Download Docker Compose)
+- [Git](https://git-scm.com/downloads) (Download Git)
+
+### Setting Up the Project
+
+1. **Clone the repository**:
+
+   ```sh
+   git clone <repository-url>
+   cd mini-project-team-three
