@@ -3,8 +3,8 @@
 This is Team-3 mini project.
 
 ## Getting Started
-
-### Prerequisites
+ - We are using a simple localhost to run this;
+### Install them later
 
 - [Docker](https://www.docker.com/products/docker-desktop) (Download Docker)
 - [Docker Compose](https://docs.docker.com/compose/install/) (Download Docker Compose)
