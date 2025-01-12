@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Dashboard</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #fcfcfc;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .container {
+            border: 1px solid black; 
+            text-align: center;
+            width: 100%; 
+            height: 100%;
+            padding: 20px;
+            box-sizing: border-box;
+            position: relative; 
+        }
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+            border-bottom: 1px solid black; 
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+        .left {
+            display: flex;
+            align-items: center;
+        }
+        .right {
+            display: flex;
+            align-items: center;
+            margin-left: auto; 
+        }
+        .header div, .header a {
+            color: black;
+            margin-right: 5px; 
+        }
+        .logo {
+            max-width: 400px; 
+            margin-top: 80px; 
+        }
+        .button-link {
+            display: inline-block;
+            padding: 10px 15px;
+            font-size: 16px;
+            color: white;
+            background-color: rgb(182, 182, 230);
+            border: none;
+            border-radius: 5px;
+            text-decoration: none;
+            text-align: center;
+            margin-top: 2px;
+        }
+        .todo-item {
+            border: 1px solid #867c7c;
+            padding: 10px;
+            margin: 10px 0;
+            text-align: center;
+            background-color: #fff;
+            border-radius: 5px;
+        }  
+        .button-start {
+            background-color: rgb(46, 124, 46);
+            color: white;
+        }
+        .button-edit {
+            background-color: rgb(85, 85, 250);
+            color: rgb(255, 245, 245);
+        }
+        .button-delete, .button-stop {
+            background-color: rgb(212, 39, 39);
+            color: rgb(255, 246, 246);
+        }
+        .button-pause {
+            background-color: rgb(240, 240, 32);
+            color: black;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="left">
+                <div>$APPNAME</div>
+                <a href="/todos/about" class="button-link">About</a>
+            </div>
+            <div class="right">
+                <a href="/todos/dashboard" class="button-link">Dashboard</a> 
+                <a href="/todos" class="button-link">Todos</a> 
+                <a href="/teams" class="button-link">Teams</a>
+                <a href="/todos/logout" class="button-link">@email</a> <!--TO DO Display user's email -->
+            </div>
+        </div>
+        {% for todo in todos %}
+        <div class="todo-item">
+            <h2>{{ todo.title }}</h2>
+            <p>{{ todo.description }}</p>
+            <div class="left">
+            {% if todo.state == 'stopped' %}
+                <a href="#" class="button-link button-start">Start</a>
+            {% elif todo.state == 'paused' %}
+                <a href="#" class="button-link button-pause">Resume</a>
+            {% elif todo.state == 'active' %}
+                <a href="#" class="button-link button-stop">Stop</a>
+                <a href="#" class="button-link button-pause">Pause</a>
+                <p>Elapsed Time: {{ todo.elapsed_time }}</p> <!-- Display elapsed time -->
+            {% endif %}
+             </div>
+        <div class="right">
+            <a href="#" class="button-link button-edit">Edit</a>
+            <a href="#" class="button-link button-delete">Delete</a>
+        </div>
+        {% endfor %}
+    </div>
+</body>
+</html>
