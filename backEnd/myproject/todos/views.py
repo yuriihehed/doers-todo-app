@@ -1,11 +1,15 @@
-<<<<<<< HEAD
-from django.shortcuts import render
 from django.contrib import messages
 from django.http import HttpResponseRedirect
+from django.shortcuts import render, redirect, get_object_or_404
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.models import User
+from datetime import timedelta
+from .models import ToDo
+from .forms import TodoForm 
 
+user = User.objects.first() # Get the first user in the database for testing purposes
 # Create your views here.
-def home(request):
-    return render(request, 'dashboard.html')
+
 
 def register(request):
     if request.method == 'POST':
@@ -25,14 +29,8 @@ def register(request):
 
     # Render the registration template
     return render(request, 'register.html')
-=======
-from django.shortcuts import render, redirect, get_object_or_404
-from django.contrib.auth.decorators import login_required
-from django.contrib.auth.models import User
-from datetime import timedelta
-from .models import ToDo
-from .forms import TodoForm 
-user = User.objects.first() # Get the first user in the database for testing purposes
+
+
 def about_page(request):
     return render(request, "about.html", {"user": request.user})
 
@@ -92,4 +90,3 @@ def delete_todo(request, todo_id):
     todo = get_object_or_404(ToDo, id=todo_id, user=user)
     todo.delete()
     return redirect('dashboard')
->>>>>>> origin/main
