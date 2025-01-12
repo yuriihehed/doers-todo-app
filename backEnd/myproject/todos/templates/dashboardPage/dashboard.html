@@ -1,0 +1,274 @@
+<!-- filepath: /Users/gulbanumadiyarova/mini-project-team-three/backEnd/myproject/todos/templates/dashboardPage/dashboard.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Dashboard</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #fcfcfc;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .container {
+            border: 1px solid black; 
+            text-align: center;
+            width: 100%; 
+            height: 100%;
+            padding: 20px;
+            box-sizing: border-box;
+            position: relative; 
+        }
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+            border-bottom: 1px solid black; 
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+        .left {
+            display: flex;
+            align-items: center;
+        }
+        .right {
+            display: flex;
+            align-items: center;
+            margin-left: auto; 
+        }
+        .header div, .header a {
+            color: black;
+            margin-right: 5px; 
+        }
+        .logo {
+            max-width: 400px; 
+            margin-top: 80px; 
+        }
+        .button-link {
+            display: inline-block;
+            padding: 10px 15px;
+            font-size: 16px;
+            color: white;
+            background-color: rgb(182, 182, 230);
+            border: none;
+            border-radius: 5px;
+            text-decoration: none;
+            text-align: center;
+            margin-top: 2px;
+        }
+        .button-create {
+            background-color: rgb(26, 26, 224);
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            text-decoration: none;
+            font-size: 16px;
+            margin-bottom: 20px;
+        }
+        .todo-item {
+            border: 1px solid #867c7c;
+            padding: 20px;
+            margin: 20px 0;
+            text-align: left;
+            background-color: #fff;
+            border-radius: 5px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            align-items: center;
+            position: relative;
+        }
+        .timer-ribbon {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background-color: #f0f0f0;
+            color: black;
+            text-align: center;
+            padding: 5px 0;
+            border-top-left-radius: 5px;
+            border-top-right-radius: 5px;
+        }
+        .button-start {
+            background-color: rgb(46, 124, 46);
+            color: white;
+        }
+        .button-edit {
+            background-color: rgb(85, 85, 250);
+            color: rgb(255, 245, 245);
+        }
+        .button-delete, .button-stop {
+            background-color: rgb(212, 39, 39);
+            color: rgb(255, 246, 246);
+        }
+        .button-pause {
+            background-color: rgb(240, 240, 32);
+            color: black;
+        }
+        .todo-buttons {
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+        }
+        .todo-buttons .left, .todo-buttons .right {
+            display: flex;
+            align-items: center;
+        }
+        .todo-buttons .left a, .todo-buttons .right a {
+            margin-right: 5px;
+        }
+        /* Modal styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgb(0,0,0);
+            background-color: rgba(0,0,0,0.4);
+            padding-top: 60px;
+        }
+        .modal-content {
+            background-color: #fefefe;
+            margin: 5% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%;
+        }
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
+        .close:hover,
+        .close:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
+        .button-firsttodo{
+            padding: 25px 35px;
+            margin-top: 10px;
+            font-size: 20px;
+            border-radius: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="left">
+                <div>$APPNAME</div>
+                <a href="/todos/about" class="button-link">About</a>
+            </div>
+            <div class="right">
+                <a href="/todos/dashboard" class="button-link">Dashboard</a>
+                <a href="/todos" class="button-link">Todos</a>
+                <a href="/teams" class="button-link">Teams</a>
+                <a href="/todos/logout" class="button-link">{{ user.email }}</a> <!-- Display user's email -->
+            </div>
+        </div>
+        <a href="{% url 'create_todo' %}" class="button-create">Create ToDo</a>
+        {% for todo in todos %}
+            <div class="todo-item">
+                <div class="timer-ribbon">
+                    {% if todo.state == 'paused' %}
+                        Paused - {{ todo.elapsed_time }}
+                    {% elif todo.state == 'stopped' %}
+                        Stopped - {{ todo.elapsed_time }}
+                    {% else %}
+                        {{ todo.elapsed_time }}
+                    {% endif %}
+                </div>
+                <div>
+                    <h2>{{ todo.title }}</h2>
+                    <p>{{ todo.description }}</p>
+                </div>
+                <div class="todo-buttons">
+                    <div class="left">
+                        {% if todo.state == 'stopped' %}
+                            <a href="{% url 'update_todo_state' todo.id 'active' %}" class="button-link button-start">Start</a>
+                        {% elif todo.state == 'paused' %}
+                            <a href="{% url 'update_todo_state' todo.id 'active' %}" class="button-link button-pause">Resume</a>
+                        {% elif todo.state == 'active' %}
+                            <a href="{% url 'update_todo_state' todo.id 'stopped' %}" class="button-link button-stop">Stop</a>
+                            <a href="{% url 'update_todo_state' todo.id 'paused' %}" class="button-link button-pause">Pause</a>
+                        {% endif %}
+                    </div>
+                    <div class="right">
+                        <a href="#" class="button-link button-edit">Edit</a>
+                        <a href="#" class="button-link button-delete" onclick="openModal('{{ todo.id }}')">Delete</a>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+
+    <!-- Delete Confirmation Modal -->
+    <div id="deleteModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <p>Are you sure you wish to delete this item?</p>
+            <button id="cancelButton" class="button-link">Cancel</button>
+            <button id="confirmDeleteButton" class="button-link button-delete">Delete</button>
+        </div>
+    </div>
+
+    <script>
+        // Get the modal
+        var modal = document.getElementById("deleteModal");
+
+        // Get the <span> element that closes the modal
+        var span = document.getElementsByClassName("close")[0];
+
+        // Get the cancel button
+        var cancelButton = document.getElementById("cancelButton");
+
+        // Get the confirm delete button
+        var confirmDeleteButton = document.getElementById("confirmDeleteButton");
+
+        // Store the ID of the to-do item to be deleted
+        var todoIdToDelete = null;
+
+        // Function to open the modal
+        function openModal(todoId) {
+            todoIdToDelete = todoId;
+            modal.style.display = "block";
+        }
+
+        // When the user clicks on <span> (x), close the modal
+        span.onclick = function() {
+            modal.style.display = "none";
+        }
+
+        // When the user clicks on the cancel button, close the modal
+        cancelButton.onclick = function() {
+            modal.style.display = "none";
+        }
+
+        // When the user clicks on the confirm delete button, delete the item
+        confirmDeleteButton.onclick = function() {
+            // Add your delete logic here, e.g., make an AJAX request to delete the item
+            window.location.href = `/todos/delete/${todoIdToDelete}/`;
+            modal.style.display = "none";
+        }
+
+        // When the user clicks anywhere outside of the modal, close it
+        window.onclick = function(event) {
+            if (event.target == modal) {
+                modal.style.display = "none";
+            }
+        }
+    </script>
+</body>
+</html>

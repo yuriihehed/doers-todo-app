@@ -59,6 +59,16 @@
             text-align: center;
             margin-top: 2px;
         }
+        .button-create {
+            background-color: rgb(26, 26, 224);
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            text-decoration: none;
+            font-size: 16px;
+            margin-bottom: 20px;
+        }
         
     </style>
 </head>
@@ -73,12 +83,12 @@
                 <a href="/todos/dashboard" class="button-link">Dashboard</a> 
                 <a href="/todos" class="button-link">Todos</a> 
                 <a href="/teams" class="button-link">Teams</a>
-                <a href="/todos/logout" class="button-link">@email</a> <!--TO DO Display user's email -->
+                <a href="/todos/logout" class="button-link">{{user.email}}</a> <!--TO DO Display user's email -->
                 <!-- <span>{{ user.username }}</span> Display user's email -->
             </div>
         </div>
         <h1>No ToDo's</h1>
-        <a href="/todos/create" class="button-link">Create ToDo</a>
+        <a href="/todos/create" class="button-link button-create">Create ToDo</a>
     </div>
 </body>
 </html>
