@@ -3,6 +3,8 @@ from django.contrib.auth.decorators import login_required
 from datetime import timedelta
 #from .models import Todo 
 
+def about_page(request):
+    return render(request, "about.html", {"user": request.user})
 
 # Create your views here.
 def landing_page(request):
