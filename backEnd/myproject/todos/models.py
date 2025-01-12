@@ -14,6 +14,7 @@ class Team(models.Model):
 # TeamMember model to represent members of a team
 class TeamMember(models.Model):
     team = models.ForeignKey(Team, on_delete=models.CASCADE, related_name='members')  # reference to the team
+    name = models.CharField(max_length=100)
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='team_members')  # reference to the user
     joined_at = models.DateTimeField(auto_now_add=True)  # timestamp when the user joined the team
 
