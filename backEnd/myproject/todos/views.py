@@ -47,7 +47,7 @@ def login_page(request):
             return redirect('dashboard')  # redirect to dashboard if login successful
         else:
             error = "Invalid email or password"  # set error message for failed login
-    return render(request, 'loginpage.html', {'error': error})  # render login page with error (if any)
+    return render(request, 'login.html', {'error': error})  # render login page with error (if any)
 
 # renders the registration page
 def registration_page(request):
