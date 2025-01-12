@@ -1,11 +1,10 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.decorators import login_required
-from .models import Team
-
-# renders dashboard page
-def home(request):
-    return render(request, 'dashboard.html')
+from django.contrib.auth.models import User
+from datetime import timedelta
+from .models import Team, ToDo
+from .forms import TodoForm
 
 # handles login page
 def login_page(request):
@@ -21,11 +20,11 @@ def login_page(request):
             error = "Invalid email or password"  # set error message for failed login
     return render(request, 'loginpage.html', {'error': error})  # render login page with error (if any)
 
-# registration page
+# renders the registration page
 def registration_page(request):
     return render(request, 'registration.html')  # show registration page
 
-# forgot password page
+# renders the forgot password page
 def forgot_password(request):
     return render(request, 'forgot_password.html')  # show forgot password page
 
@@ -43,13 +42,63 @@ def create_team(request):
     return render(request, 'teams.html', {'user_email': request.user.email})
 
 # list of all teams
-#@login_required
+@login_required
 def teams_list(request):
     teams = Team.objects.all()  # Fetch all teams
     return render(request, 'teams_list.html', {'teams': teams})
 
-## team details page
-#@login_required
+# team details page
+@login_required
 def team_details(request, id):
     team = get_object_or_404(Team, id=id)  # Get the team by ID or return a 404
     return render(request, 'team_details.html', {'team': team})
+
+# renders the about page
+def about_page(request):
+    return render(request, "about.html", {"user": request.user})
+
+# renders the landing page
+def landing_page(request):
+    return render(request, 'landing.html')
+
+# renders an empty dashboard page if no data exists
+@login_required
+def dashboard_empty(request):
+    return render(request, 'dashboardPage/dashboard_empty.html', {'user': request.user})
+
+# renders the dashboard page with todos
+@login_required
+def dashboard(request):
+    todos = ToDo.objects.filter(user=request.user)
+    if not todos.exists():
+        return redirect('dashboard_empty')  # Redirect to empty dashboard if no todos
+    return render(request, 'dashboardPage/dashboard.html', {'todos': todos, 'user': request.user})
+
+# create a new todo item
+@login_required
+def create_todo(request):
+    if request.method == 'POST':
+        form = TodoForm(request.POST)
+        if form.is_valid():
+            todo = form.save(commit=False)
+            todo.user = request.user
+            todo.save()
+            return redirect('dashboard')
+    else:
+        form = TodoForm()
+    return render(request, 'dashboardPage/create_todo.html', {'form': form})
+
+# update the state of a todo item
+@login_required
+def update_todo_state(request, todo_id, state):
+    todo = get_object_or_404(ToDo, id=todo_id, user=request.user)
+    todo.state = state
+    todo.save()
+    return redirect('dashboard')
+
+# delete a todo item
+@login_required
+def delete_todo(request, todo_id):
+    todo = get_object_or_404(ToDo, id=todo_id, user=request.user)
+    todo.delete()
+    return redirect('dashboard')
