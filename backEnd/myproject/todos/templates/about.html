@@ -1,3 +1,4 @@
+<!-- filepath: /Users/gulbanumadiyarova/mini-project-team-three/backEnd/myproject/todos/templates/about.html -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -6,35 +7,110 @@
     <title>About Page</title>
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #fcfcfc;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .container {
+            border: 1px solid black; 
+            text-align: center;
+            width: 100%; 
+            height: 100%;
+            padding: 20px;
+            box-sizing: border-box;
+            position: relative; 
+        }
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+            border-bottom: 1px solid black; 
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+        .left {
+            display: flex;
+            align-items: center;
+        }
+        .right {
+            display: flex;
+            align-items: center;
+            margin-left: auto; 
+        }
+        .header div, .header a {
+            color: black;
+            margin-right: 5px; 
+        }
+        .button-link {
+            display: inline-block;
+            padding: 10px 15px;
+            font-size: 16px;
+            color: white;
+            background-color: rgb(182, 182, 230);
+            border: none;
+            border-radius: 5px;
+            text-decoration: none;
+            text-align: center;
+            margin-top: 2px;
+        }
+        .content {
+            text-align: left;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px; /* Add margin-bottom for spacing */
+        }
+        .card {
+            margin-top: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .card-img-top {
+            height: 150px;
+            background-color: #6c757d;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-top-left-radius: 5px;
+            border-top-right-radius: 5px;
+        }
+        .card-body {
+            padding: 15px;
+        }
+    </style>
 </head>
 <body>
-    <!-- Navbar -->
-    <nav class="navbar navbar-light bg-light border-bottom px-3">
-        <div class="container-fluid">
-            <a class="navbar-brand d-flex align-items-center" href="#">
-                <span class="border bg-primary text-white p-2 me-2">B</span>
-                <span>Team 3 </span>
-            </a>
-            <a class="nav-link d-inline-block" href="#">About</a>
-            <div>
-                <span class="d-inline-block">Login</span> <!-- right top login/ info -->
+    <div class="container">
+        <div class="header">
+            <div class="left">
+                <div>$APPNAME</div>
+                <a href="/todos/about" class="button-link">About</a>
+            </div>
+            <div class="right">
+                <a href="/todos/dashboard" class="button-link">Dashboard</a>
+                <a href="/todos" class="button-link">Todos</a>
+                <a href="/teams" class="button-link">Teams</a>
+                <a href="/todos/logout" class="button-link">{{ user.email }}</a> <!-- Display user's email -->
             </div>
         </div>
-    </nav>
-
-    <!-- About Section -->
-    <div class="container mt-4">
-        <div class="p-4 bg-light rounded">
+        <div class="content">
             <h2>About</h2>
-            <p>Team 3 project about page </p>
+            <p>Team 3 project about page</p>
         </div>
-
-        <!-- Card Section -->
-        <div class="row mt-4">
+        <div class="row">
             <!-- Card 1 -->
             <div class="col-md-4">
                 <div class="card">
-                    <div class="card-img-top bg-secondary text-white d-flex align-items-center justify-content-center" style="height: 150px;">Image cap</div>
+                    <div class="card-img-top">Image cap</div>
                     <div class="card-body">
                         <h5 class="card-title">Asad</h5>
                         <p class="card-text">Bio: DePaul Student Senior<br>
@@ -42,11 +118,10 @@
                     </div>
                 </div>
             </div>
-
             <!-- Card 2 -->
             <div class="col-md-4">
                 <div class="card">
-                    <div class="card-img-top bg-secondary text-white d-flex align-items-center justify-content-center" style="height: 150px;">Image cap</div>
+                    <div class="card-img-top">Image cap</div>
                     <div class="card-body">
                         <h5 class="card-title">Kanchanjit</h5>
                         <p class="card-text">Bio: DePaul Student Senior<br>
@@ -54,11 +129,10 @@
                     </div>
                 </div>
             </div>
-
             <!-- Card 3 -->
             <div class="col-md-4">
                 <div class="card">
-                    <div class="card-img-top bg-secondary text-white d-flex align-items-center justify-content-center" style="height: 150px;">Image cap</div>
+                    <div class="card-img-top">Image cap</div>
                     <div class="card-body">
                         <h5 class="card-title">Yurii</h5>
                         <p class="card-text">Bio: DePaul Student Senior<br>
@@ -66,11 +140,10 @@
                     </div>
                 </div>
             </div>
-
             <!-- Card 4 -->
             <div class="col-md-4">
                 <div class="card">
-                    <div class="card-img-top bg-secondary text-white d-flex align-items-center justify-content-center" style="height: 150px;">Image cap</div>
+                    <div class="card-img-top">Image cap</div>
                     <div class="card-body">
                         <h5 class="card-title">John</h5>
                         <p class="card-text">Bio: DePaul Student Senior<br>
@@ -78,23 +151,21 @@
                     </div>
                 </div>
             </div>
-
             <!-- Card 5 -->
             <div class="col-md-4">
                 <div class="card">
-                    <div class="card-img-top bg-secondary text-white d-flex align-items-center justify-content-center" style="height: 150px;">Image cap</div>
+                    <div class="card-img-top">Image cap</div>
                     <div class="card-body">
                         <h5 class="card-title">Gulbanu</h5>
                         <p class="card-text">Bio: DePaul Student Senior<br>
-                            Role: project Manager</p>
+                            Role: Project Manager</p>
                     </div>
                 </div>
             </div>
-
             <!-- Card 6 -->
             <div class="col-md-4">
                 <div class="card">
-                    <div class="card-img-top bg-secondary text-white d-flex align-items-center justify-content-center" style="height: 150px;">Image cap</div>
+                    <div class="card-img-top">Image cap</div>
                     <div class="card-body">
                         <h5 class="card-title">Vanessa</h5>
                         <p class="card-text">Bio: DePaul Student Senior<br>
@@ -104,7 +175,6 @@
             </div>
         </div>
     </div>
-
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
