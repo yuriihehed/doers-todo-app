@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Landing Page</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #fcfcfc;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .container {
+            border: 1px solid black; 
+            text-align: center;
+            width: 100%; 
+            height: 100%;
+            padding: 20px;
+            box-sizing: border-box;
+            position: relative; 
+        }
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+            border-bottom: 1px solid black; 
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+        .left {
+            display: flex;
+            align-items: center;
+        }
+        .right {
+            display: flex;
+            align-items: center;
+            margin-left: auto; 
+        }
+        .header div, .header a {
+            color: black;
+            margin-right: 5px;
+        }
+        .logo {
+            max-width: 400px; 
+            margin-top: 80px; 
+        }
+        .button-link {
+            display: inline-block;
+            padding: 10px 15px;
+            font-size: 16px;
+            color: white;
+            background-color: rgb(182, 182, 230);
+            border: none;
+            border-radius: 5px;
+            text-decoration: none;
+            text-align: center;
+            margin-top: 2px;
+        }
+        .button-login{
+            padding: 25px 35px;
+            margin-top: 10px;
+            font-size: 20px;
+            border-radius: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="left">
+                <div>$APPNAME</div>
+                <a href="/todos/about" class="button-link button-login">About</a>
+            </div>
+            <a href="/todos/login" class="button-link button-login">Login</a>
+        </div>
+        <img src="https://www.organizationalpsychologydegrees.com/wp-content/uploads/2019/01/depaul-university.jpg" alt="DePaul University" class="logo">
+    </div>
+</body>
+</html>
