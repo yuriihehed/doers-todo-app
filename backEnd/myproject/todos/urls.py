@@ -10,6 +10,7 @@ urlpatterns = [
     path('delete/<int:todo_id>/', views.delete_todo, name='delete_todo'),
     path('landing/', views.landing_page, name='landing'),
     path('about/', views.about_page, name='about'),
+    path('register/', views.register, name='register'),
     path('login/', views.login_page, name='login'),  # login page
     path('forgot-password/', views.forgot_password, name='forgot_password'),  # forgot password page NOT CONNECT TO ANYTHING YET
     path('registration/', views.registration_page, name='registration'),  # registration page NEED TO BE CONNECT TO REGISTRATION
