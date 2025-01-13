@@ -1,0 +1,27 @@
+# filepath: /Users/gulbanumadiyarova/mini-project-team-three/docker-compose.yml
+services:
+  db:
+    image: postgres:14
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_DB: team3database
+      POSTGRES_USER: your_db_user
+      POSTGRES_PASSWORD: your_db_password
+    ports:
+      - "5432:5432"  # Map PostgreSQL port to the host machine
+
+  web:
+    build: .
+    command: python manage.py runserver 0.0.0.0:8000
+    volumes:
+      - .:/app
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db
+    environment:
+      DATABASE_URL: postgres://your_db_user:your_db_password@db:5432/team3database
+
+volumes:
+  postgres_data:

@@ -1,5 +1,6 @@
 from django.urls import path, include
 from . import views
+from .views import CustomLoginView
 
 urlpatterns = [
 
@@ -11,10 +12,12 @@ urlpatterns = [
     path('landing/', views.landing_page, name='landing'),
     path('about/', views.about_page, name='about'),
     path('register/', views.register, name='register'),
-    path('login/', views.login_page, name='login'),  # login page
+   # path('login/', views.login_page, name='login'),  # login page
     path('forgot-password/', views.forgot_password, name='forgot_password'),  # forgot password page NOT CONNECT TO ANYTHING YET
     path('registration/', views.registration_page, name='registration'),  # registration page NEED TO BE CONNECT TO REGISTRATION
     path('teams/', views.teams_list, name='teams_list'),  # list of all teams ONE OF THESE ( need to be addedt to the correct teams_list)
     path('teams/<int:id>/', views.team_details, name='team_details'),  # team details page with dynamic ID need to be correct to team details
     path('accounts/', include('django.contrib.auth.urls')),  # Add this line if not already present
+    path('login/', CustomLoginView.as_view(), name='login'),
+
 ]
