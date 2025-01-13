@@ -1,5 +1,5 @@
 from django.urls import path
-from . import views
+from . import views, include
 
 urlpatterns = [
 
@@ -15,4 +15,5 @@ urlpatterns = [
     path('registration/', views.registration_page, name='registration'),  # registration page NEED TO BE CONNECT TO REGISTRATION
     path('teams/', views.teams_list, name='teams_list'),  # list of all teams ONE OF THESE ( need to be addedt to the correct teams_list)
     path('teams/<int:id>/', views.team_details, name='team_details'),  # team details page with dynamic ID need to be correct to team details
+    path('accounts/', include('django.contrib.auth.urls')),  # Add this line if not already present
 ]
