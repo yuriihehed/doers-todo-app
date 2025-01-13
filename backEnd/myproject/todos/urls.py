@@ -11,7 +11,6 @@ urlpatterns = [
     path('landing/', views.landing_page, name='landing'),
     path('about/', views.about_page, name='about'),
     path('register/', views.register, name='register'),
-<<<<<<< HEAD
    # path('login/', views.login_page, name='login'),  # login page
     path('forgot-password/', views.forgot_password, name='forgot_password'),  # forgot password page NOT CONNECT TO ANYTHING YET
     path('registration/', views.registration_page, name='registration'),  # registration page NEED TO BE CONNECT TO REGISTRATION
@@ -20,13 +19,10 @@ urlpatterns = [
     path('accounts/', include('django.contrib.auth.urls')),  # Add this line if not already present
     path('login/', CustomLoginView.as_view(), name='login'),
 
-=======
     path('login/', views.login_page, name='login'),
     path('forgot-password/', views.forgot_password, name='forgot_password'),
-    path('registration/', views.registration_page, name='registration'),
     path('teams/create/', views.create_team, name='create_team'),  # Correctly named pattern
     path('teams/', views.teams_default, name='teams_default'),
     path('teams/<int:id>/', views.team_details, name='team_details'),
     path('teams_list/', views.teams_list, name='teams_list'),
->>>>>>> upstream/main
 ]

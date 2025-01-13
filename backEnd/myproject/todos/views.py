@@ -50,14 +50,9 @@ def registration_page(request):
 def forgot_password(request):
     return render(request, 'forgot_password.html')
 
-<<<<<<< HEAD
-# create team page
-#@login_required
-=======
 
 # Create Team Page
 # @login_required
->>>>>>> upstream/main
 def create_team(request):
     if request.method == 'POST':
         team_name = request.POST.get('team_name')
@@ -66,16 +61,6 @@ def create_team(request):
         # Save the new team to the database
         Team.objects.create(name=team_name, description=description, created_by=request.user)
 
-<<<<<<< HEAD
-# list of all teams
-#@login_required
-def teams_list(request):
-    teams = Team.objects.all()  # Fetch all teams
-    return render(request, 'teams_list.html', {'teams': teams})
-
-# team details page
-#@login_required
-=======
         # Redirect to the teams list page
         return redirect('teams_list')
 
@@ -95,7 +80,6 @@ def teams_default(request):
 
 # Team Details
 # @login_required
->>>>>>> upstream/main
 def team_details(request, id):
     team = get_object_or_404(Team, id=id)
     if request.method == 'POST':
@@ -119,15 +103,6 @@ def about_page(request):
 def landing_page(request):
     return render(request, 'landing.html')
 
-<<<<<<< HEAD
-# renders an empty dashboard page if no data exists
-#@login_required
-def dashboard_empty(request):
-    return render(request, 'dashboardPage/dashboard_empty.html', {'user': request.user})
-
-# renders the dashboard page with todos
-#@login_required
-=======
 
 # Empty Dashboard
 # @login_required
@@ -137,25 +112,16 @@ def dashboard_empty(request):
 
 # Dashboard with Todos
 # @login_required
->>>>>>> upstream/main
 def dashboard(request):
     todos = ToDo.objects.filter(user=request.user)
     #
     if not todos.exists():
-<<<<<<< HEAD
-      return redirect('dashboardPage/dashboard_empty.html')  # Redirect to empty dashboard if no todos
-    return render(request, 'dashboardPage/dashboard.html', {'todos': todos, 'user': request.user})
-
-# create a new todo item
-#@login_required
-=======
         return redirect('dashboard_empty')
     return render(request, 'dashboardPage/dashboard.html', {'todos': todos, 'user': request.user})
 
 
 # Create Todo Item
 # @login_required
->>>>>>> upstream/main
 def create_todo(request):
     if request.method == 'POST':
         form = TodoForm(request.POST)
@@ -168,28 +134,18 @@ def create_todo(request):
         form = TodoForm()
     return render(request, 'dashboardPage/create_todo.html', {'form': form})
 
-<<<<<<< HEAD
-# update the state of a todo item
-#@login_required
-=======
 
 # Update Todo State
 # @login_required
->>>>>>> upstream/main
 def update_todo_state(request, todo_id, state):
     todo = get_object_or_404(ToDo, id=todo_id, user=request.user)
     todo.state = state
     todo.save()
     return redirect('dashboard')
 
-<<<<<<< HEAD
-# delete a todo item
-#@login_required
-=======
 
 # Delete Todo
 # @login_required
->>>>>>> upstream/main
 def delete_todo(request, todo_id):
     todo = get_object_or_404(ToDo, id=todo_id, user=request.user)
     todo.delete()
