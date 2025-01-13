@@ -1,5 +1,5 @@
 from django import forms
-from .models import ToDo
+from .models import ToDo, Team
 
 class TodoForm(forms.ModelForm):
     class Meta:

@@ -5,8 +5,8 @@ from django.contrib.auth import authenticate, login
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from datetime import timedelta
-from .models import ToDo
-from .forms import TodoForm 
+from .forms import TodoForm, TeamForm
+from .models import Team, ToDo
 
 user = User.objects.first() # Get the first user in the database for testing purposes
 # Create your views here.
@@ -32,8 +32,7 @@ def register(request):
     return render(request, 'register.html')
 
 
-from .models import Team, ToDo
-from .forms import TodoForm
+
 
 # handles login page
 def login_page(request):
@@ -57,18 +56,27 @@ def registration_page(request):
 def forgot_password(request):
     return render(request, 'forgot_password.html')  # show forgot password page
 
+# renders the about page
+def about_page(request):
+    return render(request, "about.html", {"user": request.user})
+
+
 # create team page
-@login_required
+#@login_required
 def create_team(request):
     if request.method == 'POST':
         team_name = request.POST.get('team_name')
         description = request.POST.get('description')
         
+        if not team_name:
+            messages.error(request, 'A team name is required.')
+        
+        
         # Save the new team to the database
         Team.objects.create(name=team_name, description=description, created_by=request.user)
         
         return redirect('teams_list')  # Redirect to teams list page
-    return render(request, 'teams.html', {'user_email': request.user.email})
+    return render(request, 'teamCreation.html', {'form': TeamForm()})
 
 # list of all teams
 @login_required
@@ -81,10 +89,6 @@ def teams_list(request):
 def team_details(request, id):
     team = get_object_or_404(Team, id=id)  # Get the team by ID or return a 404
     return render(request, 'team_details.html', {'team': team})
-
-# renders the about page
-def about_page(request):
-    return render(request, "about.html", {"user": request.user})
 
 # renders the landing page
 def landing_page(request):
