@@ -3,7 +3,7 @@ from django.contrib.auth.models import User
 
 # Team model to represent a team
 class Team(models.Model):
-    name = models.CharField(max_length=100)  # team name
+    name = models.CharField(max_length=100, unique=True)  # team name
     description = models.TextField(blank=True)  # optional description
     created_by = models.ForeignKey(User, on_delete=models.CASCADE, related_name='teams')  # creator of the team
     created_at = models.DateTimeField(auto_now_add=True)  # timestamp when the team was created
