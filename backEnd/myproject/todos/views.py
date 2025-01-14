@@ -131,16 +131,15 @@ def delete_todo(request, todo_id):
     todo.delete()
     return redirect('dashboard')
 
-#not a useful code; teams are not hard coded
-#def teams_id(request):
- #   team_members = [
-  #     {"id": "002", "name": "Asad Bakhtiari"},
-        #{"id": "003", "name": "Kanchanjit Bandesha"},
-       # {"id": "004", "name": "Vanessa Wartemberg"},
-      #  {"id": "005", "name": "Yurii Hehediush"},
-     #   {"id": "006", "name": "John Le"},
-    #]
-    #return render(request, 'teams_id.html', {"team_members": team_members})
+def teams_id(request):
+    team_members = [
+       {"id": "002", "name": "Asad Bakhtiari"},
+    {"id": "003", "name": "Kanchanjit Bandesha"},
+       {"id": "004", "name": "Vanessa Wartemberg"},
+       {"id": "005", "name": "Yurii Hehediush"},
+       {"id": "006", "name": "John Le"},
+    ]
+    return render(request, 'teams_id.html', {"team_members": team_members})
 
 #########################################################################################################################################################################
 ############ Teams Views ################################################################################################################################################
