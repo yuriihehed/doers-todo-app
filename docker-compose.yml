@@ -1,6 +1,4 @@
 # filepath: /Users/gulbanumadiyarova/mini-project-team-three/docker-compose.yml
-version: "3.8"
-
 services:
   db:
     image: postgres:14

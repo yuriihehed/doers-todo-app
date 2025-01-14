@@ -1,5 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
+from django import forms
+
 
 # Team model to represent a team
 class Team(models.Model):
@@ -21,13 +23,27 @@ class TeamMember(models.Model):
     class Meta:
         unique_together = ('team', 'user')  # ensure a user cannot be added to the same team multiple times
 
-# ToDo model to represent tasks
 class ToDo(models.Model):
-    title = models.CharField(max_length=255)  # title of the task
-    description = models.TextField()  # description of the task
-    state = models.CharField(max_length=255)  # state of the task (e.g., Pending, Completed)
-    elapsed_time = models.DurationField()  # time taken for the task
-    user = models.ForeignKey(User, on_delete=models.CASCADE)  # user who owns the task
+    STATE_CHOICES = [
+        ('not_started', 'Not Started'),
+        ('in_progress', 'In Progress'),
+        ('completed', 'Completed'),
+    ]
 
-    def __str__(self):
-        return self.title
+    title = models.CharField(max_length=255)
+    description = models.TextField(blank=True, null=True)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    created_at = models.DateTimeField(auto_now_add=True)
+    deadline = models.DateTimeField(null=True, blank=True)
+    state = models.CharField(max_length=20, choices=STATE_CHOICES, default='not_started')
+
+    def is_overdue(self):
+        return self.deadline and self.deadline < timezone.now()
+
+class TodoForm(forms.ModelForm):
+    class Meta:
+        model = ToDo
+        fields = ['title', 'description', 'deadline', 'state']
+        widgets = {
+            'deadline': forms.DateTimeInput(attrs={'type': 'datetime-local'}),
+        }

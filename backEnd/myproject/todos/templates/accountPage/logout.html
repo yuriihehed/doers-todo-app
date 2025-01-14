@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Logout</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #fcfcfc;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .container {
+            border: 1px solid black;
+            text-align: center;
+            width: 100%;
+            height: 100%;
+            padding: 20px;
+            box-sizing: border-box;
+            position: relative;
+        }
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+            border-bottom: 1px solid black;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+        .left {
+            display: flex;
+            align-items: center;
+        }
+        .right {
+            display: flex;
+            align-items: center;
+            margin-left: auto;
+        }
+        .header div, .header a {
+            color: black;
+            margin-right: 5px;
+        }
+        .button-link {
+            display: inline-block;
+            padding: 10px 15px;
+            font-size: 16px;
+            color: white;
+            background-color: rgb(182, 182, 230);
+            border: none;
+            border-radius: 5px;
+            text-decoration: none;
+            text-align: center;
+            margin-top: 2px;
+        }
+        .form-container {
+            max-width: 400px;
+            margin: 0 auto;
+            background-color: #fff;
+            border: 1px solid #ccc;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            text-align: left;
+        }
+        .form-container h2 {
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        .form-control {
+            margin-bottom: 15px;
+        }
+        .form-label {
+            display: block;
+            margin-bottom: 5px;
+            text-align: left;
+        }
+        .error-message {
+            color: red;
+            font-size: 14px;
+            margin-bottom: 15px;
+        }
+        .buttons {
+            display: flex;
+            justify-content: space-between;
+        }
+        .buttons button {
+            flex: 1;
+            margin: 0 5px;
+        }
+        h1 {
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+        p {
+            font-size: 16px;
+            margin-bottom: 20px;
+        }
+        .button {
+            display: inline-block;
+            padding: 10px 20px;
+            font-size: 16px;
+            color: #fff;
+            text-decoration: none;
+            border-radius: 5px;
+            margin: 5px;
+        }
+        .yes-button {
+            background-color: #28a745;
+        }
+        .no-button {
+            background-color: #dc3545;
+        }
+    </style>
+</head>
+
+</style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="left">
+                <div>$APPNAME</div>
+                <a href="{% url 'about' %}" class="button-link">About</a>
+            </div>
+            <div class="right">
+                <a href="{% url 'login' %}" class="button-link">Login</a>
+            </div>
+        </div>
+
+        <div class="container">
+            <h1>Logout</h1>
+            <p>You are signed in as <strong>{{ user.email }}</strong>. Would you like to log out?</p>
+            <a href="/todos/landing" class="button yes-button">Yes</a>
+            <a href="/todos/dashboard" class="button no-button">No</a>
+        </div>
+</body>
+</html>
