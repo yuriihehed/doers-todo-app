@@ -4,147 +4,144 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
         body {
             font-family: Arial, sans-serif;
-            background-color: #f0f0f0;
-            margin: 0;
-            padding: 0;
+            background-color: #fcfcfc;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .container {
+            border: 1px solid black;
+            text-align: center;
+            width: 100%;
+            height: 100%;
+            padding: 20px;
+            box-sizing: border-box;
+            position: relative;
         }
         .header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            background-color: #f8f9fa;
-            padding: 10px 20px;
-            border-bottom: 1px solid #ddd;
-        }
-        .header .left {
-            display: flex;
-            align-items: center;
-        }
-        .header .left span {
-            font-size: 20px;
-            font-weight: bold;
-            margin-right: 20px;
-        }
-        .header a {
-            text-decoration: none;
-            color: #007bff;
-            margin-left: 15px;
-        }
-        .header .right a {
-            text-decoration: none;
-            color: #007bff;
-            font-weight: bold;
-        }
-        .main-container {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: calc(100vh - 60px); /* Full height minus the header height */
-            padding: 20px;
-        }
-        .container {
-            max-width: 500px;
             width: 100%;
-            background: white;
-            border-radius: 8px;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-            padding: 40px;
-            box-sizing: border-box;
+            border-bottom: 1px solid black;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
         }
-        label {
+        .left {
+            display: flex;
+            align-items: center;
+        }
+        .right {
+            display: flex;
+            align-items: center;
+            margin-left: auto;
+        }
+        .header div, .header a {
+            color: black;
+            margin-right: 5px;
+        }
+        .button-link {
+            display: inline-block;
+            padding: 10px 15px;
+            font-size: 16px;
+            color: white;
+            background-color: rgb(182, 182, 230);
+            border: none;
+            border-radius: 5px;
+            text-decoration: none;
+            text-align: center;
+            margin-top: 2px;
+        }
+        .form-container {
+            max-width: 400px;
+            margin: 0 auto;
+            background-color: #fff;
+            border: 1px solid #ccc;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            text-align: left;
+        }
+        .form-container h2 {
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        .form-control {
+            margin-bottom: 15px;
+        }
+        .form-label {
             display: block;
             margin-bottom: 5px;
-            font-weight: bold;
-        }
-        input[type="text"], input[type="password"] {
-            width: 100%;
-            padding: 10px;
-            margin-bottom: 15px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-            box-sizing: border-box;
-        }
-        input.error {
-            border: 1px solid red; /* Highlight field with error */
-            background-color: #ffe6e6; /* Light red background for error */
+            text-align: left;
         }
         .error-message {
             color: red;
-            margin: -10px 0 10px 0; /* Adjust spacing for the error message */
             font-size: 14px;
+            margin-bottom: 15px;
         }
         .buttons {
             display: flex;
             justify-content: space-between;
-            flex-wrap: wrap;
-            gap: 10px;
         }
-        button {
-            padding: 10px 20px;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
+        .buttons button {
             flex: 1;
-            white-space: nowrap;
-        }
-        button.login {
-            background-color: #007bff;
-            color: white;
-        }
-        button.gray-button {
-            background-color: #6c757d;
-            color: white;
+            margin: 0 5px;
         }
     </style>
 </head>
 <body>
-    <!-- Header Section -->
-    <div class="header">
-        <div class="left">
-            <span>$APPNAME</span>
-            <a href="/about">About</a>
+    <div class="container">
+        <div class="header">
+            <div class="left">
+                <div>$APPNAME</div>
+                <a href="{% url 'about' %}" class="button-link">About</a>
+            </div>
+            <div class="right">
+                <a href="{% url 'login' %}" class="button-link">Login</a>
+            </div>
         </div>
-        <div class="right">
-            <a href="/login">Login</a>
-        </div>
-    </div>
 
-    <!-- Main Content Section -->
-    <div class="main-container">
-        <div class="container">
-            <h1>Login</h1>
+        <div class="form-container">
+            <h2>Login</h2>
             <form method="POST">
                 {% csrf_token %}
-                <label for="email">Email</label>
-                <input
-                    type="text"
-                    id="email"
-                    name="email"
-                    placeholder="Enter your email"
-                    class="{% if error and request.method == 'POST' %}error{% endif %}">
-
-                <label for="password">Password</label>
-                <input
-                    type="password"
-                    id="password"
-                    name="password"
-                    placeholder="Enter your password"
-                    class="{% if error and request.method == 'POST' %}error{% endif %}">
-
+                <div class="mb-3">
+                    <label for="email" class="form-label">Email</label>
+                    <input
+                        type="text"
+                        id="email"
+                        name="email"
+                        placeholder="Enter your email"
+                        class="form-control {% if error and request.method == 'POST' %}is-invalid{% endif %}">
+                </div>
+                <div class="mb-3">
+                    <label for="password" class="form-label">Password</label>
+                    <input
+                        type="password"
+                        id="password"
+                        name="password"
+                        placeholder="Enter your password"
+                        class="form-control {% if error and request.method == 'POST' %}is-invalid{% endif %}">
+                </div>
                 {% if error and request.method == 'POST' %}
                     <div class="error-message">Invalid email or password</div>
                 {% endif %}
 
                 <div class="buttons">
-                    <button type="submit" class="login">Login</button>
-                    <button type="button" class="gray-button" onclick="location.href='/forgot-password/';">Forgot Password</button>
-                    <button type="button" class="gray-button" onclick="location.href='/registration/';">Sign Up</button>
+                    <button type="submit" class="btn btn-primary">Login</button>
+                    <button type="button" class="btn btn-secondary" onclick="location.href='{% url 'forgot_password' %}';">Forgot Password</button>
+                    <button type="button" class="btn btn-secondary" onclick="location.href='{% url 'register' %}';">Sign Up</button>
                 </div>
             </form>
         </div>
     </div>
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

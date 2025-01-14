@@ -70,10 +70,13 @@ def create_team(request):
 
 # Teams Default View
 def teams_default(request):
+    # Get the first available team
     first_team = Team.objects.first()
     if first_team:
-        return redirect('team_details', id=first_team.id)
+        # Render the team details page with the first team
+        return render(request, 'team_details.html', {'team': first_team})
     else:
+        # Redirect to create_team if no teams exist
         messages.info(request, "No teams are available. Please create a new team.")
         return redirect('create_team')
 
@@ -81,11 +84,20 @@ def teams_default(request):
 # Team Details
 # @login_required
 def team_details(request, id):
-    team = get_object_or_404(Team, id=id)
-    if request.method == 'POST':
-        new_member_email = request.POST.get('new_member')
-        # Add logic to handle adding a new member
-    return render(request, 'team_details.html', {'team': team})
+    try:
+        # Ensure the team with the given ID exists
+        team = Team.objects.get(id=id)
+        if request.method == 'POST':
+            new_member_email = request.POST.get('new_member')
+            # Add logic to handle adding a new member
+        return render(request, 'team_details.html', {'team': team})
+    except Team.DoesNotExist:
+        # If the team with the given ID does not exist, redirect to create_team
+        messages.info(request, "Team not found. Please create a new team.")
+        return redirect('create_team')
+    except ValueError:
+        # If the ID is invalid (not an integer), raise a 404 error
+        raise Http404("Invalid team ID.")
 
 
 # Teams List
@@ -149,3 +161,14 @@ def delete_todo(request, todo_id):
     todo = get_object_or_404(ToDo, id=todo_id, user=request.user)
     todo.delete()
     return redirect('dashboard')
+
+def teams_id(request):
+    team_members = [
+        {"id": "001", "name": "Gulbanu Madiyarova"},
+        {"id": "002", "name": "Asad Bakhtiari"},
+        {"id": "003", "name": "Kanchanjit Bandesha"},
+        {"id": "004", "name": "Vanessa Wartemberg"},
+        {"id": "005", "name": "Yurii Hehediush"},
+        {"id": "006", "name": "John Le"},
+    ]
+    return render(request, 'teams_id.html', {"team_members": team_members})
