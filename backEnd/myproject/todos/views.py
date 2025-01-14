@@ -1,7 +1,7 @@
 from django.contrib import messages
 from django.db import models
 from django.shortcuts import render, redirect, get_object_or_404
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
 from .models import Team, ToDo
 from .forms import TodoForm
@@ -92,7 +92,11 @@ def forgot_password(request):
 
 # Logout Page
 def logout_user(request):
-    return render(request, 'accountPage/logout.html')
+    if request.method == 'POST':  # Handle the form submission for logout confirmation
+        logout(request)  # Logs out the user
+        return redirect('/todos/landing')  # Redirect to a landing page or login page after logout
+    else:  # Display the logout confirmation page
+        return render(request, 'accountPage/logout.html', {'user': request.user})
 
 #########################################################################################################################################################################
 ############ Todos Views ################################################################################################################################################
@@ -127,16 +131,16 @@ def delete_todo(request, todo_id):
     todo.delete()
     return redirect('dashboard')
 
-def teams_id(request):
-    team_members = [
-        {"id": "001", "name": "Gulbanu Madiyarova"},
-        {"id": "002", "name": "Asad Bakhtiari"},
-        {"id": "003", "name": "Kanchanjit Bandesha"},
-        {"id": "004", "name": "Vanessa Wartemberg"},
-        {"id": "005", "name": "Yurii Hehediush"},
-        {"id": "006", "name": "John Le"},
-    ]
-    return render(request, 'teams_id.html', {"team_members": team_members})
+#not a useful code; teams are not hard coded
+#def teams_id(request):
+ #   team_members = [
+  #     {"id": "002", "name": "Asad Bakhtiari"},
+        #{"id": "003", "name": "Kanchanjit Bandesha"},
+       # {"id": "004", "name": "Vanessa Wartemberg"},
+      #  {"id": "005", "name": "Yurii Hehediush"},
+     #   {"id": "006", "name": "John Le"},
+    #]
+    #return render(request, 'teams_id.html', {"team_members": team_members})
 
 #########################################################################################################################################################################
 ############ Teams Views ################################################################################################################################################

@@ -134,8 +134,11 @@
         <div class="container">
             <h1>Logout</h1>
             <p>You are signed in as <strong>{{ user.email }}</strong>. Would you like to log out?</p>
-            <a href="/todos/landing" class="button yes-button">Yes</a>
-            <a href="/todos/dashboard" class="button no-button">No</a>
+            <form method="post">
+                {% csrf_token %}
+                <button type="submit" class="button yes-button">Yes</button>
+                <a href="/todos/dashboard" class="button no-button">No</a>
+            </form>
         </div>
 </body>
 </html>
