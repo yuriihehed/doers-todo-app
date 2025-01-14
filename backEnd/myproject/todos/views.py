@@ -1,12 +1,12 @@
 from django.contrib import messages
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import authenticate, login
-from django.contrib.auth.models import User
+# from django.contrib.auth.models import User
 from .models import Team, ToDo
 from .forms import TodoForm
 
 # User for testing purposes
-user = User.objects.first()
+# user = User.objects.first()
 
 
 # User Registration

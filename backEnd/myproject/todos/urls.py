@@ -1,6 +1,6 @@
 from django.urls import path, include
 from . import views
-from .views import CustomLoginView
+# from .views import CustomLoginView
 
 urlpatterns = [
     path('dashboardPage/empty/', views.dashboard_empty, name='dashboard_empty'),
@@ -17,7 +17,7 @@ urlpatterns = [
     path('teams/', views.teams_list, name='teams_list'),  # list of all teams ONE OF THESE ( need to be addedt to the correct teams_list)
     path('teams/<int:id>/', views.team_details, name='team_details'),  # team details page with dynamic ID need to be correct to team details
     path('accounts/', include('django.contrib.auth.urls')),  # Add this line if not already present
-    path('login/', CustomLoginView.as_view(), name='login'),
+    # path('login/', CustomLoginView.as_view(), name='login'),
 
     path('login/', views.login_page, name='login'),
     path('forgot-password/', views.forgot_password, name='forgot_password'),
