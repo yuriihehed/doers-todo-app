@@ -19,14 +19,15 @@ class Migration(migrations.Migration):
             field=models.CharField(default='Default Name', max_length=100),
             preserve_default=False,
         ),
-        migrations.CreateModel(
-            name='Team',
-            fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('name', models.CharField(max_length=100)),
-                ('description', models.TextField(blank=True)),
-                ('created_at', models.DateTimeField(auto_now_add=True)),
-                ('created_by', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='teams', to=settings.AUTH_USER_MODEL)),
-            ],
-        ),
+        # Comment out or remove the CreateModel operation
+        # migrations.CreateModel(
+        #     name='Team',
+        #     fields=[
+        #         ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+        #         ('name', models.CharField(max_length=100)),
+        #         ('description', models.TextField(blank=True)),
+        #         ('created_at', models.DateTimeField(auto_now_add=True)),
+        #         ('created_by', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='teams', to=settings.AUTH_USER_MODEL)),
+        #     ],
+        # ),
     ]
