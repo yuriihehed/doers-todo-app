@@ -12,10 +12,9 @@ urlpatterns = [
     path('register/', views.register, name='register'),
     path('login/', views.login_page, name='login'),
     path('forgot-password/', views.forgot_password, name='forgot_password'),
-    path('teams/create/', views.create_team, name='create_team'),
+    path('teams/new/', views.create_team, name='create_team'),  # Updated path for "Create Team"
     path('teams/', views.teams_default, name='teams_default'),
     path('teams/<int:id>/', views.team_details, name='team_details'),
     path('teams_list/', views.teams_list, name='teams_list'),
     path('teams/id/', views.teams_id, name='teams_id'),
-    path('forgot-password/', views.forgot_password, name='forgot_password'),
 ]
