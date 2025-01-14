@@ -3,6 +3,7 @@ from . import views
 # from .views import CustomLoginView
 
 urlpatterns = [
+
     path('dashboardPage/empty/', views.dashboard_empty, name='dashboard_empty'),
     path('dashboard/', views.dashboard, name='dashboard'),
     path('dashboard/create/', views.create_todo, name='create_todo'),
@@ -27,6 +28,7 @@ urlpatterns = [
     path('teams/<int:id>/', views.team_details, name='team_details'),
     path('teams_list/', views.teams_list, name='teams_list'),
     path('teams/id/', views.teams_id, name='teams_id'),
+    path('accounts/', include('django.contrib.auth.urls')),  # Add this line if not already present
 
     path('new/', views.create_todo, name='create_todo'),
 
