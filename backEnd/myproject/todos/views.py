@@ -10,8 +10,8 @@ from .forms import TodoForm
 from django.core.validators import validate_email
 from django.core.exceptions import ValidationError
 from django.contrib.auth.decorators import login_required
-
-
+from django.http import JsonResponse
+from django.utils import timezone
 #########################################################################################################################################################################
 ############ Landing Views ##############################################################################################################################################
 #########################################################################################################################################################################
@@ -125,19 +125,27 @@ def user_todos(request):
     return render(request, 'dashboardPage/dashboard.html', {'todos': todos})
 
 # Update Todo State
-@login_required
-def update_todo_state(request, todo_id, state):
-    todo = get_object_or_404(ToDo, id=todo_id, user=request.user)
-    todo.state = state
-    todo.save()
-    return redirect('user_todos')
+def update_todo_state(request, todo_id, new_state):
+    todo = get_object_or_404(ToDo, pk=todo_id, user=request.user)
 
-# Delete Todo
-@login_required
+    if new_state == 'active':
+        todo.state = 'active'
+        todo.start_time = timezone.now()  # You may need to add this field to your model to track when the timer starts.
+    elif new_state == 'paused':
+        todo.state = 'paused'
+        todo.elapsed_time += (timezone.now() - todo.start_time).total_seconds()  # Update elapsed time if paused
+    elif new_state == 'stopped':
+        todo.state = 'stopped'
+        todo.elapsed_time += (timezone.now() - todo.start_time).total_seconds()  # Update elapsed time if stopped
+
+    todo.save()
+    return redirect('dashboard')  # Redirect back to the dashboard
+
+# View for deleting a ToDo
 def delete_todo(request, todo_id):
-    todo = get_object_or_404(ToDo, id=todo_id, user=request.user)
+    todo = get_object_or_404(ToDo, pk=todo_id, user=request.user)
     todo.delete()
-    return redirect('user_todos')
+    return redirect('dashboard')  # Redirect back to the dashboard
 
 # Team Members (for dropdown menu in the form)
 @login_required
