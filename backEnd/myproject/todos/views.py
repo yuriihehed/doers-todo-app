@@ -160,7 +160,7 @@ def create_team(request):
         return redirect('teams_list')
 
     # Render the create_team.html template
-    return render(request, 'teamsPage/create_team.html')
+    return render(request, 'teamCreation.html')
 
 # Teams Default View
 @login_required
