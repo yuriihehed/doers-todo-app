@@ -126,27 +126,42 @@ def user_todos(request):
 
 # Update Todo State
 def update_todo_state(request, todo_id, new_state):
-    todo = get_object_or_404(ToDo, pk=todo_id, user=request.user)
-
-    if new_state == 'active':
-        todo.state = 'active'
-        todo.start_time = timezone.now()  # You may need to add this field to your model to track when the timer starts.
-    elif new_state == 'paused':
-        todo.state = 'paused'
-        todo.elapsed_time += (timezone.now() - todo.start_time).total_seconds()  # Update elapsed time if paused
-    elif new_state == 'stopped':
-        todo.state = 'stopped'
-        todo.elapsed_time += (timezone.now() - todo.start_time).total_seconds()  # Update elapsed time if stopped
-
+    todo = get_object_or_404(ToDo, id=todo_id)
+    todo.state = new_state
+    if new_state == 'stopped' or new_state == 'paused':
+        # Calculate and save elapsed time
+        todo.elapsed_time += (timezone.now() - todo.last_active_time).seconds
+    elif new_state == 'active':
+        todo.last_active_time = timezone.now()
     todo.save()
-    return redirect('dashboard')  # Redirect back to the dashboard
+    return JsonResponse({'status': 'success', 'state': todo.state})
+
 
 # View for deleting a ToDo
 def delete_todo(request, todo_id):
     todo = get_object_or_404(ToDo, pk=todo_id, user=request.user)
     todo.delete()
     return redirect('dashboard')  # Redirect back to the dashboard
+# View for editing a ToDo
+@login_required
+def edit_todo(request, todo_id):
+    # Fetch the ToDo item or return a 404 if not found
+    todo = get_object_or_404(ToDo, pk=todo_id, user=request.user)
 
+    if request.method == 'POST':
+        form = TodoForm(request.POST, instance=todo)
+        if form.is_valid():
+            form.save()
+            return redirect('dashboard')  # Redirect to the dashboard after saving
+    else:
+        form = TodoForm(instance=todo)
+
+    # Render the edit page with pre-filled form data
+    return render(request, 'todoPage/edit_todo.html', {
+        'form': form,
+        'todo': todo,
+        'user_email': request.user.email,
+    })
 # Team Members (for dropdown menu in the form)
 @login_required
 def teams_id(request):
