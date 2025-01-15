@@ -40,11 +40,10 @@ class ToDo(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True) 
     deadline = models.DateField(null=True, blank=True)
-    state = models.CharField(max_length=20, choices=STATE_CHOICES, default='not_started') 
+    state = models.CharField(max_length=20, choices=STATE_CHOICES, default='stopped') 
     start_time = models.DateTimeField(null=True, blank=True)  # Track when the timer started
-    elapsed_time = models.DurationField(default=timedelta(seconds=0))
+    elapsed_time = models.DurationField(default="0")  # Store as timedelta
     last_active_time = models.DateTimeField(null=True, blank=True)
-
 
     def is_overdue(self):
         return self.deadline and self.deadline < timezone.now()
