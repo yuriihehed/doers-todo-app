@@ -1,4 +1,5 @@
 <!-- filepath: /Users/gulbanumadiyarova/mini-project-team-three/backEnd/myproject/todos/templates/dashboardPage/dashboard.html -->
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -163,6 +164,8 @@
             border-radius: 10px;
         }
     </style>
+    <script src="{% static 'todos/js/dashboard-timer.js' %}"></script>
+
 </head>
 <body>
     <div class="container">
@@ -181,18 +184,20 @@
         <a href="{% url 'create_todo' %}" class="button-create">Create ToDo</a>
         {% for todo in todos %}
             <div class="todo-item">
-                <div class="timer-ribbon">
-                    {% if todo.state == 'paused' %}
-                        Paused - {{ todo.elapsed_time }}
-                    {% elif todo.state == 'stopped' %}
-                        Stopped - {{ todo.elapsed_time }}
-                    {% else %}
-                        {{ todo.elapsed_time }}
-                    {% endif %}
-                </div>
+                <div class="timer-ribbon" id="timer-{{ todo.id }}" data-state="{{ todo.state }}">
+                        {% if todo.state == 'paused' %}
+                            Paused - <span id="elapsed-time-{{ todo.id }}">{{ todo.elapsed_time }}</span>
+                        {% elif todo.state == 'stopped' %}
+                            Stopped - <span id="elapsed-time-{{ todo.id }}">{{ todo.elapsed_time }}</span>
+                        {% else %}
+                            <span id="elapsed-time-{{ todo.id }}">{{ todo.elapsed_time }}</span>
+                        {% endif %}
+                    </div>
                 <div>
                     <h2>{{ todo.title }}</h2>
-                    <p>{{ todo.description }}</p>
+                    <p>Deadline: {{ todo.deadline }}</p>  <!-- Display the deadline -->
+                    <p>Description: {{ todo.description }}</p>
+                    
                 </div>
                 <div class="todo-buttons">
                     <div class="left">
@@ -206,7 +211,7 @@
                         {% endif %}
                     </div>
                     <div class="right">
-                        <a href="#" class="button-link button-edit">Edit</a>
+                        <a href="{% url 'edit_todo' todo.id %}" class="button-link button-edit">Edit</a>
                         <a href="#" class="button-link button-delete" onclick="openModal('{{ todo.id }}')">Delete</a>
                     </div>
                 </div>
