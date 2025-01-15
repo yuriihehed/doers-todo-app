@@ -98,8 +98,8 @@
             <div class="right">
                 {% if user.is_authenticated %}
             <a href="/dashboard" class="button-link">Dashboard</a>
-            <a href="/dashboard" class="button-link">Todos</a>
-            <a href="/teams" class="button-link">Teams</a>
+            <a href="/todos/new" class="button-link">Todos</a>
+            <a href="/teams/new" class="button-link">Teams</a>
             <a href="/logout" class="button-link button-login">{{ user.email }}</a>
         {% else %}
             <a href="/login" class="button-link button-login">Login</a>

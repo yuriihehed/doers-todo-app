@@ -7,9 +7,12 @@ urlpatterns = [
     path('dashboardPage/empty/', views.dashboard_empty, name='dashboard_empty'),
     path('dashboard/', views.dashboard, name='dashboard'),
     path('dashboard/create/', views.create_todo, name='create_todo'),
+    path('get_timer/<int:todo_id>/', views.get_timer, name='get_timer'),
+
 
     path('update/<int:todo_id>/<str:state>/', views.update_todo_state, name='update_todo_state'),
     path('delete/<int:todo_id>/', views.delete_todo, name='delete_todo'),
+    path('todos/edit/<int:todo_id>/', views.edit_todo, name='edit_todo'),
 
     path('', views.landing_page, name='landing'),
 
@@ -33,5 +36,9 @@ urlpatterns = [
     path('todos/<int:todo_id>/update/<str:state>/', views.update_todo_state, name='update_todo_state'),  # Update state
     path('todos/<int:todo_id>/delete/', views.delete_todo, name='delete_todo'),  # Delete ToDo
     path('teams/', views.teams_id, name='teams_id'),  # Teams dropdown
+    
+    path('update_todo_state/<int:todo_id>/<str:new_state>/', views.update_todo_state, name='update_todo_state'),
+
+    path('delete/<int:todo_id>/', views.delete_todo, name='delete_todo'),
 ]
 
