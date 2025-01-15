@@ -43,7 +43,7 @@ def dashboard(request):
     todos = ToDo.objects.filter(user=request.user).order_by('deadline')
     if not todos.exists():
         return redirect('dashboard_empty')
-    return render(request, 'dashboard.html', {'todos': todos})
+    return render(request, 'dashboardPage/dashboard.html', {'todos': todos})
 
 #########################################################################################################################################################################
 ############ Account Views ##############################################################################################################################################
@@ -113,10 +113,16 @@ def create_todo(request):
             todo = form.save(commit=False)
             todo.user = request.user
             todo.save()
-            return redirect('dashboard')  # Adjust to your dashboard or desired page
+            return redirect('dashboard')  # Redirect to the list of user's todos
     else:
         form = TodoForm()
     return render(request, 'todoPage/create_todo.html', {'form': form})
+
+# View User's Todos
+@login_required
+def user_todos(request):
+    todos = ToDo.objects.filter(user=request.user)
+    return render(request, 'dashboardPage/dashboard.html', {'todos': todos})
 
 # Update Todo State
 @login_required
@@ -124,24 +130,26 @@ def update_todo_state(request, todo_id, state):
     todo = get_object_or_404(ToDo, id=todo_id, user=request.user)
     todo.state = state
     todo.save()
-    return redirect('dashboard')
+    return redirect('user_todos')
 
 # Delete Todo
 @login_required
 def delete_todo(request, todo_id):
     todo = get_object_or_404(ToDo, id=todo_id, user=request.user)
     todo.delete()
-    return redirect('dashboard')
+    return redirect('user_todos')
 
+# Team Members (for dropdown menu in the form)
+@login_required
 def teams_id(request):
     team_members = [
        {"id": "002", "name": "Asad Bakhtiari"},
-    {"id": "003", "name": "Kanchanjit Bandesha"},
+       {"id": "003", "name": "Kanchanjit Bandesha"},
        {"id": "004", "name": "Vanessa Wartemberg"},
        {"id": "005", "name": "Yurii Hehediush"},
        {"id": "006", "name": "John Le"},
     ]
-    return render(request, 'teamsPage/teams_id.html', {"team_members": team_members})
+    return render(request, 'todoPage/teams_id.html', {"team_members": team_members}) 
 
 #########################################################################################################################################################################
 ############ Teams Views ################################################################################################################################################
