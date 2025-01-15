@@ -40,5 +40,7 @@ urlpatterns = [
     path('update_todo_state/<int:todo_id>/<str:new_state>/', views.update_todo_state, name='update_todo_state'),
 
     path('delete/<int:todo_id>/', views.delete_todo, name='delete_todo'),
+
+    path('teams/<int:id>/', views.team_details, name='team_details'),  # Define URL for team_details view
 ]
 
