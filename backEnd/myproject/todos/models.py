@@ -33,12 +33,21 @@ class ToDo(models.Model):  # Define a model for a ToDo item, representing a task
     STATE_CHOICES = [
         ('not_started', 'Not Started'),  
         ('in_progress', 'In Progress'),  
-        ('completed', 'Completed'),  
+        ('completed', 'Completed'),
+        ('completed', 'Completed'),
+        ('active', 'Active'),
+        ('paused', 'Paused'),
+        ('stopped', 'Stopped')  
     ]
 
-    # Fields for the ToDo model
-    title = models.CharField(max_length=255)  
-    description = models.TextField(blank=True, null=True) 
+    title = models.CharField(max_length=255)
+    description = models.TextField(blank=True, null=True)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    created_at = models.DateTimeField(auto_now_add=True) 
+    deadline = models.DateTimeField(null=True, blank=True)
+    state = models.CharField(max_length=20, choices=STATE_CHOICES, default='not_started') 
+    start_time = models.DateTimeField(null=True, blank=True)  # Track when the timer started
+    elapsed_time = models.FloatField(default=0)  # Track the total elapsed time in seconds
 
     # A relationship linking this ToDo to a specific user
     # `on_delete=models.CASCADE`: If the user is deleted, all their ToDos will also be deleted

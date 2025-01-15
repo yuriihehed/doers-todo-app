@@ -10,8 +10,8 @@ from .forms import TodoForm
 from django.core.validators import validate_email
 from django.core.exceptions import ValidationError
 from django.contrib.auth.decorators import login_required
-
-
+from django.http import JsonResponse
+from django.utils import timezone
 #########################################################################################################################################################################
 ############ Landing Views ##############################################################################################################################################
 #########################################################################################################################################################################
@@ -130,13 +130,23 @@ def user_todos(request):
 
 # Update Todo State
 # @login_required
-def update_todo_state(request, todo_id, state):
-    todo = get_object_or_404(ToDo, id=todo_id, user=request.user)  
+def update_todo_state(request, todo_id, new_state):
+    todo = get_object_or_404(ToDo, pk=todo_id, user=request.user)  
     # Retrieve the ToDo item by ID, ensuring it belongs to the logged-in user
     # If not found, return a 404 error
-    todo.state = state  # Update the state of the ToDo
+
+    if new_state == 'active':
+        todo.state = 'active'
+        todo.start_time = timezone.now()  # You may need to add this field to your model to track when the timer starts.
+    elif new_state == 'paused':
+        todo.state = 'paused'
+        todo.elapsed_time += (timezone.now() - todo.start_time).total_seconds()  # Update elapsed time if paused
+    elif new_state == 'stopped':
+        todo.state = 'stopped'
+        todo.elapsed_time += (timezone.now() - todo.start_time).total_seconds()  # Update elapsed time if stopped
+
     todo.save()  # Save the updated state to the database
-    return redirect('user_todos')  
+    return redirect('dashboard')  
     # Redirect the user back to their list of ToDos
 
 # Delete Todo
@@ -148,7 +158,6 @@ def delete_todo(request, todo_id):
     todo.delete()  # Delete the ToDo item from the database
     return redirect('user_todos')  
     # Redirect the user back to their list of ToDos after deletion
-
 
 # Team Members (for dropdown menu in the form)
 @login_required
