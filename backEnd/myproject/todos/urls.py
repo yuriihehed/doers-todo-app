@@ -29,7 +29,9 @@ urlpatterns = [
     path('teams/id/', views.teams_id, name='teams_id'),
     path('accounts/', include('django.contrib.auth.urls')),  # Add this line if not already present
 
-    path('new/', views.create_todo, name='create_todo'),
-
+    path('todos/new/', views.create_todo, name='create_todo'),  # Create ToDo page
+    path('todos/<int:todo_id>/update/<str:state>/', views.update_todo_state, name='update_todo_state'),  # Update state
+    path('todos/<int:todo_id>/delete/', views.delete_todo, name='delete_todo'),  # Delete ToDo
+    path('teams/', views.teams_id, name='teams_id'),  # Teams dropdown
 ]
 
