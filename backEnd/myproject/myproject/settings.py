@@ -56,7 +56,7 @@ ROOT_URLCONF = 'myproject.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [BASE_DIR / 'templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -84,6 +84,10 @@ DATABASES = {
         'HOST': 'team3_mini_database',  # Matches container_name in docker-compose.yml
         'PORT': '5432',
     }
+
+
+
+
 }
 
 
