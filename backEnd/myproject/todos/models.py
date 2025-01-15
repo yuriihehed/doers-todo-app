@@ -25,14 +25,20 @@ class TeamMember(models.Model):
     class Meta:
         unique_together = ('team', 'user')  # ensure a user cannot be added to the same team multiple times
 
-class ToDo(models.Model):
+
+############################################################################################################
+#######################ToDo Model#######################################################################
+
+class ToDo(models.Model):  # Define a model for a ToDo item, representing a task in your app
+    # A set of predefined choices for the state of the task
     STATE_CHOICES = [
-        ('not_started', 'Not Started'),
-        ('in_progress', 'In Progress'),
+        ('not_started', 'Not Started'),  
+        ('in_progress', 'In Progress'),  
+        ('completed', 'Completed'),
         ('completed', 'Completed'),
         ('active', 'Active'),
         ('paused', 'Paused'),
-        ('stopped', 'Stopped'),
+        ('stopped', 'Stopped')  
     ]
 
     title = models.CharField(max_length=255)
@@ -48,16 +54,42 @@ class ToDo(models.Model):
     def is_overdue(self):
         return self.deadline and self.deadline < timezone.now()
     
-    def __str__(self):
+    # Timestamp for when the ToDo was created. Automatically set when the ToDo is created.
+    created_at = models.DateTimeField(auto_now_add=True)  
+    
+    # Optional deadline for completing the task. Can be left empty.
+    deadline = models.DateTimeField(null=True, blank=True)  
+
+     # The current state of the task. It uses predefined choices (STATE_CHOICES) and defaults to 'not_started'.
+    state = models.CharField(
+        max_length=20, choices=STATE_CHOICES, default='not_started'
+    )  
+
+    # Methods for the ToDo model
+    def is_overdue(self):  
+        # Checks if the task is overdue
+        # Returns True if `deadline` exists and is in the past
+        return self.deadline and self.deadline < timezone.now()
+
+    def __str__(self):  
+        # Returns a string representation of the ToDo instance
+        # Used in admin panels or debugging to display the title of the ToDo
         return self.title
-    class Meta:
-        db_table = 'todos_todo'
+
+    class Meta:  
+        # Meta options for the model
+        db_table = 'todos_todo'  
+        # Specifies the name of the database table for this model as 'todos_todo'
 
 
-class TodoForm(forms.ModelForm):
+class TodoForm(forms.ModelForm):  # A form based on the ToDo model
     class Meta:
-        model = ToDo
-        fields = ['title', 'description', 'deadline', 'state']
+        model = ToDo  # Link this form to the ToDo model
+        fields = ['title', 'description', 'deadline', 'state']  
+        # Specify the fields to be included in the form
+        # These fields will correspond to the fields defined in the ToDo model
+
         widgets = {
             'deadline': forms.DateTimeInput(attrs={'type': 'datetime-local'}),
+            # Customize the `deadline` field to use a datetime-local input in the HTML form
         }
