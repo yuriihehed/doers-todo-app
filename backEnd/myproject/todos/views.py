@@ -105,39 +105,50 @@ def logout_user(request):
 #########################################################################################################################################################################
 
 # Create Todo Item
-# @login_required
+@login_required
 def create_todo(request):
-    if request.method == 'POST':
-        form = TodoForm(request.POST)
-        if form.is_valid():
-            todo = form.save(commit=False)
-            todo.user = request.user
-            todo.save()
-            return redirect('dashboard')  # Redirect to the list of user's todos
-    else:
-        form = TodoForm()
-    return render(request, 'todoPage/create_todo.html', {'form': form})
+    if request.method == 'POST':  # Check if the request is a POST request (form submission)
+        form = TodoForm(request.POST)  # Bind the submitted data to the TodoForm
+        if form.is_valid():  # Check if the form data is valid
+            todo = form.save(commit=False)  # Create a ToDo object but don't save it to the database yet
+            todo.user = request.user  # Assign the logged-in user as the owner of the ToDo
+            todo.save()  # Save the ToDo to the database
+            return redirect('dashboard')  # Redirect to the dashboard or list of user's ToDos
+    else:  # If the request is not POST (likely a GET request)
+        form = TodoForm()  # Create an empty form instance for the user to fill out
+    return render(request, 'todoPage/create_todo.html', {'form': form})  
+    # Render the 'create_todo.html' template with the empty or pre-filled form
+
 
 # View User's Todos
 @login_required
 def user_todos(request):
-    todos = ToDo.objects.filter(user=request.user)
-    return render(request, 'dashboardPage/dashboard.html', {'todos': todos})
+    todos = ToDo.objects.filter(user=request.user)  
+    # Query the database to get all ToDo items for the logged-in user
+    return render(request, 'dashboardPage/dashboard.html', {'todos': todos})  
+    # Render the 'dashboard.html' template, passing the user's ToDos as context
 
 # Update Todo State
 # @login_required
 def update_todo_state(request, todo_id, state):
-    todo = get_object_or_404(ToDo, id=todo_id, user=request.user)
-    todo.state = state
-    todo.save()
-    return redirect('user_todos')
+    todo = get_object_or_404(ToDo, id=todo_id, user=request.user)  
+    # Retrieve the ToDo item by ID, ensuring it belongs to the logged-in user
+    # If not found, return a 404 error
+    todo.state = state  # Update the state of the ToDo
+    todo.save()  # Save the updated state to the database
+    return redirect('user_todos')  
+    # Redirect the user back to their list of ToDos
 
 # Delete Todo
 # @login_required
 def delete_todo(request, todo_id):
-    todo = get_object_or_404(ToDo, id=todo_id, user=request.user)
-    todo.delete()
-    return redirect('user_todos')
+    todo = get_object_or_404(ToDo, id=todo_id, user=request.user)  
+    # Retrieve the ToDo item by ID, ensuring it belongs to the logged-in user
+    # If not found, return a 404 error
+    todo.delete()  # Delete the ToDo item from the database
+    return redirect('user_todos')  
+    # Redirect the user back to their list of ToDos after deletion
+
 
 # Team Members (for dropdown menu in the form)
 @login_required
