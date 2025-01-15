@@ -34,12 +34,18 @@ class ToDo(models.Model):
     title = models.CharField(max_length=255)
     description = models.TextField(blank=True, null=True)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    created_at = models.DateTimeField(auto_now_add=True)
+    created_at = models.DateTimeField(auto_now_add=True) 
     deadline = models.DateTimeField(null=True, blank=True)
     state = models.CharField(max_length=20, choices=STATE_CHOICES, default='not_started')
 
     def is_overdue(self):
         return self.deadline and self.deadline < timezone.now()
+    
+    def __str__(self):
+        return self.title
+    class Meta:
+        db_table = 'todos_todo'
+
 
 class TodoForm(forms.ModelForm):
     class Meta:
