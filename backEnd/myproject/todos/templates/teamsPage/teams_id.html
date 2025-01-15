@@ -118,10 +118,10 @@
                 <a href="{% url 'about' %}" class="button-link">About</a>
             </div>
             <div class="right">
-                <a href="{% url 'dashboard' %}" class="button-link">Dashboard</a>
-                <a href="{% url 'teams_list' %}" class="button-link">Teams</a>
-                <a href="{% url 'dashboard' %}" class="button-link">Todos</a>
-                <span class="button-link">{{ user.email }}</span>
+                <a href="/dashboard" class="button-link">Dashboard</a>
+                <a href="/todos/new" class="button-link">Todos</a>
+                <a href="/teams/new" class="button-link">Teams</a>
+                <a href="/logout" class="button-link button-login">{{ user.email }}</a>
             </div>
         </div>
 
