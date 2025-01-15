@@ -77,18 +77,18 @@
         <div class="header">
             <div class="left">
                 <div>$APPNAME</div>
-                <a href="/todos/about" class="button-link">About</a>
+                <a href="/about" class="button-link">About</a>
             </div>
             <div class="right">
-                <a href="/todos/dashboard" class="button-link">Dashboard</a> 
-                <a href="/todos/dashboard" class="button-link">Todos</a> 
+                <a href="/dashboard" class="button-link">Dashboard</a> 
+                <a href="/dashboard" class="button-link">Todos</a> 
                 <a href="teams/<int:id>/" class="button-link">Teams</a>
-                <a href="/todos/logout" class="button-link">{{user.email}}</a> <!--TO DO Display user's email -->
+                <a href="/logout" class="button-link">{{user.email}}</a> <!--TO DO Display user's email -->
                 <!-- <span>{{ user.username }}</span> Display user's email -->
             </div>
         </div>
         <h1>No ToDo's</h1>
-        <a href="/todos/new" class="button-link button-create">Create ToDo</a>
+        <a href="/new" class="button-link button-create">Create ToDo</a>
     </div>
 </body>
 </html>

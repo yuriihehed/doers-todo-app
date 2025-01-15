@@ -3,6 +3,8 @@ from django.db import models
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
+from datetime import timedelta
+from .forms import TodoForm, TeamForm
 from .models import Team, ToDo
 from .forms import TodoForm
 from django.core.validators import validate_email
@@ -41,7 +43,7 @@ def dashboard(request):
     todos = ToDo.objects.filter(user=request.user).order_by('deadline')
     if not todos.exists():
         return redirect('dashboard_empty')
-    return render(request, 'todos/dashboard.html', {'todos': todos})
+    return render(request, 'dashboard.html', {'todos': todos})
 
 #########################################################################################################################################################################
 ############ Account Views ##############################################################################################################################################
@@ -94,7 +96,7 @@ def forgot_password(request):
 def logout_user(request):
     if request.method == 'POST':  # Handle the form submission for logout confirmation
         logout(request)  # Logs out the user
-        return redirect('/todos/landing')  # Redirect to a landing page or login page after logout
+        return redirect('')  # Redirect to a landing page or login page after logout
     else:  # Display the logout confirmation page
         return render(request, 'accountPage/logout.html', {'user': request.user})
 
