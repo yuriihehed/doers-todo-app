@@ -32,12 +32,12 @@ def about_page(request):
 ############ Dashboard Views ############################################################################################################################################
 #########################################################################################################################################################################
 # Empty Dashboard
-@login_required
+#@login_required
 def dashboard_empty(request):
     return render(request, 'dashboardPage/dashboard_empty.html', {'user': request.user})
 
 # Dashboard with Todos
-@login_required
+#@login_required
 def dashboard(request):
     if not request.user.is_authenticated:
         return redirect('login.html')  # Replace 'login' with the actual name of your login URL
@@ -109,22 +109,26 @@ def logout_user(request):
 # Create Todo Item
 @login_required
 def create_todo(request):
-    if request.method == 'POST':
-        form = TodoForm(request.POST)
-        if form.is_valid():
-            todo = form.save(commit=False)
-            todo.user = request.user
-            todo.save()
-            return redirect('dashboard')  # Redirect to the list of user's todos
-    else:
-        form = TodoForm()
-    return render(request, 'todoPage/create_todo.html', {'form': form})
+    if request.method == 'POST':  # Check if the request is a POST request (form submission)
+        form = TodoForm(request.POST)  # Bind the submitted data to the TodoForm
+        if form.is_valid():  # Check if the form data is valid
+            todo = form.save(commit=False)  # Create a ToDo object but don't save it to the database yet
+            todo.user = request.user  # Assign the logged-in user as the owner of the ToDo
+            todo.save()  # Save the ToDo to the database
+            return redirect('dashboard')  # Redirect to the dashboard or list of user's ToDos
+    else:  # If the request is not POST (likely a GET request)
+        form = TodoForm()  # Create an empty form instance for the user to fill out
+    return render(request, 'todoPage/create_todo.html', {'form': form})  
+    # Render the 'create_todo.html' template with the empty or pre-filled form
+
 
 # View User's Todos
 @login_required
 def user_todos(request):
-    todos = ToDo.objects.filter(user=request.user)
-    return render(request, 'dashboardPage/dashboard.html', {'todos': todos})
+    todos = ToDo.objects.filter(user=request.user)  
+    # Query the database to get all ToDo items for the logged-in user
+    return render(request, 'dashboardPage/dashboard.html', {'todos': todos})  
+    # Render the 'dashboard.html' template, passing the user's ToDos as context
 
 login_required
 def get_timer(request, todo_id):
