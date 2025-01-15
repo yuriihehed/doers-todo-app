@@ -134,7 +134,7 @@ def delete_todo(request, todo_id):
 def teams_id(request):
     team_members = [
        {"id": "002", "name": "Asad Bakhtiari"},
-    {"id": "003", "name": "Kanchanjit Bandesha"},
+       {"id": "003", "name": "Kanchanjit Bandesha"},
        {"id": "004", "name": "Vanessa Wartemberg"},
        {"id": "005", "name": "Yurii Hehediush"},
        {"id": "006", "name": "John Le"},
