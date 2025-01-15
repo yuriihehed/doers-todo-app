@@ -11,7 +11,7 @@ urlpatterns = [
     path('update/<int:todo_id>/<str:state>/', views.update_todo_state, name='update_todo_state'),
     path('delete/<int:todo_id>/', views.delete_todo, name='delete_todo'),
 
-    path('landing/', views.landing_page, name='landing'),
+    path('', views.landing_page, name='landing'),
 
     path('about/', views.about_page, name='about'),
 
@@ -25,7 +25,6 @@ urlpatterns = [
     
     path('teams/new/', views.create_team, name='create_team'),  # Updated path for "Create Team"
     path('teams/', views.teams_default, name='teams_default'),
-    path('teams/<int:id>/', views.team_details, name='team_details'),
     path('teams_list/', views.teams_list, name='teams_list'),
     path('teams/id/', views.teams_id, name='teams_id'),
     path('accounts/', include('django.contrib.auth.urls')),  # Add this line if not already present

@@ -72,12 +72,12 @@
         <div class="header">
             <div class="left">
                 <div>$APPNAME</div>
-                <a href="/todos/about" class="button-link button-login">About</a>
+                <a href="/about" class="button-link button-login">About</a>
             </div>
             {% if user.is_authenticated %}
-            <a href="/todos/logout" class="button-link button-login">{{ user.email }}</a> <!-- Display user's email -->
+            <a href="/logout" class="button-link button-login">{{ user.email }}</a> <!-- Display user's email -->
         {% else %}
-            <a href="/todos/login" class="button-link button-login">Login</a>
+            <a href="/login" class="button-link button-login">Login</a>
 
         {% endif %}
         </div>

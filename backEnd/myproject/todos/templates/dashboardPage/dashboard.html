@@ -169,13 +169,13 @@
         <div class="header">
             <div class="left">
                 <div>$APPNAME</div>
-                <a href="/todos/about" class="button-link">About</a>
+                <a href="/about" class="button-link">About</a>
             </div>
             <div class="right">
-                <a href="/todos/dashboard" class="button-link">Dashboard</a>
+                <a href="/dashboard" class="button-link">Dashboard</a>
                 <a href="/todos/" class="button-link">Todos</a>
                 <a href="/teams" class="button-link">Teams</a>
-                <a href="/todos/logout" class="button-link">{{ user.email }}</a> <!-- Display user's email -->
+                <a href="/logout" class="button-link">{{ user.email }}</a> <!-- Display user's email -->
             </div>
         </div>
         <a href="{% url 'create_todo' %}" class="button-create">Create ToDo</a>
