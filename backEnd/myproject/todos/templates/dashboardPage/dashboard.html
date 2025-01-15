@@ -259,7 +259,7 @@
         // When the user clicks on the confirm delete button, delete the item
         confirmDeleteButton.onclick = function() {
             // Add your delete logic here, e.g., make an AJAX request to delete the item
-            window.location.href = `/todos/delete/${todoIdToDelete}/`;
+            window.location.href = `/delete/${todoIdToDelete}/`;
             modal.style.display = "none";
         }
 
