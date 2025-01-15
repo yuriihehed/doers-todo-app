@@ -96,7 +96,7 @@ def forgot_password(request):
 def logout_user(request):
     if request.method == 'POST':  # Handle the form submission for logout confirmation
         logout(request)  # Logs out the user
-        return redirect('')  # Redirect to a landing page or login page after logout
+        return redirect(request, 'landing.html')  # Redirect to a landing page or login page after logout
     else:  # Display the logout confirmation page
         return render(request, 'accountPage/logout.html', {'user': request.user})
 
@@ -160,7 +160,7 @@ def create_team(request):
         return redirect('teams_list')
 
     # Render the create_team.html template
-    return render(request, 'teamsPage/create_team.html')
+    return render(request, 'teamCreation.html')
 
 # Teams Default View
 @login_required
