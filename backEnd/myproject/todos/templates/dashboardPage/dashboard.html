@@ -183,7 +183,6 @@
                 <a href="/logout" class="button-link">{{ user.email }}</a> <!-- Display user's email -->
             </div>
         </div>
-        <a href="{% url 'create_todo' %}" class="button-create">Create ToDo</a>
         {% for todo in todos %}
     <div class="todo-item">
         <div class="timer-ribbon" id="timer-{{ todo.id }}" data-state="{{ todo.state }}">
