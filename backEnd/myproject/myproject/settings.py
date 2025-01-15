@@ -80,10 +80,12 @@ DATABASES = {
         'NAME': 'postgres',
         'USER': 'postgres',
         'PASSWORD': 'postgres',
-        'HOST': 'db',
+        'HOST': 'team3_mini_database',  # Matches container_name in docker-compose.yml
         'PORT': '5432',
     }
 }
+
+
 
 
 # Password validation
