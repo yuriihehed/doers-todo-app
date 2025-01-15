@@ -109,7 +109,7 @@
             </div>
             <div class="right">
                 <!-- Corrected login link -->
-                <a href="{% url 'login' %}" class="button-link">Login</a>
+                <a href="/login" class="button-link button-login">Login</a>
             </div>
         </div>
 
@@ -153,7 +153,7 @@
                         <div class="error-message">{{ errors.confirm }}</div>
                     {% endif %}
                 </div>
-                <button type="submit" class="btn btn-primary">Register</button>
+                <button type="submit" class="btn btn-primary" onclick="window.location.href='/login';">Register</button>
             </form>
         </div>
     </div>
