@@ -33,5 +33,8 @@ urlpatterns = [
     path('todos/<int:todo_id>/update/<str:state>/', views.update_todo_state, name='update_todo_state'),  # Update state
     path('todos/<int:todo_id>/delete/', views.delete_todo, name='delete_todo'),  # Delete ToDo
     path('teams/', views.teams_id, name='teams_id'),  # Teams dropdown
+    
+    path('update_todo_state/<int:todo_id>/<str:new_state>/', views.update_todo_state, name='update_todo_state'),
+    path('delete/<int:todo_id>/', views.delete_todo, name='delete_todo'),
 ]
 
