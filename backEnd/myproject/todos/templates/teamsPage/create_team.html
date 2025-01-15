@@ -64,44 +64,45 @@
     </style>
 </head>
 <body>
-    <!-- Main container for the page content -->
+   
     <div class="container">
-        <!-- Header section -->
+   
         <div class="header">
-            <!-- Left section of the header (can be used for logo or branding) -->
+   
             <div class="left">
                 <div>$APPNAME</div>
                 <a href="/about" class="button-link button-login">About</a>
             </div>
 
-            <!-- Right section of the header (navigation links) -->
+           
             <div class="right">
-                <!-- Navigation links styled as buttons -->
+               
                 <a href="#" class="button-link">Dashboard</a>
-                <a href="#" class="button-link">Todos</a>
+                <a href="/todos/new" class="button-link">Todos</a>
                 <a href="#" class="button-link">Teams</a>
-                <a href="/logout" class="button-link">{{ user.email }}</a> <!-- Display user's email -->
+                <a href="/logout" class="button-link">{{ user.email }}</a> 
             </div>
         </div>
         
 
-        <!-- Page Title -->
+        
         <h1>Create New Team</h1>
 
-        <!-- Section to display messages (success or error messages) -->
+        
         {% if messages %}
             <div>
                 {% for message in messages %}
-                    <!-- Message alert with specific style depending on message type -->
+                    
                     <div class="alert {{ message.tags }}">{{ message }}</div>
                 {% endfor %}
             </div>
         {% endif %}
 
-        <!-- Form to create a team -->
+        
         <form method="post">
             {% csrf_token %}
-            <!-- Input for team name -->
+            
+
             <div class="mb-3">
                 <div class="d-flex justify-content-start">
                     <label for="team_name" class="form-label">Team Name</label>
@@ -109,7 +110,7 @@
                 <input type="text" name="team_name" id="team_name" class="form-control" placeholder="team name" required>
             </div>
 
-            <!-- Input for team description -->
+
             <div class="mb-3">
                 <div class="d-flex justify-content-start">
                     <label for="description" class="form-label">Description</label>
@@ -117,7 +118,7 @@
                 <textarea name="description" id="description" class="form-control" placeholder="description" required></textarea>
             </div>
 
-            <!-- Buttons to save or cancel the form -->
+
             <div class="d-flex justify-content-end">
                 <a href="{% url 'teams_list' %}" class="btn btn-danger me-3">Cancel</a>
                 <button type="submit" class="btn btn-success me-3">Save</button>
