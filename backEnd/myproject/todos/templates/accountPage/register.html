@@ -98,6 +98,12 @@
             flex: 1;
             margin: 0 5px;
         }
+            .purple button {
+                background-color: #9C27B0; /* Custom background color */
+                border-color: #9C27B0;    /* Custom border color */
+                color: white;            /* Text color */
+            }
+        
     </style>
 </head>
 <body>
@@ -153,7 +159,7 @@
                         <div class="error-message">{{ errors.confirm }}</div>
                     {% endif %}
                 </div>
-                <button type="submit" class="btn btn-primary">Register</button>
+                <button type="submit" class="btn btn-primary" onclick="window.location.href='/login';">Register</button>
             </form>
         </div>
     </div>
