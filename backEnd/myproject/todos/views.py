@@ -43,7 +43,7 @@ def dashboard(request):
     todos = ToDo.objects.filter(user=request.user).order_by('deadline')
     if not todos.exists():
         return redirect('dashboard_empty')
-    return render(request, 'todos/dashboard.html', {'todos': todos})
+    return render(request, 'dashboard.html', {'todos': todos})
 
 #########################################################################################################################################################################
 ############ Account Views ##############################################################################################################################################
