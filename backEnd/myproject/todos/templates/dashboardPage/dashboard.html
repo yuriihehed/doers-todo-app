@@ -1,5 +1,7 @@
 <!-- filepath: /Users/gulbanumadiyarova/mini-project-team-three/backEnd/myproject/todos/templates/dashboardPage/dashboard.html -->
 {% load static %}
+{% load tz %}
+{% load custom_filters %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -183,41 +185,41 @@
         </div>
         <a href="{% url 'create_todo' %}" class="button-create">Create ToDo</a>
         {% for todo in todos %}
-            <div class="todo-item">
-                <div class="timer-ribbon" id="timer-{{ todo.id }}" data-state="{{ todo.state }}">
-                        {% if todo.state == 'paused' %}
-                            Paused - <span id="elapsed-time-{{ todo.id }}">{{ todo.elapsed_time }}</span>
-                        {% elif todo.state == 'stopped' %}
-                            Stopped - <span id="elapsed-time-{{ todo.id }}">{{ todo.elapsed_time }}</span>
-                        {% else %}
-                            <span id="elapsed-time-{{ todo.id }}">{{ todo.elapsed_time }}</span>
-                        {% endif %}
-                    </div>
-                <div>
-                    <h2>{{ todo.title }}</h2>
-                    <p>Deadline: {{ todo.deadline }}</p>  <!-- Display the deadline -->
-                    <p>Description: {{ todo.description }}</p>
-                    
-                </div>
-                <div class="todo-buttons">
-                    <div class="left">
-                        {% if todo.state == 'stopped' %}
-                            <a href="{% url 'update_todo_state' todo.id 'active' %}" class="button-link button-start">Start</a>
-                        {% elif todo.state == 'paused' %}
-                            <a href="{% url 'update_todo_state' todo.id 'active' %}" class="button-link button-pause">Resume</a>
-                        {% elif todo.state == 'active' %}
-                            <a href="{% url 'update_todo_state' todo.id 'stopped' %}" class="button-link button-stop">Stop</a>
-                            <a href="{% url 'update_todo_state' todo.id 'paused' %}" class="button-link button-pause">Pause</a>
-                        {% endif %}
-                    </div>
-                    <div class="right">
-                        <a href="{% url 'edit_todo' todo.id %}" class="button-link button-edit">Edit</a>
-                        <a href="#" class="button-link button-delete" onclick="openModal('{{ todo.id }}')">Delete</a>
-                    </div>
-                </div>
+    <div class="todo-item">
+        <div class="timer-ribbon" id="timer-{{ todo.id }}" data-state="{{ todo.state }}">
+            {% if todo.state == 'paused' %}
+                Paused - <span id="elapsed-time-{{ todo.id }}">{{ todo.elapsed_time|format_duration }}</span>
+            {% elif todo.state == 'stopped' %}
+                Stopped - <span id="elapsed-time-{{ todo.id }}">{{ todo.elapsed_time|format_duration }}</span>
+            {% else %}
+                <span id="elapsed-time-{{ todo.id }}">{{ todo.elapsed_time }}</span>
+            {% endif %}
+        </div>
+        <div>
+            <h2>{{ todo.title }}</h2>
+            <p>Deadline: {{ todo.deadline }}</p>  <!-- Display the deadline -->
+            <p>Description: {{ todo.description }}</p>
+        </div>
+        <div class="todo-buttons">
+            <div class="left">
+                {% if todo.state == 'active' %}
+                    <a href="{% url 'update_todo_state' todo.id 'stopped' %}" class="button-link button-stop">Stop</a>
+                    <a href="{% url 'update_todo_state' todo.id 'paused' %}" class="button-link button-pause">Pause</a>
+                {% elif todo.state == 'paused' %}
+                    <a href="{% url 'update_todo_state' todo.id 'active' %}" class="button-link button-pause">Resume</a>
+                {% else %}
+                    <a href="{% url 'update_todo_state' todo.id 'active' %}" class="button-link button-start">Start</a>
+                {% endif %}
             </div>
-        {% endfor %}
+        </div>
+
+        <div class="right">
+            <a href="{% url 'edit_todo' todo.id %}" class="button-link button-edit">Edit</a>
+            <a href="#" class="button-link button-delete" onclick="openModal('{{ todo.id }}')">Delete</a>
+        </div>
     </div>
+
+{% endfor %}
 
     <!-- Delete Confirmation Modal -->
     <div id="deleteModal" class="modal">
