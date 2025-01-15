@@ -12,6 +12,8 @@ from django.core.exceptions import ValidationError
 from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
 from django.utils import timezone
+
+
 #########################################################################################################################################################################
 ############ Landing Views ##############################################################################################################################################
 #########################################################################################################################################################################
@@ -124,19 +126,47 @@ def user_todos(request):
     todos = ToDo.objects.filter(user=request.user)
     return render(request, 'dashboardPage/dashboard.html', {'todos': todos})
 
-# Update Todo State
+login_required
+def get_timer(request, todo_id):
+    todo = get_object_or_404(ToDo, id=todo_id, user=request.user)
+    elapsed = todo.elapsed_time
+    
+    # If todo is active, add the time since last_active_time
+    if todo.state == 'active' and todo.last_active_time:
+        current_elapsed = timezone.now() - todo.last_active_time
+        elapsed += current_elapsed
+    
+    # Convert to total seconds
+    total_seconds = int(elapsed.total_seconds())
+    
+    # Format as 00h00m00s
+    hours = total_seconds // 3600
+    minutes = (total_seconds % 3600) // 60
+    seconds = total_seconds % 60
+    
+    formatted_time = f"{hours:02d}h{minutes:02d}m{seconds:02d}s"
+    
+    return JsonResponse({'elapsed_time': formatted_time})
+
+#update todo state
+@login_required
 def update_todo_state(request, todo_id, new_state):
-    todo = get_object_or_404(ToDo, id=todo_id)
+    todo = get_object_or_404(ToDo, id=todo_id, user=request.user)
+    old_state = todo.state
     todo.state = new_state
-    if new_state == 'stopped' or new_state == 'paused':
-        # Calculate and save elapsed time
-        todo.elapsed_time += (timezone.now() - todo.last_active_time).seconds
-    elif new_state == 'active':
-        todo.last_active_time = timezone.now()
+
+    current_time = timezone.now()
+
+    if old_state == 'active' and new_state in ['stopped', 'paused']:
+        if todo.last_active_time:
+            elapsed = current_time - todo.last_active_time
+            todo.elapsed_time += elapsed
+
+    if new_state == 'active':
+        todo.last_active_time = current_time
+
     todo.save()
-    return JsonResponse({'status': 'success', 'state': todo.state})
-
-
+    return redirect('dashboard')
 # View for deleting a ToDo
 def delete_todo(request, todo_id):
     todo = get_object_or_404(ToDo, pk=todo_id, user=request.user)
