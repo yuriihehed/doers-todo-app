@@ -2,6 +2,7 @@ from datetime import timezone
 from django.db import models
 from django.contrib.auth.models import User
 from django import forms
+from datetime import timedelta
 
 
 # Team model to represent a team
@@ -44,14 +45,14 @@ class ToDo(models.Model):  # Define a model for a ToDo item, representing a task
     description = models.TextField(blank=True, null=True)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True) 
-    deadline = models.DateTimeField(null=True, blank=True)
-    state = models.CharField(max_length=20, choices=STATE_CHOICES, default='not_started') 
+    deadline = models.DateField(null=True, blank=True)
+    state = models.CharField(max_length=20, choices=STATE_CHOICES, default='stopped') 
     start_time = models.DateTimeField(null=True, blank=True)  # Track when the timer started
-    elapsed_time = models.FloatField(default=0)  # Track the total elapsed time in seconds
+    elapsed_time = models.DurationField(default="0")  # Store as timedelta
+    last_active_time = models.DateTimeField(null=True, blank=True)
 
-    # A relationship linking this ToDo to a specific user
-    # `on_delete=models.CASCADE`: If the user is deleted, all their ToDos will also be deleted
-    user = models.ForeignKey(User, on_delete=models.CASCADE)  
+    def is_overdue(self):
+        return self.deadline and self.deadline < timezone.now()
     
     # Timestamp for when the ToDo was created. Automatically set when the ToDo is created.
     created_at = models.DateTimeField(auto_now_add=True)  
