@@ -30,12 +30,12 @@ def about_page(request):
 ############ Dashboard Views ############################################################################################################################################
 #########################################################################################################################################################################
 # Empty Dashboard
-@login_required
+#@login_required
 def dashboard_empty(request):
     return render(request, 'dashboardPage/dashboard_empty.html', {'user': request.user})
 
 # Dashboard with Todos
-@login_required
+#@login_required
 def dashboard(request):
     if not request.user.is_authenticated:
         return redirect('login.html')  # Replace 'login' with the actual name of your login URL
@@ -105,7 +105,7 @@ def logout_user(request):
 #########################################################################################################################################################################
 
 # Create Todo Item
-@login_required
+# @login_required
 def create_todo(request):
     if request.method == 'POST':
         form = TodoForm(request.POST)
@@ -119,7 +119,7 @@ def create_todo(request):
     return render(request, 'todoPage/create_todo.html', {'form': form})
 
 # Update Todo State
-@login_required
+# @login_required
 def update_todo_state(request, todo_id, state):
     todo = get_object_or_404(ToDo, id=todo_id, user=request.user)
     todo.state = state
@@ -127,7 +127,7 @@ def update_todo_state(request, todo_id, state):
     return redirect('dashboard')
 
 # Delete Todo
-@login_required
+# @login_required
 def delete_todo(request, todo_id):
     todo = get_object_or_404(ToDo, id=todo_id, user=request.user)
     todo.delete()
@@ -148,7 +148,7 @@ def teams_id(request):
 #########################################################################################################################################################################
 
 # Create Team Page
-@login_required
+# @login_required
 def create_team(request):
     if request.method == 'POST':
         team_name = request.POST.get('team_name')
@@ -163,7 +163,7 @@ def create_team(request):
     return render(request, 'teamsPage/create_team.html')
 
 # Teams Default View
-@login_required
+# @login_required
 def teams_default(request):
     # Filter teams created by the logged-in user
     user_teams = Team.objects.filter(created_by=request.user)
@@ -177,7 +177,7 @@ def teams_default(request):
         return redirect('create_team')
 
 # Team Details
-@login_required
+# @login_required
 def team_details(request, id):
     try:
         # Get the specific team for the given ID
@@ -196,7 +196,7 @@ def team_details(request, id):
         return redirect('create_team')
 
 # Teams List
-@login_required
+# @login_required
 def teams_list(request):
     teams = Team.objects.all()
 
