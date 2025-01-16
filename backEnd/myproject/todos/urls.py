@@ -1,8 +1,11 @@
 from django.urls import path, include
 from . import views
+from django.contrib.auth.views import LoginView
+
 # from .views import CustomLoginView
 
 urlpatterns = [
+    path('accounts/login/',views.login_page, name='login'),
 
     path('dashboardPage/empty/', views.dashboard_empty, name='dashboard_empty'),
     path('dashboard/', views.dashboard, name='dashboard'),

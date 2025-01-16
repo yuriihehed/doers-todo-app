@@ -126,7 +126,7 @@
                         placeholder="Enter your email"
                         class="form-control {% if errors.email %}is-invalid{% endif %}">
                     {% if errors.email %}
-                        <div class="error-message">{{ errors.email }}</div>
+                        <div class="text-danger">{{ errors.email }}</div>
                     {% endif %}
                 </div>
                 <div class="mb-3">
@@ -138,7 +138,7 @@
                         placeholder="Enter your password"
                         class="form-control {% if errors.password %}is-invalid{% endif %}">
                     {% if errors.password %}
-                        <div class="error-message">{{ errors.password }}</div>
+                        <div class="text-danger">{{ errors.password }}</div>
                     {% endif %}
                 </div>
                 <div class="mb-3">
@@ -150,10 +150,10 @@
                         placeholder="Confirm your password"
                         class="form-control {% if errors.confirm %}is-invalid{% endif %}">
                     {% if errors.confirm %}
-                        <div class="error-message">{{ errors.confirm }}</div>
+                        <div class="text-danger">{{ errors.confirm }}</div>
                     {% endif %}
                 </div>
-                <button type="submit" class="btn btn-primary" onclick="window.location.href='/login';">Register</button>
+                <button type="submit" class="btn btn-primary">Register</button> <!-- i took the onclick off -->
             </form>
         </div>
     </div>
