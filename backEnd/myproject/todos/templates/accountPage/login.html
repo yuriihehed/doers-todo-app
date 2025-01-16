@@ -97,20 +97,25 @@
 </head>
 <body>
     <div class="container">
+
+        <!-- Header section -->
         <div class="header">
             <div class="left">
-                <div>$APPNAME</div>
-                <a href="/about" class="button-link button-login">About</a>
+                <div>TO DO APP</div>
+                <a href="/about" class="button-link button-login">About</a> <!-- Button for about -->
             </div>
             <div class="right">
-                <a href="/login" class="button-link button-login">Login</a>
+                <a href="/login" class="button-link button-login">Login</a> <!-- Button for login -->
             </div>
         </div>
 
+        <!-- Form section -->
         <div class="form-container">
             <h2>Login</h2>
-            <form method="POST">
-                {% csrf_token %}
+            <form method="POST"> <!-- Form for login -->
+                {% csrf_token %} <!-- CSRF token -->
+                
+                <!-- Email input -->
                 <div class="mb-3">
                     <label for="email" class="form-label">Email</label>
                     <input
@@ -120,6 +125,8 @@
                         placeholder="Enter your email"
                         class="form-control {% if error and request.method == 'POST' %}is-invalid{% endif %}">
                 </div>
+
+                <!-- Password Field -->
                 <div class="mb-3">
                     <label for="password" class="form-label">Password</label>
                     <input
@@ -129,14 +136,17 @@
                         placeholder="Enter your password"
                         class="form-control {% if error and request.method == 'POST' %}is-invalid{% endif %}">
                 </div>
+
+                <!-- Error message -->
                 {% if error and request.method == 'POST' %}
                     <div class="error-message">Invalid email or password</div>
                 {% endif %}
 
+                <!-- Buttons -->
                 <div class="buttons">
-                    <button type="submit" class="btn btn-primary">Login</button>
-                    <button type="button" class="btn btn-secondary" onclick="location.href='{% url 'forgot_password' %}';">Forgot Password</button>
-                    <button type="button" class="btn btn-secondary" onclick="location.href='{% url 'register' %}';">Sign Up</button>
+                    <button type="submit" class="btn btn-primary">Login</button> <!-- submit the form -->
+                    <button type="button" class="btn btn-secondary" onclick="location.href='{% url &quot;forgot_password&quote; %}';">Forgot Password</button>
+                    <button type="button" class="btn btn-secondary" onclick="location.href='{% url &quot;register&quot; %}';">Sign Up</button>
                 </div>
             </form>
         </div>

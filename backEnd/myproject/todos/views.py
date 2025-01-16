@@ -52,37 +52,68 @@ def dashboard(request):
 #########################################################################################################################################################################
 # User Registration
 def register(request):
-    if request.method == 'POST':
+
+    if request.method == 'POST': # if the request method is POST
+
+        # then get the form data from the POST request
         email = request.POST.get('email')
         password = request.POST.get('password')
         confirm_password = request.POST.get('confirm')
 
-        if not email or not password or not confirm_password:
-            messages.error(request, 'All fields are required.')
+        # initialize an empty dictionary to store any errors
+        errors = {}
+
+        # check if the email field, password field, and confirm password field are empty
+        if not email:
+            errors['email'] = 'Email is required.'
+        if not password:
+            errors['password'] = 'Password is required.'
+        if not confirm_password:
+            errors['confirm'] = 'Please confirm your password.'
+
+        # check if the passwords match
         elif password != confirm_password:
             messages.error(request, 'Passwords do not match.')
+
+        # check if the email is valid
         else:
             try:
+                # validate the email
                 validate_email(email)
-                user = User.objects.create_user(username=email, email=email, password=password)
-                user.save()
-                messages.success(request, 'You have registered successfully!')
-                return redirect('register')
+                # check if the email is already in use
+                if User.objects.filter(email=email).exists():
+                    errors['email'] = 'Email is already in use.'
             except ValidationError:
-                messages.error(request, 'Invalid email address.')
-    return render(request, 'accountPage/register.html')
+                errors['email'] = 'Invalid email address.'
 
+        # if there are validation errors, rerender the form with the errors
+        if errors:
+            return render(request, 'accountPage/registration.html', {'errors': errors, 'email': email})
+        
+        # if no errors, create the user
+        user = User.objects.create_user(email, email, password)
+        user.save()
+        messages.success(request, 'Account created successfully.')
+        return redirect('login')  # Redirect to the login page
+    
+    # if the request is GET, render the registration page
+    return render(request, 'accountPage/registration.html')
 # Login Page
 def login_page(request):
     error = None
+    # Check if the form is submitted and get the arguments
     if request.method == 'POST':
         email = request.POST.get('email')
         password = request.POST.get('password')
+
+        # Authenticate the user
         user = authenticate(request, username=email, password=password)
         if user:
+            # If the user is authenticated, log them in
             login(request, user)
             return redirect('dashboard')
         else:
+            # If the user is not authenticated, display an error message
             error = "Invalid email or password"
     return render(request, 'accountPage/login.html', {'error': error})
 
