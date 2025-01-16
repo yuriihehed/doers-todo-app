@@ -1,8 +1,11 @@
 from django.urls import path, include
 from . import views
+from django.contrib.auth.views import LoginView
+
 # from .views import CustomLoginView
 
 urlpatterns = [
+    path('accounts/login/',views.login_page, name='login'),
 
     path('dashboardPage/empty/', views.dashboard_empty, name='dashboard_empty'),
     path('dashboard/', views.dashboard, name='dashboard'),
@@ -33,7 +36,7 @@ urlpatterns = [
     path('accounts/', include('django.contrib.auth.urls')),  # Add this line if not already present
 
     path('todos/new/', views.create_todo, name='create_todo'),  # Create ToDo page
-    path('todos/<int:todo_id>/update/<str:state>/', views.update_todo_state, name='update_todo_state'),  # Update state
+    path(':todo_id>/update/<str:state>/', views.update_todo_state, name='update_todo_state'),  # Update state
     path('todos/<int:todo_id>/delete/', views.delete_todo, name='delete_todo'),  # Delete ToDo
     path('teams/', views.teams_id, name='teams_id'),  # Teams dropdown
     
