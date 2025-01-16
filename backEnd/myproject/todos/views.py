@@ -71,12 +71,12 @@ def register(request):
         if not confirm_password:
             errors['confirm'] = 'Please confirm your password.'
 
-        # check if the passwords match
-        elif password != confirm_password:
-            messages.error(request, 'Passwords do not match.')
+         # check if the passwords match
+        if password and confirm_password and password != confirm_password:
+            errors['confirm'] = 'Passwords do not match.'
 
         # check if the email is valid
-        else:
+        if email:
             try:
                 # validate the email
                 validate_email(email)
@@ -88,7 +88,7 @@ def register(request):
 
         # if there are validation errors, rerender the form with the errors
         if errors:
-            return render(request, 'accountPage/registration.html', {'errors': errors, 'email': email})
+            return render(request, 'accountPage/register.html', {'errors': errors, 'email': email})
         
         # if no errors, create the user
         user = User.objects.create_user(email, email, password)
@@ -97,7 +97,9 @@ def register(request):
         return redirect('login')  # Redirect to the login page
     
     # if the request is GET, render the registration page
-    return render(request, 'accountPage/registration.html')
+    return render(request, 'accountPage/register.html')
+
+
 # Login Page
 def login_page(request):
     error = None
