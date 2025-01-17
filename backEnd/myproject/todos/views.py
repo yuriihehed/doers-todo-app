@@ -246,7 +246,7 @@ def teams_id(request):
 #########################################################################################################################################################################
 
 # Create Team Page
-@login_requireds
+@login_required
 def create_team(request):
     error_team_name = None
     error_description = None
