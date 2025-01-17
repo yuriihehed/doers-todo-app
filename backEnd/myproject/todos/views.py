@@ -248,17 +248,34 @@ def teams_id(request):
 # Create Team Page
 @login_required
 def create_team(request):
+    error_team_name = None
+    error_description = None
+    team_name = ""
+    description = ""
+
     if request.method == 'POST':
-        team_name = request.POST.get('team_name')
-        description = request.POST.get('description')
+        team_name = request.POST.get('team_name', '').strip()
+        description = request.POST.get('description', '').strip()
 
-        # Save the new team to the database
-        Team.objects.create(name=team_name, description=description, created_by=request.user)
-        # Redirect to the teams list page
-        return redirect('teams_list')
+        # Validate input
+        if not team_name:
+            error_team_name = "Team Name is required."
 
-    # Render the create_team.html template
-    return render(request, 'teamCreation.html')
+        if not description:
+            error_description = "Description is required."
+
+        # If no errors, save the team
+        if not error_team_name and not error_description:
+            Team.objects.create(name=team_name, description=description, created_by=request.user)
+            messages.success(request, "Team created successfully.")
+            return redirect('teams_list')
+
+    return render(request, 'teamCreation.html', {
+        'error_team_name': error_team_name,
+        'error_description': error_description,
+        'team_name': team_name,
+        'description': description,
+    })
 
 # Teams Default View
 @login_required
@@ -303,3 +320,6 @@ def teams_list(request):
 #########################################################################################################################################################################
 ############ END ########################################################################################################################################################
 #########################################################################################################################################################################
+
+
+###### TYRING TO ADD new edit and delete for teams_list.html
