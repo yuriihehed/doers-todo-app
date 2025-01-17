@@ -246,7 +246,7 @@ def teams_id(request):
 #########################################################################################################################################################################
 
 # Create Team Page
-@login_required
+@login_requireds
 def create_team(request):
     error_team_name = None
     error_description = None
@@ -257,18 +257,21 @@ def create_team(request):
         team_name = request.POST.get('team_name', '').strip()
         description = request.POST.get('description', '').strip()
 
-        # Validate input
         if not team_name:
             error_team_name = "Team Name is required."
+        elif Team.objects.filter(name=team_name).exists():
+            error_team_name = "A team with this name already exists."  # Prevent duplicate team names
 
         if not description:
             error_description = "Description is required."
 
-        # If no errors, save the team
         if not error_team_name and not error_description:
-            Team.objects.create(name=team_name, description=description, created_by=request.user)
-            messages.success(request, "Team created successfully.")
-            return redirect('teams_list')
+            try:
+                Team.objects.create(name=team_name, description=description, created_by=request.user)
+                messages.success(request, "Team created successfully.")
+                return redirect('teams_list')  # Redirect to teams list
+            except IntegrityError:
+                error_team_name = "A team with this name already exists."
 
     return render(request, 'teamCreation.html', {
         'error_team_name': error_team_name,
