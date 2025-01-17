@@ -245,6 +245,15 @@ def teams_id(request):
 ############ Teams Views ################################################################################################################################################
 #########################################################################################################################################################################
 
+
+# Check if the logged-in user has created a team
+def team_context(request):
+    if request.user.is_authenticated:
+        team_exists = Team.objects.filter(created_by=request.user).exists()
+    else:
+        team_exists = False
+    return {'team_exist': team_exists}
+
 # Create Team Page
 @login_required
 def create_team(request):
