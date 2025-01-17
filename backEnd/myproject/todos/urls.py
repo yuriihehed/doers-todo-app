@@ -29,10 +29,12 @@ urlpatterns = [
     path('forgot-password/', views.forgot_password, name='forgot_password'),
     path('logout/', views.logout_user, name='logout'),
     
-    path('teams/new/', views.create_team, name='create_team'),  # Updated path for "Create Team"
+    # for teams
+    path('teams/new/', views.create_team, name='create_team'),  # creating new team page
     path('teams/', views.teams_default, name='teams_default'),
-    path('teams_list/', views.teams_list, name='teams_list'),
+    path('teams_list/', views.teams_list, name='teams_list'), # teams list page
     path('teams/id/', views.teams_id, name='teams_id'),
+    
     path('accounts/', include('django.contrib.auth.urls')),  # Add this line if not already present
 
     path('todos/new/', views.create_todo, name='create_todo'),  # Create ToDo page
