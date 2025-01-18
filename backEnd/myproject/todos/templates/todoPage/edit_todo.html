@@ -130,7 +130,62 @@
             <h2>Edit ToDo</h2>
             <form method="POST">
                 {% csrf_token %}
-                {{ form.as_p }}
+                <!-- Title Field -->
+                <div class="mb-3">
+                    <label for="id_title" class="form-label">Title</label>
+                    {{ form.title }} <!-- Render the title field from the form -->
+                </div>
+
+                <!-- Description Field -->
+                <div class="mb-3">
+                    <label for="id_description" class="form-label">Description</label>
+                    {{ form.description }} <!-- Render the description field from the form -->
+                </div>
+
+                <!-- Due Date Field -->
+                <div class="mb-3">
+                    <label for="id_deadline" class="form-label">Due Date</label>
+                    <input 
+                        type="date" 
+                        id="id_deadline" 
+                        name="deadline" 
+                        class="form-control" 
+                        value="{{ form.deadline.value|default:'' }}" 
+                        min="{{ today_date }}" 
+                        {% if form.deadline.errors %} aria-invalid="true" {% endif %} 
+                    />
+                    {% if form.deadline.errors %}
+                    <div class="error-message">
+                        {% for error in form.deadline.errors %}
+                            <p>{{ error }}</p>
+                        {% endfor %}
+                    </div>
+                    {% endif %}
+                </div>
+                
+                
+                
+
+                <!-- Category Field -->
+                <div class="mb-3">
+                    <label for="id_state" class="form-label">Category</label>
+                    {{ form.state }} <!-- Assuming the state field in the model corresponds to category -->
+                </div>
+
+                <!-- Team Field -->
+                <div class="mb-3">
+                    <label for="id_team" class="form-label">Team</label>
+                    {% if user.team_set.count == 0 %}
+                        <p>No team available</p>
+                    {% else %}
+                        <select class="form-control" name="team" id="id_team">
+                            {% for team in user.team_set.all %}
+                                <option value="{{ team.id }}">{{ team.name }}</option>
+                            {% endfor %}
+                        </select>
+                    {% endif %}
+                </div>
+                
                 <!-- Action Buttons -->
                 <div class="buttons">
                     <a href="/dashboard" class="btn btn-danger me-3">Cancel</a>
