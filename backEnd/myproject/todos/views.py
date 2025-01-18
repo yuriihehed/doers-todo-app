@@ -245,20 +245,49 @@ def teams_id(request):
 ############ Teams Views ################################################################################################################################################
 #########################################################################################################################################################################
 
+
+# Check if the logged-in user has created a team
+def team_context(request):
+    if request.user.is_authenticated:
+        team_exists = Team.objects.filter(created_by=request.user).exists()
+    else:
+        team_exists = False
+    return {'team_exist': team_exists}
+
 # Create Team Page
 @login_required
 def create_team(request):
+    error_team_name = None
+    error_description = None
+    team_name = ""
+    description = ""
+
     if request.method == 'POST':
-        team_name = request.POST.get('team_name')
-        description = request.POST.get('description')
+        team_name = request.POST.get('team_name', '').strip()
+        description = request.POST.get('description', '').strip()
 
-        # Save the new team to the database
-        Team.objects.create(name=team_name, description=description, created_by=request.user)
-        # Redirect to the teams list page
-        return redirect('teams_list')
+        if not team_name:
+            error_team_name = "Team Name is required."
+        elif Team.objects.filter(name=team_name).exists():
+            error_team_name = "A team with this name already exists."  # Prevent duplicate team names
 
-    # Render the create_team.html template
-    return render(request, 'teamCreation.html')
+        if not description:
+            error_description = "Description is required."
+
+        if not error_team_name and not error_description:
+            try:
+                Team.objects.create(name=team_name, description=description, created_by=request.user)
+                messages.success(request, "Team created successfully.")
+                return redirect('teams_list')  # Redirect to teams list
+            except IntegrityError:
+                error_team_name = "A team with this name already exists."
+
+    return render(request, 'teamCreation.html', {
+        'error_team_name': error_team_name,
+        'error_description': error_description,
+        'team_name': team_name,
+        'description': description,
+    })
 
 # Teams Default View
 @login_required
@@ -303,3 +332,6 @@ def teams_list(request):
 #########################################################################################################################################################################
 ############ END ########################################################################################################################################################
 #########################################################################################################################################################################
+
+
+###### TYRING TO ADD new edit and delete for teams_list.html

@@ -43,10 +43,6 @@
             color: black;
             margin-right: 5px;
         }
-        .logo {
-            max-width: 400px;
-            margin-top: 80px;
-        }
         .button-link {
             display: inline-block;
             padding: 10px 15px;
@@ -59,66 +55,76 @@
             text-align: center;
             margin-top: 2px;
         }
+        .error-message {
+            color: red;
+            font-size: 14px;
+            margin-top: 5px;
+        }
+        .is-invalid {
+            border: 1px solid red;
+            background-color: #ffe6e6;
+        }
     </style>
 </head>
 <body>
     
     <div class="container">
-       
         <div class="header">
-            
             <div class="left">
                 <div>$APPNAME</div>
                 <a href="/about" class="button-link button-login">About</a>
             </div>
-
-            
             <div class="right">
-                
                 <a href="/dashboard" class="button-link">Dashboard</a>
                 <a href="/todos/new" class="button-link">Todos</a>
                 <a href="/teams/new" class="button-link">Teams</a>
                 <a href="/logout" class="button-link">{{ user.email }}</a>
             </div>
         </div>
-        
 
-       
         <h1>Create Team</h1>
 
-        
         {% if messages %}
             <div>
                 {% for message in messages %}
-        
-                    <div class="alert {{ message.tags }}">{{ message }}</div>
+                    <div class="alert alert-success">{{ message }}</div>
                 {% endfor %}
             </div>
         {% endif %}
 
         <form method="post">
             {% csrf_token %}
+            
+            <!-- Team Name -->
             <div class="mb-3">
                 <div class="d-flex justify-content-start">
                     <label for="team_name" class="form-label">Team Name</label>
                 </div>
-                <input type="text" name="team_name" id="team_name" class="form-control" placeholder="team name" required>
+                <input type="text" name="team_name" id="team_name" 
+                       class="form-control {% if error_team_name %}is-invalid{% endif %}" 
+                       placeholder="Enter team name" value="{{ team_name }}">
+                {% if error_team_name %}
+                    <div class="error-message">{{ error_team_name }}</div>
+                {% endif %}
             </div>
 
-        
+            <!-- Description -->
             <div class="mb-3">
                 <div class="d-flex justify-content-start">
                     <label for="description" class="form-label">Description</label>
                 </div>
-                <textarea name="description" id="description" class="form-control" placeholder="description" required></textarea>
+                <textarea name="description" id="description" 
+                          class="form-control {% if error_description %}is-invalid{% endif %}" 
+                          placeholder="Enter description">{{ description }}</textarea>
+                {% if error_description %}
+                    <div class="error-message">{{ error_description }}</div>
+                {% endif %}
             </div>
 
-    
             <div class="d-flex justify-content-end">
                 <a href="/teams_list" class="btn btn-danger me-3">Cancel</a>
                 <button type="submit" class="btn btn-success me-3">Save</button>
             </div>
-            
         </form>
     </div>
 </body>

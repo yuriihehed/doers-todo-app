@@ -29,14 +29,16 @@ urlpatterns = [
     path('forgot-password/', views.forgot_password, name='forgot_password'),
     path('logout/', views.logout_user, name='logout'),
     
-    path('teams/new/', views.create_team, name='create_team'),  # Updated path for "Create Team"
+    # for teams
+    path('teams/new/', views.create_team, name='create_team'),  # creating new team page
     path('teams/', views.teams_default, name='teams_default'),
-    path('teams_list/', views.teams_list, name='teams_list'),
+    path('teams_list/', views.teams_list, name='teams_list'), # teams list page
     path('teams/id/', views.teams_id, name='teams_id'),
+    
     path('accounts/', include('django.contrib.auth.urls')),  # Add this line if not already present
 
     path('todos/new/', views.create_todo, name='create_todo'),  # Create ToDo page
-    path(':todo_id>/update/<str:state>/', views.update_todo_state, name='update_todo_state'),  # Update state
+    path('<int:todo_id>/update/<str:state>/', views.update_todo_state, name='update_todo_state'),
     path('todos/<int:todo_id>/delete/', views.delete_todo, name='delete_todo'),  # Delete ToDo
     path('teams/', views.teams_id, name='teams_id'),  # Teams dropdown
     
@@ -45,5 +47,8 @@ urlpatterns = [
     path('delete/<int:todo_id>/', views.delete_todo, name='delete_todo'),
 
     path('teams/<int:id>/', views.team_details, name='team_details'),  # Define URL for team_details view
+
+    #path('teams/<int:team_id>/delete/', views.delete_team, name='delete_team'), #for delete button on teams_list.html
+    #path('teams/<int:team_id>/edit/', views.edit_team, name='edit_team'), #for edit button on teams_list.html
 ]
 
