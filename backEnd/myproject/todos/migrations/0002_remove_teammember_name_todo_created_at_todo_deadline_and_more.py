@@ -83,3 +83,4 @@ class Migration(migrations.Migration):
             table='todos_todo',
         ),
     ]
+
