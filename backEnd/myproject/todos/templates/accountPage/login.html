@@ -1,3 +1,4 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -9,11 +10,15 @@
     <style>
         body {
             font-family: Arial, sans-serif;
-            background-color: #fcfcfc;
+            background-color: #fffef2;
             display: flex;
             justify-content: center;
             align-items: center;
             height: 100vh;
+        }
+        .button-edit {
+            background-color: rgb(85, 85, 250);
+            color: rgb(255, 245, 245);
         }
         .container {
             border: 1px solid black; 
@@ -101,7 +106,9 @@
         <!-- Header section -->
         <div class="header">
             <div class="left">
-                <div>TO DO APP</div>
+                <a href="/" class="button-link" style="background: none; padding: 0; border: none; margin-right: 10px; ">
+                    <img src=" {% static 'todos/images/DoersLogo.png' %}" style="width: 120px; height: 74px; object-fit: cover; border-radius: 25%;">
+                </a>
                 <a href="/about" class="button-link button-login">About</a> <!-- Button for about -->
             </div>
             <div class="right">
@@ -144,7 +151,7 @@
 
                 <!-- Buttons -->
                 <div class="buttons">
-                    <button type="submit" class="btn btn-primary">Login</button> <!-- submit the form -->
+                    <button type="submit" class="btn button-edit">Login</button> <!-- submit the form -->
                     <button type="button" class="btn btn-secondary" onclick="location.href='{% url 'forgot_password' %}';">Forgot Password</button>
                     <button type="button" class="btn btn-secondary" onclick="location.href='{% url 'register' %}';">Sign Up</button>
                 </div>

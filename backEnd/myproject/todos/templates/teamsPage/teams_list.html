@@ -1,5 +1,4 @@
-<!-- This is to see all teams -->
-<!-- This is to see all teams -->
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -11,12 +10,12 @@
     <style>
         /* Body styling for overall layout */
         body {
-            font-family: Arial, sans-serif; /* Sets the font style */
-            background-color: #fcfcfc; /* Light gray background */
-            display: flex; /* Flexbox layout for centering content */
-            justify-content: center; /* Centers horizontally */
-            align-items: center; /* Centers vertically */
-            height: 100vh; /* Full height of the viewport */
+            font-family: Arial, sans-serif;
+            background-color: #fffef2;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
         }
 
         /* Main container styling */
@@ -59,16 +58,17 @@
 
         /* Button-like links in the header */
         .button-link {
-            display: inline-block; /* Makes it behave like a button */
-            padding: 10px 15px; /* Adds padding inside the button */
-            font-size: 16px; /* Font size */
-            color: white; /* White text */
-            background-color: rgb(182, 182, 230); /* Light purple background */
-            border: none; /* Removes default border */
-            border-radius: 5px; /* Rounded corners */
-            text-decoration: none; /* Removes underline */
-            text-align: center; /* Centers the text */
-            margin-top: 2px; /* Small space at the top */
+            display: inline-block;
+            padding: 10px 15px;
+            font-size: 16px;
+            color: white;
+            background-color: rgb(182, 182, 230);
+            border: none;
+            border-radius: 5px;
+            text-decoration: none;
+            text-align: center;
+            margin-top: 2px;
+    
         }
 
         /* Styling for the team list container */
@@ -98,21 +98,23 @@
 
         /* Member count styling */
         .member-count {
-            font-size: 14px; /* Smaller font size */
-            font-weight: bold; /* Bold text */
-            color: gray; /* Gray color */
-        }
-
-
-        /* Styling for the team actions (edit and delete buttons) */
-        .team-actions {
-            margin-top: 10px; /* Space above the buttons */
-        }
-
-        .team-actions .btn {
-            margin-right: 5px; /* Space between the buttons */
-            font-size: 14px; /* Slightly smaller font size */
-            padding: 5px 10px; /* Compact padding for smaller buttons */
+            font-size: 14px;
+            font-weight: bold;
+            color: gray;
+        }.bottom-center-btn {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: rgb(182, 182, 230);
+            color: black;
+            padding: 10px 20px;
+            font-size: 18px;
+            border: none;
+            border-radius: 8px;
+            text-decoration: none;
+            text-align: center;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
         }
     </style>
 </head>
@@ -123,15 +125,17 @@
         <div class="header">
             <!-- Left section: App name and About link -->
             <div class="left">
-                <div>$APPNAME</div> <!-- Placeholder for app name -->
+                <a href="/" class="button-link" style="background: none; padding: 0; border: none; margin-right: 10px; ">
+                    <img src=" {% static 'todos/images/DoersLogo.png' %}" style="width: 120px; height: 74px; object-fit: cover; border-radius: 25%;">
+                </a>
                 <a href="/about" class="button-link button-login">About</a>
             </div>
             <!-- Right section: Navigation links -->
             <div class="right">
-                <a href="#" class="button-link">Dashboard</a>
-                <a href="/todos/new" class="button-link">Todos</a>
-                <a href="#" class="button-link">Teams</a>
-                <a href="/logout" class="button-link">{{ user.email }}</a> <!-- Displays user email -->
+            <a href="/dashboard" class="button-link">Dashboard</a>
+            <a href="/todos/new" class="button-link">Todos</a>
+            <a href="/teams/new" class="button-link">Teams</a>
+            <a href="/logout" class="button-link button-login">{{ user.email }}</a>
             </div>
         </div>
 
@@ -173,6 +177,7 @@
             <!-- Message if no teams are available -->
             <p>No teams available. <a href="{% url 'create_team' %}">Create a new team</a>.</p>
         {% endif %}
+        <a href="{% url 'create_team' %}" class="bottom-center-btn">Create Team</a>
     </div>
 </body>
 </html>
