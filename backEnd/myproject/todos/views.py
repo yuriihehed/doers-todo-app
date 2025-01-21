@@ -250,11 +250,13 @@ def teams_id(request):
 
 # Check if the logged-in user has created a team
 def team_context(request):
-    if request.user.is_authenticated:
-        team_exists = Team.objects.filter(created_by=request.user).exists()
-    else:
-        team_exists = False
-    return {'team_exist': team_exists}
+    if not request.user.is_authenticated:
+        return redirect('login.html')  # Redirect to the login page if the user is not logged in
+    teams_exist = Team.objects.filter(created_by=request.user).exists()
+    if not teams_exist:
+        messages.info(request, "No teams are available. Please create a new team.")
+        return redirect('create_team')
+    return redirect('teams_list')  # Redirect to the teams list if the user has created a team
 
 # Create Team Page
 @login_required
