@@ -40,14 +40,12 @@ def dashboard_empty(request):
 #@login_required
 def dashboard(request):
     if not request.user.is_authenticated:
-        return redirect('login')  # Replace 'login' with the correct login URL
+        return redirect('login.html')  # Replace 'login' with the actual name of your login URL
 
-    todos = ToDo.objects.filter(user=request.user).select_related('team').order_by('deadline')
+    todos = ToDo.objects.filter(user=request.user).order_by('deadline')
     if not todos.exists():
         return redirect('dashboard_empty')
-
     return render(request, 'dashboardPage/dashboard.html', {'todos': todos})
-
 
 #########################################################################################################################################################################
 ############ Account Views ##############################################################################################################################################
@@ -153,8 +151,7 @@ def create_todo(request):
             return redirect('dashboard')  # Redirect to the dashboard or list of user's ToDos
     else:  # If the request is not POST (likely a GET request)
         form = TodoForm()  # Create an empty form instance for the user to fill out
-    teams = Team.objects.all()
-    return render(request, 'todoPage/create_todo.html', {'form': form, 'teams': teams})
+    return render(request, 'todoPage/create_todo.html', {'form': form})  
     # Render the 'create_todo.html' template with the empty or pre-filled form
 
 
@@ -225,17 +222,12 @@ def edit_todo(request, todo_id):
             return redirect('dashboard')  # Redirect to the dashboard after saving
     else:
         form = TodoForm(instance=todo)
-    teams = Team.objects.all()
-
-    
-        
 
     # Render the edit page with pre-filled form data
     return render(request, 'todoPage/edit_todo.html', {
         'form': form,
         'todo': todo,
         'user_email': request.user.email,
-        'teams': teams
     })
 # Team Members (for dropdown menu in the form)
 @login_required
