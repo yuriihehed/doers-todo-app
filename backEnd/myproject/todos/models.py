@@ -15,7 +15,7 @@ class Team(models.Model):
     members = models.ManyToManyField(
         settings.AUTH_USER_MODEL,
         through='TeamMember',
-        related_name='teams'  # Changed this
+        related_name='member_teams'  # Changed this
     )
 
     def __str__(self):
