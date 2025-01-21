@@ -391,7 +391,6 @@ def teams_list(request):
 #########################################################################################################################################################################
 
 
-<<<<<<< HEAD
 ###### TYRING TO ADD new edit and delete for teams_list.html
 def edit_team(request, team_id):
     team = get_object_or_404(Team, id=team_id)  # Fetch the specific team
@@ -410,6 +409,3 @@ def delete_team(request, team_id):
         team.delete()  # Delete the team
         return redirect('teams_list')  # Redirect to the list of teams
     return render(request, 'confirm_delete.html', {'team': team})
-=======
-###### TYRING TO ADD new edit and delete for teams_list.html
->>>>>>> upstream/main
