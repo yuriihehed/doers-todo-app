@@ -59,6 +59,7 @@
             text-decoration: none;
             text-align: center;
             margin-top: 2px;
+    
         }
         /* Styling for the team list */
         .teams-container {
@@ -84,6 +85,20 @@
             font-size: 14px;
             font-weight: bold;
             color: gray;
+        }.bottom-center-btn {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: rgb(182, 182, 230);
+            color: black;
+            padding: 10px 20px;
+            font-size: 18px;
+            border: none;
+            border-radius: 8px;
+            text-decoration: none;
+            text-align: center;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
         }
     </style>
 </head>
@@ -97,10 +112,10 @@
                 <a href="/about" class="button-link button-login">About</a>
             </div>
             <div class="right">
-                <a href="#" class="button-link">Dashboard</a>
-                <a href="/todos/new" class="button-link">Todos</a>
-                <a href="#" class="button-link">Teams</a>
-                <a href="/logout" class="button-link">{{ user.email }}</a> 
+            <a href="/dashboard" class="button-link">Dashboard</a>
+            <a href="/todos/new" class="button-link">Todos</a>
+            <a href="/teams/new" class="button-link">Teams</a>
+            <a href="/logout" class="button-link button-login">{{ user.email }}</a>
             </div>
         </div>
 
@@ -119,6 +134,7 @@
         {% else %}
             <p>No teams available. <a href="{% url 'create_team' %}">Create a new team</a>.</p>
         {% endif %}
+        <a href="{% url 'create_team' %}" class="bottom-center-btn">Create Team</a>
     </div>
 </body>
 </html>
