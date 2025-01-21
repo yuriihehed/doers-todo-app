@@ -145,7 +145,15 @@
                 <!-- Due Date Field -->
                 <div class="mb-3">
                     <label for="id_deadline" class="form-label">Due Date</label>
-                    {{ form.deadline }}
+                    <input 
+                        type="date" 
+                        id="id_deadline" 
+                        name="deadline" 
+                        class="form-control" 
+                        value="{{ form.deadline.value|default:'' }}" 
+                        min="{{ today_date }}" 
+                        {% if form.deadline.errors %} aria-invalid="true" {% endif %} 
+                    />
                     {% if form.deadline.errors %}
                     <div class="error-message">
                         {% for error in form.deadline.errors %}
@@ -154,6 +162,9 @@
                     </div>
                     {% endif %}
                 </div>
+                
+                
+                
 
                 <!-- Category Field -->
                 <div class="mb-3">

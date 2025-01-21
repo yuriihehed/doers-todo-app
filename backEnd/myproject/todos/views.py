@@ -1,5 +1,5 @@
 from django.contrib import messages
-from django.db import models
+from django.db import IntegrityError, models
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
@@ -52,37 +52,70 @@ def dashboard(request):
 #########################################################################################################################################################################
 # User Registration
 def register(request):
-    if request.method == 'POST':
+
+    if request.method == 'POST': # if the request method is POST
+
+        # then get the form data from the POST request
         email = request.POST.get('email')
         password = request.POST.get('password')
         confirm_password = request.POST.get('confirm')
 
-        if not email or not password or not confirm_password:
-            messages.error(request, 'All fields are required.')
-        elif password != confirm_password:
-            messages.error(request, 'Passwords do not match.')
-        else:
+        # initialize an empty dictionary to store any errors
+        errors = {}
+
+        # check if the email field, password field, and confirm password field are empty
+        if not email:
+            errors['email'] = 'Email is required.'
+        if not password:
+            errors['password'] = 'Password is required.'
+        if not confirm_password:
+            errors['confirm'] = 'Please confirm your password.'
+
+         # check if the passwords match
+        if password and confirm_password and password != confirm_password:
+            errors['confirm'] = 'Passwords do not match.'
+
+        # check if the email is valid
+        if email:
             try:
+                # validate the email
                 validate_email(email)
-                user = User.objects.create_user(username=email, email=email, password=password)
-                user.save()
-                messages.success(request, 'You have registered successfully!')
-                return redirect('register')
+                # check if the email is already in use
+                if User.objects.filter(email=email).exists():
+                    errors['email'] = 'Email is already in use.'
             except ValidationError:
-                messages.error(request, 'Invalid email address.')
+                errors['email'] = 'Invalid email address.'
+
+        # if there are validation errors, rerender the form with the errors
+        if errors:
+            return render(request, 'accountPage/register.html', {'errors': errors, 'email': email})
+        
+        # if no errors, create the user
+        user = User.objects.create_user(email, email, password)
+        user.save()
+        messages.success(request, 'Account created successfully.')
+        return redirect('login')  # Redirect to the login page
+    
+    # if the request is GET, render the registration page
     return render(request, 'accountPage/register.html')
+
 
 # Login Page
 def login_page(request):
     error = None
+    # Check if the form is submitted and get the arguments
     if request.method == 'POST':
         email = request.POST.get('email')
         password = request.POST.get('password')
+
+        # Authenticate the user
         user = authenticate(request, username=email, password=password)
         if user:
+            # If the user is authenticated, log them in
             login(request, user)
             return redirect('dashboard')
         else:
+            # If the user is not authenticated, display an error message
             error = "Invalid email or password"
     return render(request, 'accountPage/login.html', {'error': error})
 
@@ -212,20 +245,51 @@ def teams_id(request):
 ############ Teams Views ################################################################################################################################################
 #########################################################################################################################################################################
 
+
+# Check if the logged-in user has created a team
+def team_context(request):
+    if not request.user.is_authenticated:
+        return redirect('login.html')  # Redirect to the login page if the user is not logged in
+    teams_exist = Team.objects.filter(created_by=request.user).exists()
+    if not teams_exist:
+        messages.info(request, "No teams are available. Please create a new team.")
+        return redirect('create_team')
+    return redirect('teams_list')  # Redirect to the teams list if the user has created a team
+
 # Create Team Page
 @login_required
 def create_team(request):
+    error_team_name = None
+    error_description = None
+    team_name = ""
+    description = ""
+
     if request.method == 'POST':
-        team_name = request.POST.get('team_name')
-        description = request.POST.get('description')
+        team_name = request.POST.get('team_name', '').strip()
+        description = request.POST.get('description', '').strip()
 
-        # Save the new team to the database
-        Team.objects.create(name=team_name, description=description, created_by=request.user)
-        # Redirect to the teams list page
-        return redirect('teams_list')
+        if not team_name:
+            error_team_name = "Team Name is required."
+        elif Team.objects.filter(name=team_name).exists():
+            error_team_name = "A team with this name already exists."  # Prevent duplicate team names
 
-    # Render the create_team.html template
-    return render(request, 'teamCreation.html')
+        if not description:
+            error_description = "Description is required."
+
+        if not error_team_name and not error_description:
+            try:
+                Team.objects.create(name=team_name, description=description, created_by=request.user)
+                messages.success(request, "Team created successfully.")
+                return redirect('teams_list')  # Redirect to teams list
+            except IntegrityError:
+                error_team_name = "A team with this name already exists."
+
+    return render(request, 'teamCreation.html', {
+        'error_team_name': error_team_name,
+        'error_description': error_description,
+        'team_name': team_name,
+        'description': description,
+    })
 
 # Teams Default View
 @login_required
@@ -270,3 +334,6 @@ def teams_list(request):
 #########################################################################################################################################################################
 ############ END ########################################################################################################################################################
 #########################################################################################################################################################################
+
+
+###### TYRING TO ADD new edit and delete for teams_list.html
