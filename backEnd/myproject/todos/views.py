@@ -32,20 +32,24 @@ def about_page(request):
 ############ Dashboard Views ############################################################################################################################################
 #########################################################################################################################################################################
 # Empty Dashboard
-#@login_required
+@login_required
 def dashboard_empty(request):
     return render(request, 'dashboardPage/dashboard_empty.html', {'user': request.user})
 
 # Dashboard with Todos
-#@login_required
+@login_required
 def dashboard(request):
     if not request.user.is_authenticated:
-        return redirect('login.html')  # Replace 'login' with the actual name of your login URL
+        return redirect('login_page')
+    
+    todos = ToDo.objects.filter(user=request.user).select_related('team')
 
-    todos = ToDo.objects.filter(user=request.user).order_by('deadline')
     if not todos.exists():
         return redirect('dashboard_empty')
-    return render(request, 'dashboardPage/dashboard.html', {'todos': todos})
+    
+    return render(request, 'dashboardPage/dashboard.html', {
+        'todos': todos
+    })
 
 #########################################################################################################################################################################
 ############ Account Views ##############################################################################################################################################
@@ -142,18 +146,16 @@ def logout_user(request):
 # Create Todo Item
 @login_required
 def create_todo(request):
-    if request.method == 'POST':  # Check if the request is a POST request (form submission)
-        form = TodoForm(request.POST)  # Bind the submitted data to the TodoForm
-        if form.is_valid():  # Check if the form data is valid
-            todo = form.save(commit=False)  # Create a ToDo object but don't save it to the database yet
-            todo.user = request.user  # Assign the logged-in user as the owner of the ToDo
-            todo.save()  # Save the ToDo to the database
-            return redirect('dashboard')  # Redirect to the dashboard or list of user's ToDos
-    else:  # If the request is not POST (likely a GET request)
-        form = TodoForm()  # Create an empty form instance for the user to fill out
-    return render(request, 'todoPage/create_todo.html', {'form': form})  
-    # Render the 'create_todo.html' template with the empty or pre-filled form
-
+    if request.method == 'POST':
+        form = TodoForm(data=request.POST, user=request.user)  # Changed this line
+        if form.is_valid():
+            todo = form.save(commit=False)
+            todo.user = request.user
+            todo.save()
+            return redirect('dashboard')
+    else:
+        form = TodoForm(user=request.user)  # Changed this line
+    return render(request, 'todoPage/create_todo.html', {'form': form})
 
 # View User's Todos
 @login_required
@@ -210,25 +212,25 @@ def delete_todo(request, todo_id):
     todo.delete()
     return redirect('dashboard')  # Redirect back to the dashboard
 # View for editing a ToDo
+
 @login_required
 def edit_todo(request, todo_id):
-    # Fetch the ToDo item or return a 404 if not found
-    todo = get_object_or_404(ToDo, pk=todo_id, user=request.user)
-
+    todo = get_object_or_404(Todo, pk=todo_id, user=request.user)
+    
     if request.method == 'POST':
-        form = TodoForm(request.POST, instance=todo)
+        form = TodoForm(request.POST, instance=todo, user=request.user)
         if form.is_valid():
             form.save()
-            return redirect('dashboard')  # Redirect to the dashboard after saving
+            return redirect('dashboard')
     else:
-        form = TodoForm(instance=todo)
+        form = TodoForm(instance=todo, user=request.user)
 
-    # Render the edit page with pre-filled form data
     return render(request, 'todoPage/edit_todo.html', {
         'form': form,
         'todo': todo,
         'user_email': request.user.email,
     })
+
 # Team Members (for dropdown menu in the form)
 @login_required
 def teams_id(request):
