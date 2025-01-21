@@ -337,3 +337,20 @@ def teams_list(request):
 
 
 ###### TYRING TO ADD new edit and delete for teams_list.html
+def edit_team(request, team_id):
+    team = get_object_or_404(Team, id=team_id)  # Fetch the specific team
+    if request.method == "POST":
+        form = TeamForm(request.POST, instance=team)
+        if form.is_valid():
+            form.save()  # Save the updated team
+            return redirect('teams_list')  # Redirect to the list of teams
+    else:
+        form = TeamForm(instance=team)  # Pre-fill the form with the team's data
+    return render(request, 'edit_team.html', {'form': form, 'team': team})
+
+def delete_team(request, team_id):
+    team = get_object_or_404(Team, id=team_id)  # Fetch the specific team
+    if request.method == "POST":
+        team.delete()  # Delete the team
+        return redirect('teams_list')  # Redirect to the list of teams
+    return render(request, 'confirm_delete.html', {'team': team})
