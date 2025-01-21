@@ -55,7 +55,7 @@ urlpatterns = [
 
     path('teams/<int:id>/', views.team_details, name='team_details'),  # Define URL for team_details view
 
-    #path('teams/<int:team_id>/delete/', views.delete_team, name='delete_team'), #for delete button on teams_list.html
-    #path('teams/<int:team_id>/edit/', views.edit_team, name='edit_team'), #for edit button on teams_list.html
+    path('teams/<int:team_id>/delete/', views.delete_team, name='delete_team'), 
+    path('teams/<int:team_id>/edit/', views.edit_team, name='edit_team'),
 ]
 

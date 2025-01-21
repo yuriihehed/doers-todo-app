@@ -1,5 +1,6 @@
 from django import forms
 from .models import ToDo, Team
+from .models import Team, Member
 
 class TodoForm(forms.ModelForm):
     class Meta:
@@ -9,7 +10,12 @@ class TodoForm(forms.ModelForm):
 class TeamForm(forms.ModelForm):
     class Meta:
         model = Team
-        fields = ['name', 'description']
+        fields = ['name', 'description', 'members']
+        
+        members = forms.ModelMultipleChoiceField(
+            queryset= Member.objects.all(),
+            widget=forms.CheckboxSelectMultiple,  # Or use `forms.SelectMultiple` for a multi-select dropdown
+            required=False)
         error_messages = {
             'name': {
                 "required": "A team name is required.",

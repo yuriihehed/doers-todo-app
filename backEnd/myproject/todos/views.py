@@ -346,7 +346,7 @@ def edit_team(request, team_id):
             return redirect('teams_list')  # Redirect to the list of teams
     else:
         form = TeamForm(instance=team)  # Pre-fill the form with the team's data
-    return render(request, 'edit_team.html', {'form': form, 'team': team})
+    return render(request, 'teamsPage/edit_team.html', {'form': form, 'team': team})
 
 def delete_team(request, team_id):
     team = get_object_or_404(Team, id=team_id)  # Fetch the specific team
