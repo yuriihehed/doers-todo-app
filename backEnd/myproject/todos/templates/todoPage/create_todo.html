@@ -175,15 +175,7 @@
                 <!-- Team Field -->
                 <div class="mb-3">
                     <label for="id_team" class="form-label">Team</label>
-                    {% if user.team_set.count == 0 %}
-                        <p>No team available</p>
-                    {% else %}
-                        <select class="form-control" name="team" id="id_team">
-                            {% for team in user.team_set.all %}
-                                <option value="{{ team.id }}">{{ team.name }}</option>
-                            {% endfor %}
-                        </select>
-                    {% endif %}
+                    {{ form.team|add_class:"form-control" }} <!-- Render the team field from the form -->
                 </div>
 
                 <!-- Action Buttons -->
