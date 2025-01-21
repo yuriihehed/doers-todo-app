@@ -4,20 +4,26 @@ from django.contrib.auth.models import User
 from django import forms
 from datetime import timedelta
 
+class Member(models.Model):
+    name = models.CharField(max_length=100)
 
+    def __str__(self):
+        return self.name
+    
 # Team model to represent a team
 class Team(models.Model):
     name = models.CharField(max_length=100, unique=True)  # team name
     description = models.TextField(blank=True)  # optional description
     created_by = models.ForeignKey(User, on_delete=models.CASCADE, related_name='teams')  # creator of the team
     created_at = models.DateTimeField(auto_now_add=True)  # timestamp when the team was created
+    members = models.ManyToManyField(Member, related_name='teams')
 
     def __str__(self):
         return self.name
-
+    
 # TeamMember model to represent members of a team
 class TeamMember(models.Model):
-    team = models.ForeignKey(Team, on_delete=models.CASCADE, related_name='members')  # reference to the team
+    team = models.ForeignKey(Team, on_delete=models.CASCADE, related_name='team_members')  # reference to the team
     name = models.CharField(max_length=100)
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='team_members')  # reference to the user
     joined_at = models.DateTimeField(auto_now_add=True)  # timestamp when the user joined the team

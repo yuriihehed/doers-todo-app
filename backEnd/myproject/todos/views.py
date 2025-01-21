@@ -5,12 +5,12 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
 from datetime import timedelta
 from .forms import TodoForm, TeamForm
-from .models import Team, ToDo
+from .models import Team, ToDo, Member
 from .forms import TodoForm
 from django.core.validators import validate_email
 from django.core.exceptions import ValidationError
 from django.contrib.auth.decorators import login_required
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponseBadRequest
 from django.utils import timezone
 
 
@@ -384,11 +384,43 @@ def teams_list(request):
 
 
    return render(request, 'teamsPage/teams_list.html', {'teams': teams})
+'''
+def add_member(request, team_id):
+    # Get the team or return a 404 if not found
+        team = get_object_or_404(Team, id=team_id)
 
-
+        if request.method == "POST":
+            # Get the new member name from the form
+            new_member_name = request.POST.get("new_member")
+            if new_member_name:
+                # Add a new member instance and associate it with the team
+                new_member, created = Member.objects.get_or_create(name=new_member_name)
+                team.members.add(new_member)  # Add member to the team
+            return redirect('team_details', team_id=team.id)  # Redirect to the same page
+        
+        # If the request method is not POST, redirect to the team details page
+        return redirect('team_details', team_id=team.id)
+'''
 #########################################################################################################################################################################
 ############ END ########################################################################################################################################################
 #########################################################################################################################################################################
 
 
 ###### TYRING TO ADD new edit and delete for teams_list.html
+def edit_team(request, team_id):
+    team = get_object_or_404(Team, id=team_id)  # Fetch the specific team
+    if request.method == "POST":
+        form = TeamForm(request.POST, instance=team)
+        if form.is_valid():
+            form.save()  # Save the updated team
+            return redirect('teams_list')  # Redirect to the list of teams
+    else:
+        form = TeamForm(instance=team)  # Pre-fill the form with the team's data
+    return render(request, 'teamsPage/edit_team.html', {'form': form, 'team': team})
+
+def delete_team(request, team_id):
+    team = get_object_or_404(Team, id=team_id)  # Fetch the specific team
+    if request.method == "POST":
+        team.delete()  # Delete the team
+        return redirect('teams_list')  # Redirect to the list of teams
+    return render(request, 'confirm_delete.html', {'team': team})

@@ -2,9 +2,13 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>Team List</title>
+    <!-- Page title and external stylesheet (Bootstrap) -->
+    <title>Teams List</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css">
+    
+    <!-- Inline CSS for custom styles -->
     <style>
+        /* Body styling for overall layout */
         body {
             font-family: Arial, sans-serif;
             background-color: #fffef2;
@@ -13,41 +17,46 @@
             align-items: center;
             height: 100vh;
         }
+
+        /* Main container styling */
         .container {
-            border: 1px solid black;
-            text-align: center;
-            width: 100%;
-            height: 100%;
-            padding: 20px;
-            box-sizing: border-box;
-            position: relative;
+            border: 1px solid black; /* Adds a black border */
+            text-align: center; /* Centers text inside */
+            width: 100%; /* Full width of the page */
+            height: 100%; /* Full height of the page */
+            padding: 20px; /* Space inside the container */
+            box-sizing: border-box; /* Includes padding in width/height */
+            position: relative; /* For positioning child elements */
         }
+
+        /* Header styling for navigation */
         .header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            width: 100%;
-            border-bottom: 1px solid black;
-            padding-bottom: 10px;
-            margin-bottom: 20px;
+            display: flex; /* Flexbox for alignment */
+            justify-content: space-between; /* Spreads content across */
+            align-items: center; /* Centers content vertically */
+            width: 100%; /* Full width of the container */
+            border-bottom: 1px solid black; /* Bottom border */
+            padding-bottom: 10px; /* Space below the header */
+            margin-bottom: 20px; /* Space between header and content */
         }
-        .left {
-            display: flex;
-            align-items: center;
+
+        /* Left and right sections of the header */
+        .left, .right {
+            display: flex; /* Flexbox for alignment */
+            align-items: center; /* Centers content vertically */
         }
+
         .right {
-            display: flex;
-            align-items: center;
-            margin-left: auto;
+            margin-left: auto; /* Pushes the right section to the end */
         }
+
+        /* Styling for navigation links and divs in the header */
         .header div, .header a {
-            color: black;
-            margin-right: 5px;
+            color: black; /* Black text */
+            margin-right: 5px; /* Space between items */
         }
-        .logo {
-            max-width: 400px;
-            margin-top: 80px;
-        }
+
+        /* Button-like links in the header */
         .button-link {
             display: inline-block;
             padding: 10px 15px;
@@ -61,26 +70,33 @@
             margin-top: 2px;
     
         }
-        /* Styling for the team list */
+
+        /* Styling for the team list container */
         .teams-container {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 15px;
-            justify-content: center;
-            margin-top: 20px;
+            display: flex; /* Flexbox for alignment */
+            flex-wrap: wrap; /* Wraps items to the next row if needed */
+            gap: 15px; /* Space between items */
+            justify-content: center; /* Centers the items */
+            margin-top: 20px; /* Space above the team list */
         }
+
+        /* Individual team card styling */
         .team-card {
-            background: white;
-            border: 1px solid black;
-            border-radius: 8px;
-            padding: 15px;
-            width: 300px;
-            text-align: center;
-            box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.1);
+            background: white; /* White background */
+            border: 1px solid black; /* Black border */
+            border-radius: 8px; /* Rounded corners */
+            padding: 15px; /* Space inside the card */
+            width: 300px; /* Fixed width */
+            text-align: center; /* Centers text inside */
+            box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.1); /* Light shadow */
         }
+
+        /* Styling for the team card heading */
         .team-card h3 {
-            margin-bottom: 10px;
+            margin-bottom: 10px; /* Space below the heading */
         }
+
+        /* Member count styling */
         .member-count {
             font-size: 14px;
             font-weight: bold;
@@ -103,14 +119,18 @@
     </style>
 </head>
 <body>
+    <!-- Main container for the page content -->
     <div class="container">
+        <!-- Navigation bar at the top -->
         <div class="header">
+            <!-- Left section: App name and About link -->
             <div class="left">
                 <a href="/" class="button-link" style="background: none; padding: 0; border: none; margin-right: 10px; ">
                     <img src=" {% static 'todos/images/DoersLogo.png' %}" style="width: 120px; height: 74px; object-fit: cover; border-radius: 25%;">
                 </a>
                 <a href="/about" class="button-link button-login">About</a>
             </div>
+            <!-- Right section: Navigation links -->
             <div class="right">
             <a href="/dashboard" class="button-link">Dashboard</a>
             <a href="/todos/new" class="button-link">Todos</a>
@@ -119,19 +139,42 @@
             </div>
         </div>
 
+        <!-- Page title -->
         <h1 class="text-center mb-4">Teams List</h1>
 
+        <!-- Check if teams exist -->
         {% if teams %}
+            <!-- Container for all the teams -->
             <div class="teams-container">
+                <!-- Loop through each team -->
                 {% for team in teams %}
+                    <!-- Card for each individual team -->
                     <div class="team-card">
+                        <!-- Display team number and name with a link -->
                         <h3>#{{ forloop.counter }} - <a href="{% url 'team_details' team.id %}">{{ team.name }}</a></h3>
+                        <!-- Display team description -->
                         <p>{{ team.description }}</p>
-                        <p class="member-count">Members: {{ team.members.count }}</p>
+                        <!-- Display the number of members in the team -->
+                        <!--<p class="member-count">Members: {{ members }}</p>  I REMOVED THIS TILL MEMBERS WORK-->
+
+
+                        <!-- Buttons for editing and deleting the team -->
+                        <div class="team-actions">
+                            <!-- Edit button -->
+                            <a href="{% url 'edit_team' team.id %}" class="btn btn-primary btn-sm">Edit</a>
+                            <!-- Delete button -->
+                            <form action="{% url 'delete_team' team.id %}" method="post" style="display: inline;">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure you want to delete this team?');">
+                                    Delete
+                                </button>
+                            </form>
+                        </div>
                     </div>
                 {% endfor %}
             </div>
         {% else %}
+            <!-- Message if no teams are available -->
             <p>No teams available. <a href="{% url 'create_team' %}">Create a new team</a>.</p>
         {% endif %}
         <a href="{% url 'create_team' %}" class="bottom-center-btn">Create Team</a>
