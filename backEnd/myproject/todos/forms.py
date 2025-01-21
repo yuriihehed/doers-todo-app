@@ -4,7 +4,7 @@ from .models import ToDo, Team
 class TodoForm(forms.ModelForm):
     class Meta:
         model = ToDo
-        fields = ['title', 'description', 'deadline', 'state']
+        fields = ['title', 'description', 'deadline', 'state', 'team']
         
 class TeamForm(forms.ModelForm):
     class Meta:

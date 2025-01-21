@@ -174,17 +174,17 @@
 
                 <!-- Team Field -->
                 <div class="mb-3">
-                    <label for="id_team" class="form-label">Team</label>
-                    {% if user.team_set.count == 0 %}
-                        <p>No team available</p>
-                    {% else %}
-                        <select class="form-control" name="team" id="id_team">
-                            {% for team in user.team_set.all %}
-                                <option value="{{ team.id }}">{{ team.name }}</option>
-                            {% endfor %}
-                        </select>
-                    {% endif %}
+                    <label for="id_team" class="form-label">Select a Team</label>
+                    <select name="team" id="id_team" class="form-control" required>
+                        <option value="" {% if not todo.team %}selected{% endif %}>Select a team</option>
+                        {% for team in teams %}
+                            <option value="{{ team.id }}" {% if todo.team and todo.team.id == team.id %}selected{% endif %}>
+                                {{ team.name }}
+                            </option>
+                        {% endfor %}
+                    </select>
                 </div>
+                
                 
                 <!-- Action Buttons -->
                 <div class="buttons">
