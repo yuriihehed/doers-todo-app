@@ -36,13 +36,13 @@ def about_page(request):
 ############ Dashboard Views ############################################################################################################################################
 #########################################################################################################################################################################
 # Empty Dashboard
-#@login_required
+@login_required
 def dashboard_empty(request):
    return render(request, 'dashboardPage/dashboard_empty.html', {'user': request.user})
 
 
 # Dashboard with Todos
-#@login_required
+@login_required
 def dashboard(request):
      if not request.user.is_authenticated:
          return redirect('login')  # Replace 'login' with the correct login URL
@@ -242,6 +242,7 @@ def delete_todo(request, todo_id):
    todo.delete()
    return redirect('dashboard')  # Redirect back to the dashboard
 # View for editing a ToDo
+
 @login_required
 def edit_todo(request, todo_id):
    # Fetch the ToDo item or return a 404 if not found
