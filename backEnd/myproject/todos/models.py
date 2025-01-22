@@ -55,7 +55,7 @@ class ToDo(models.Model):
     start_time = models.DateTimeField(null=True, blank=True)
     elapsed_time = models.DurationField(default=timedelta())
     last_active_time = models.DateTimeField(null=True, blank=True)
-    team = models.ForeignKey('Team', on_delete=models.CASCADE)
+    team = models.ForeignKey('Team', on_delete=models.CASCADE, null=True, blank=True)
 
     def is_overdue(self):
         return self.deadline and self.deadline < timezone.now()
@@ -84,8 +84,11 @@ class TodoForm(forms.ModelForm):
     )
 
     class Meta:
-        model = ToDo
-        fields = ['title', 'description', 'deadline', 'state', 'team']
+        model = ToDo  # Link this form to the ToDo model
+        fields = ['title', 'description', 'deadline', 'state', 'team']  
+        # Specify the fields to be included in the form
+        # These fields will correspond to the fields defined in the ToDo model
+
         widgets = {
             'deadline': forms.DateTimeInput(attrs={'type': 'datetime-local'}),
         }

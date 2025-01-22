@@ -208,9 +208,7 @@
             <h2>{{ todo.title }}</h2>
             <p>Deadline: {{ todo.deadline }}</p>  <!-- Display the deadline -->
             <p>Description: {{ todo.description }}</p>
-            {% if todo.team %}
-                <p class="team-info">Team: {{ todo.team.name }}</p>
-            {% endif %}
+            <p>Team: {% if todo.team %}{{ todo.team.name }}{% else %}No team assigned{% endif %}</p>
         </div>
         <div class="todo-buttons">
             <div class="left">

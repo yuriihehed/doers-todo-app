@@ -44,14 +44,13 @@ def dashboard_empty(request):
 # Dashboard with Todos
 @login_required
 def dashboard(request):
-    if not request.user.is_authenticated:
-        return redirect('login_page')
-    
-    todos = ToDo.objects.filter(user=request.user).select_related('team')
+     if not request.user.is_authenticated:
+         return redirect('login')  # Replace 'login' with the correct login URL
 
-    if not todos.exists():
-        return redirect('dashboard_empty')
-    return render(request, 'dashboardPage/dashboard.html', {'todos': todos})
+     todos = ToDo.objects.filter(user=request.user).select_related('team').order_by('deadline')
+     if not todos.exists():
+         return redirect('dashboard_empty')
+     return render(request, 'dashboardPage/dashboard.html', {'todos': todos})
 
 
 
@@ -258,11 +257,6 @@ def edit_todo(request, todo_id):
    else:
        form = TodoForm(instance=todo)
    teams = Team.objects.all()
-
-
-  
-      
-
 
    # Render the edit page with pre-filled form data
    return render(request, 'todoPage/edit_todo.html', {
