@@ -56,7 +56,7 @@ class ToDo(models.Model):  # Define a model for a ToDo item, representing a task
     start_time = models.DateTimeField(null=True, blank=True)  # Track when the timer started
     elapsed_time = models.DurationField(default="0")  # Store as timedelta
     last_active_time = models.DateTimeField(null=True, blank=True)
-    team = models.ForeignKey('Team', on_delete=models.CASCADE)
+    team = models.ForeignKey('Team', on_delete=models.CASCADE, null=True, blank=True)
 
     def is_overdue(self):
         return self.deadline and self.deadline < timezone.now()
@@ -92,7 +92,7 @@ class ToDo(models.Model):  # Define a model for a ToDo item, representing a task
 class TodoForm(forms.ModelForm):  # A form based on the ToDo model
     class Meta:
         model = ToDo  # Link this form to the ToDo model
-        fields = ['title', 'description', 'deadline', 'state']  
+        fields = ['title', 'description', 'deadline', 'state', 'team']  
         # Specify the fields to be included in the form
         # These fields will correspond to the fields defined in the ToDo model
 
