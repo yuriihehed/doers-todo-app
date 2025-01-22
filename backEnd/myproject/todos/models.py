@@ -92,7 +92,7 @@ class ToDo(models.Model):  # Define a model for a ToDo item, representing a task
 class TodoForm(forms.ModelForm):  # A form based on the ToDo model
     class Meta:
         model = ToDo  # Link this form to the ToDo model
-        fields = ['title', 'description', 'deadline', 'state']  
+        fields = ['title', 'description', 'deadline', 'state', 'team']  
         # Specify the fields to be included in the form
         # These fields will correspond to the fields defined in the ToDo model
 
