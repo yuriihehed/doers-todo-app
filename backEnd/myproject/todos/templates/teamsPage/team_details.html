@@ -199,9 +199,13 @@
         <form method="POST" action="{% url 'team_details' team.id %}">
             {% csrf_token %}
             <div class="input-group mb-3">
-                <input type="text" name="new_member" class="form-control" placeholder="Add team member">
+                <input type="text" name="new_member"
+                    class="form-control {% if errors.new_member %}is-invalid{% endif %}" placeholder="Add team member">
                 <button type="submit" class="btn btn-success">Add Member</button>
             </div>
+            {% if errors.new_member %}
+                <div class="text-danger">{{ errors.new_member }}</div>
+            {% endif %}
         </form>
 
         <!-- Team Members List -->

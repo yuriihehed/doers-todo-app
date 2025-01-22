@@ -354,19 +354,25 @@ def team_details(request, id):
     try:
         # Get the specific team for the given ID
         team = Team.objects.get(id=id, created_by=request.user)
+        errors = {}
         
         if request.method == 'POST':
             # Get the new member name from the form
-            new_member_name = request.POST.get('new_member')
+            new_member_name = request.POST.get('new_member').strip()
             
-            if new_member_name:
+            # Validation checks
+            if not new_member_name:
+                errors['new_member'] = "Member name is required."
+            elif team.members.filter(name=new_member_name).exists():
+                errors['new_member'] = "This member is already in the team."
+            else:
                 # Add the new member to the team
                 new_member, _ = Member.objects.get_or_create(name=new_member_name)
                 team.members.add(new_member)
                 messages.success(request, f"'{new_member_name}' added to the team.")
         
         # Render the team details template
-        return render(request, 'teamsPage/team_details.html', {'team': team})
+        return render(request, 'teamsPage/team_details.html', {'team': team, 'errors': errors})
     
     except Team.DoesNotExist:
         # Handle the case where the team does not exist
