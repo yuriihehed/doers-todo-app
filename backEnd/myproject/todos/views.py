@@ -336,7 +336,6 @@ def create_team(request):
    })
 
 
-# Teams Default View
 @login_required
 def teams_default(request):
    # Filter teams created by the logged-in user
@@ -349,8 +348,7 @@ def teams_default(request):
        # Redirect to create_team if no teams exist
        messages.info(request, "No teams are available. Please create a new team.")
        return redirect('create_team')
-
-
+   
 @login_required
 def team_details(request, id):
     try:
