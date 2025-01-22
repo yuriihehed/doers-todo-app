@@ -1,17 +1,12 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <title>Landing Page</title>
+    <link rel="stylesheet" href="{% static 'todos/css/stylesheet.css' %}">
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #fcfcfc;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-        }
+        
         .container {
             border: 1px solid black; 
             text-align: center;
@@ -44,7 +39,7 @@
             margin-right: 5px;
         }
         .logo {
-            max-width: 400px; 
+            max-width: 600px; 
             margin-top: 80px; 
         }
         .button-link {
@@ -71,7 +66,6 @@
     <div class="container">
         <div class="header">
             <div class="left">
-                <div>$APPNAME</div>
                 <a href="/about" class="button-link button-login">About</a>
             </div>
             {% if user.is_authenticated %}
@@ -81,7 +75,8 @@
         {% endif %}
         </div>
         <div class="container">
-        <img src="https://www.organizationalpsychologydegrees.com/wp-content/uploads/2019/01/depaul-university.jpg" alt="DePaul University" class="logo">
+            <img src=" {% static 'todos/images/DoersLogo.png' %}" alt="DoersLogo" class="logo">    
+            <!--img src="https://www.organizationalpsychologydegrees.com/wp-content/uploads/2019/01/depaul-university.jpg" alt="DePaul University" class="logo"-->
     </div>
 </body>
 </html>
