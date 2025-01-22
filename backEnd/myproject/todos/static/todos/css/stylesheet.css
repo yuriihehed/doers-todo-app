@@ -1,0 +1,15 @@
+
+/* Do not put periods infront of these class names:
+body
+h1
+h2
+h3
+p */
+
+body {
+    background-color: #fffef2;
+}
+.button_logoPurple {
+    background-color: rgb(104,48,187);
+    color: rgb(255, 245, 245);
+}
