@@ -394,7 +394,7 @@ def teams_list(request):
 ############ END ########################################################################################################################################################
 #########################################################################################################################################################################
 
-
+@login_required
 ###### TYRING TO ADD new edit and delete for teams_list.html
 # used for team_list html to edit team
 def edit_team(request, team_id):
@@ -408,6 +408,38 @@ def edit_team(request, team_id):
         form = TeamForm(instance=team)  # Pre-fill the form with the team's data
     return render(request, 'teamsPage/edit_team.html', {'form': form, 'team': team})
 
+
+@login_required
+# I want to make a function call edit_teammember for the team_details page 
+def edit_teammember(request, team_id, member_id):
+    team = get_object_or_404(Team, id=team_id, created_by=request.user)  # Fetch the specific team
+    member = get_object_or_404(Member, id=member_id, teams=team)  # Fetch the specific team
+    
+    if request.method == "POST":
+        # get the updated name from the form 
+        updated_name = request.POST.get('name')
+        if updated_name:
+            member.name = updated_name # update the member's name
+            member.save()  # Save the updated team
+            messages.success(request, f"Member '{member.name}' updated successfully.")
+            return redirect('team_details', id=team_id)  # Redirect to the team details
+    # render a simple form for editing the member's name
+    return render(request, 'teamsPage/edit_member.html', {'member': member, 'team': team})
+
+@login_required
+# used for team_list html to delete teammember
+def delete_teammember(request, team_id, member_id):
+    team = get_object_or_404(Team, id=team_id, created_by=request.user)  # Fetch the specific team
+    member = get_object_or_404(Member, id=member_id, teams=team)  # Fetch the specific team
+    
+    if request.method == "POST":
+        team.members.remove(member)  # Delete the member from the team
+        messages.success(request, f"Member '{member.name}' removed from the team.")
+        return redirect('team_details', id=team_id)  # Redirect to the list of teams
+    
+    #return render(request, 'confirm_delete.html', {'team': team})   <--- This is a confirm delete page that I need to create
+
+@login_required
 # used for team_list html to delete team
 def delete_team(request, team_id):
     team = get_object_or_404(Team, id=team_id)  # Fetch the specific team
