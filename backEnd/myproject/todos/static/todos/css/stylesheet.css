@@ -66,3 +66,8 @@ body {
 .header a:hover {
     background-color: rgb(150, 150, 200);
 }
+.description-box {
+    width: 600px; 
+    height: 100px; 
+    font-family: Arial, sans-serif; 
+}

@@ -6,6 +6,13 @@ class TodoForm(forms.ModelForm):
     class Meta:
         model = ToDo
         fields = ['title', 'description', 'deadline', 'state', 'team']
+        widgets = {
+            'description': forms.Textarea(attrs={
+                'cols': 55,  
+                'rows': 5, 
+                'class': 'description-box',  
+            }),
+        }
         
 class TeamForm(forms.ModelForm):
     class Meta:
