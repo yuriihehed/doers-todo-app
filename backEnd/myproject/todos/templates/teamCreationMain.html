@@ -55,20 +55,6 @@
             font-size: 14px;
             margin-top: 5px;
         }
-        .form-container {
-            max-width: 500px;
-            margin: 0 auto;
-            background-color: #fff;
-            border: 1px solid #ccc;
-            padding: 20px;
-            border-radius: 5px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            text-align: left;
-        }
-        .form-container h2 {
-            margin-bottom: 20px;
-            text-align: center;
-        }
         .is-invalid {
             border: 1px solid red;
             background-color: #ffe6e6;
@@ -93,42 +79,42 @@
             </div>
         </div>
 
-        <div class="form-container">
-            <h2>Create Team</h2>
-            <form method="post">
-                {% csrf_token %}
-                <!-- Team Name -->
-                <div class="mb-3">
-                    <div class="d-flex justify-content-start">
-                        <label for="team_name" class="form-label">Team Name</label>
-                    </div>
-                    <input type="text" name="team_name" id="team_name" 
-                        class="form-control {% if error_team_name %}is-invalid{% endif %}" 
-                        placeholder="Enter team name" value="{{ team_name }}">
-                    {% if error_team_name %}
-                        <div class="error-message">{{ error_team_name }}</div>
-                    {% endif %}
-                </div>
+        <h1>Create Team</h1>
 
-                <!-- Description -->
-                <div class="mb-3">
-                    <div class="d-flex justify-content-start">
-                        <label for="description" class="form-label">Description</label>
-                    </div>
-                    <textarea name="description" id="description" 
-                            class="form-control {% if error_description %}is-invalid{% endif %}" 
-                            placeholder="Enter description">{{ description }}</textarea>
-                    {% if error_description %}
-                        <div class="error-message">{{ error_description }}</div>
-                    {% endif %}
+        <form method="post">
+            {% csrf_token %}
+            
+            <!-- Team Name -->
+            <div class="mb-3">
+                <div class="d-flex justify-content-start">
+                    <label for="team_name" class="form-label">Team Name</label>
                 </div>
+                <input type="text" name="team_name" id="team_name" 
+                       class="form-control {% if error_team_name %}is-invalid{% endif %}" 
+                       placeholder="Enter team name" value="{{ team_name }}">
+                {% if error_team_name %}
+                    <div class="error-message">{{ error_team_name }}</div>
+                {% endif %}
+            </div>
 
-                <div class="d-flex justify-content-end">
-                    <a href="/teams_list" class="btn btn-danger me-3">Cancel</a>
-                    <button type="submit" class="btn button_logoPurple me-3">Save</button>
+            <!-- Description -->
+            <div class="mb-3">
+                <div class="d-flex justify-content-start">
+                    <label for="description" class="form-label">Description</label>
                 </div>
-            </form>
-        </div>    
+                <textarea name="description" id="description" 
+                          class="form-control {% if error_description %}is-invalid{% endif %}" 
+                          placeholder="Enter description">{{ description }}</textarea>
+                {% if error_description %}
+                    <div class="error-message">{{ error_description }}</div>
+                {% endif %}
+            </div>
+
+            <div class="d-flex justify-content-end">
+                <a href="/teams_list" class="btn btn-danger me-3">Cancel</a>
+                <button type="submit" class="btn button_logoPurple me-3">Save</button>
+            </div>
+        </form>
     </div>
 </body>
 </html>
