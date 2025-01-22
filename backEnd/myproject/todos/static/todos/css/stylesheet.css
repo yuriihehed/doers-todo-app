@@ -71,3 +71,17 @@ body {
     height: 100px; 
     font-family: Arial, sans-serif; 
 }
+.form-container {
+    max-width: 500px;
+    margin: 0 auto;
+    background-color: #fff;
+    border: 1px solid #ccc;
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    text-align: left;
+}
+.form-container h2 {
+    margin-bottom: 20px;
+    text-align: center;
+}
