@@ -126,7 +126,7 @@
             <!-- Left section: App name and About link -->
             <div class="left">
                 <a href="/" class="button-link" style="background: none; padding: 0; border: none; margin-right: 10px; ">
-                    <img src=" {% static 'todos/images/DoersLogo.png' %}" style="width: 120px; height: 74px; object-fit: cover; border-radius: 25%;">
+                    <img src=" {% static 'todos/images/DoersLogo.png' %}" style="width: 120px; height: 74px; object-fit: cover; border-radius: 15%;">
                 </a>
                 <a href="/about" class="button-link button-login">About</a>
             </div>
@@ -151,7 +151,7 @@
                     <!-- Card for each individual team -->
                     <div class="team-card">
                         <!-- Display team number and name with a link -->
-                        <h3>#{{ forloop.counter }} - <a href="{% url 'team_details' team.id %}">{{ team.name }}</a></h3>
+                        <h3> <a href="{% url 'team_details' team.id %}">{{ team.name }}</a></h3>
                         <!-- Display team description -->
                         <p>{{ team.description }}</p>
                         <!-- Display the number of members in the team -->
