@@ -8,14 +8,15 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="{% static 'todos/css/stylesheet.css' %}">
     <style>
-        /* General styling */
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #fffef2;
+        
+        .container {
+        
+            text-align: center;
+            width: 100%; 
+            height: 100%;
             padding: 20px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
+            box-sizing: border-box;
+            position: relative; 
         }
 
         /* Header styling */
@@ -87,12 +88,11 @@
             /* Font size for readability */
             white-space: nowrap;
         }
-
         .header a:hover {
             background-color: rgb(150, 150, 200);
             /* Darker purple on hover */
         }
-        
+
 
         /* Team details section */
         .team-details {
@@ -201,7 +201,7 @@
             {% csrf_token %}
             <div class="input-group mb-3">
                 <input type="text" name="new_member" class="form-control" placeholder="Add team member">
-                <button type="submit" class="btn btn-success">Add Member</button>
+                <button type="submit" class="btn button_logoPurple">Add Member</button>
             </div>
         </form>
 
@@ -216,7 +216,7 @@
         
         <!-- Buttons to edit and delete the team -->
         <div class="action-buttons">
-            <a href="{% url 'edit_team' team.id %}" class="btn btn-primary">Edit</a>
+            <a href="{% url 'edit_team' team.id %}" class="btn button-edit">Edit</a>
             <form action="{% url 'delete_team' team.id %}" method="post">
                 {% csrf_token %}
                 <button type="submit" class="btn btn-danger"
