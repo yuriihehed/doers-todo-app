@@ -356,25 +356,29 @@ def teams_default(request):
        return redirect('create_team')
 
 
-# Team Details
 @login_required
 def team_details(request, id):
-   try:
-       # Get the specific team for the given ID
-       team = Team.objects.get(id=id, created_by=request.user)
-       if request.method == 'POST':
-           # Add a new member if submitted
-           new_member_email = request.POST.get('new_member')
-           if new_member_email:
-               # Add logic for adding the new member to the team
-               messages.success(request, f"{new_member_email} added to the team.")
-               # Add to database logic here if needed
-
-
-       return render(request, 'teamsPage/team_details.html', {'team': team})
-   except Team.DoesNotExist:
-       messages.info(request, "Team not found. Please create a new team.")
-       return redirect('create_team')
+    try:
+        # Get the specific team for the given ID
+        team = Team.objects.get(id=id, created_by=request.user)
+        
+        if request.method == 'POST':
+            # Get the new member name from the form
+            new_member_name = request.POST.get('new_member')
+            
+            if new_member_name:
+                # Add the new member to the team
+                new_member, _ = Member.objects.get_or_create(name=new_member_name)
+                team.members.add(new_member)
+                messages.success(request, f"'{new_member_name}' added to the team.")
+        
+        # Render the team details template
+        return render(request, 'teamsPage/team_details.html', {'team': team})
+    
+    except Team.DoesNotExist:
+        # Handle the case where the team does not exist
+        messages.error(request, "Team not found. Please create a new team.")
+        return redirect('create_team')
 
 
 # Teams List
@@ -384,29 +388,15 @@ def teams_list(request):
 
 
    return render(request, 'teamsPage/teams_list.html', {'teams': teams})
-'''
-def add_member(request, team_id):
-    # Get the team or return a 404 if not found
-        team = get_object_or_404(Team, id=team_id)
 
-        if request.method == "POST":
-            # Get the new member name from the form
-            new_member_name = request.POST.get("new_member")
-            if new_member_name:
-                # Add a new member instance and associate it with the team
-                new_member, created = Member.objects.get_or_create(name=new_member_name)
-                team.members.add(new_member)  # Add member to the team
-            return redirect('team_details', team_id=team.id)  # Redirect to the same page
-        
-        # If the request method is not POST, redirect to the team details page
-        return redirect('team_details', team_id=team.id)
-'''
+
 #########################################################################################################################################################################
 ############ END ########################################################################################################################################################
 #########################################################################################################################################################################
 
 
 ###### TYRING TO ADD new edit and delete for teams_list.html
+# used for team_list html to edit team
 def edit_team(request, team_id):
     team = get_object_or_404(Team, id=team_id)  # Fetch the specific team
     if request.method == "POST":
@@ -418,6 +408,7 @@ def edit_team(request, team_id):
         form = TeamForm(instance=team)  # Pre-fill the form with the team's data
     return render(request, 'teamsPage/edit_team.html', {'form': form, 'team': team})
 
+# used for team_list html to delete team
 def delete_team(request, team_id):
     team = get_object_or_404(Team, id=team_id)  # Fetch the specific team
     if request.method == "POST":
