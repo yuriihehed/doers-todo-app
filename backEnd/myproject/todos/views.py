@@ -44,16 +44,14 @@ def dashboard_empty(request):
 # Dashboard with Todos
 #@login_required
 def dashboard(request):
-    if not request.user.is_authenticated:
-        return redirect('login.html')  # Replace 'login' with the actual name of your login URL
+     if not request.user.is_authenticated:
+         return redirect('login')  # Replace 'login' with the correct login URL
 
-    todos = ToDo.objects.filter(user=request.user).order_by('deadline')
-    if not todos.exists():
-        return redirect('dashboard_empty')
-    return render(request, 'dashboardPage/dashboard.html', {'todos': todos})
+     todos = ToDo.objects.filter(user=request.user).select_related('team').order_by('deadline')
+     if not todos.exists():
+         return redirect('dashboard_empty')
 
-
-
+     return render(request, 'dashboardPage/dashboard.html', {'todos': todos})
 
 #########################################################################################################################################################################
 ############ Account Views ##############################################################################################################################################
