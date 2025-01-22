@@ -1,3 +1,4 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -7,11 +8,15 @@
     <style>
         body {
             font-family: Arial, sans-serif;
-            background-color: #fcfcfc;
+            background-color: #fffef2;
             display: flex;
             justify-content: center;
             align-items: center;
             height: 100vh;
+        }
+        .button-edit {
+            background-color: rgb(85, 85, 250);
+            color: rgb(255, 245, 245);
         }
         .container {
             border: 1px solid black;
@@ -123,7 +128,9 @@
     <div class="container">
         <div class="header">
             <div class="left">
-                <div>$APPNAME</div>
+                <a href="/" class="button-link" style="background: none; padding: 0; border: none; margin-right: 10px; ">
+                    <img src=" {% static 'todos/images/DoersLogo.png' %}" style="width: 120px; height: 74px; object-fit: cover; border-radius: 15%;">
+                </a>
                 <a href="/about" class="button-link button-login">About</a>
             </div>
             <div class="right">
