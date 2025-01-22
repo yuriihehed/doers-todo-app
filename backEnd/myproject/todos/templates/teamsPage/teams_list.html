@@ -159,9 +159,6 @@
                     </div>
                 {% endfor %}
             </div>
-        {% else %}
-            <!-- Message if no teams are available -->
-            <p>No teams available. <a href="{% url 'create_team' %}">Create a new team</a>.</p>
         {% endif %}
         <a href="{% url 'create_team' %}" class="bottom-center-btn">Create Team</a>
     </div>
