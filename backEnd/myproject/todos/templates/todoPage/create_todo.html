@@ -143,7 +143,6 @@
            </div>
        </div>
 
-
        <div class="form-container">
            <h2>Create ToDo</h2>
            <form method="POST">
@@ -154,13 +153,11 @@
                    {{ form.title }} <!-- Render the title field from the form -->
                </div>
 
-
                <!-- Description Field -->
                <div class="mb-3">
                    <label for="id_description" class="form-label">Description</label>
                    {{ form.description }} <!-- Render the description field from the form -->
                </div>
-
 
                <!-- Due Date Field -->
                <div class="mb-3">
@@ -183,13 +180,11 @@
                    {% endif %}
                </div>
 
-
                <!-- Category Field -->
                <div class="mb-3">
                    <label for="id_state" class="form-label">Category</label>
                    {{ form.state }} <!-- Assuming the state field in the model corresponds to category -->
                </div>
-
 
                <!-- Team Field -->
                <div class="mb-3">
@@ -203,9 +198,9 @@
                </div>
 
                <!-- Action Buttons -->
-               <div class="buttons">
+               <div class="d-flex justify-content-end">
                    <a href="/dashboard" class="btn btn-danger me-3">Cancel</a>
-                   <button type="submit" class="btn button_logoPurple">Save</button>
+                   <button type="submit" class="btn button_logoPurple me-3">Save</button>
                </div>
            </form>
        </div>
