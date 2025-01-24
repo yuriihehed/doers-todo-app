@@ -170,25 +170,27 @@
 
 
                <!-- Due Date Field -->
-               <div class="mb-3">
-                   <label for="id_deadline" class="form-label">Due Date</label>
-                   <input
-                       type="date"
-                       id="id_deadline"
-                       name="deadline"
-                       class="form-control"
-                       value="{{ form.deadline.value|default:'' }}"
-                       min="{{ today_date }}"
-                       {% if form.deadline.errors %} aria-invalid="true" {% endif %}
-                   />
-                   {% if form.deadline.errors %}
-                   <div class="error-message">
-                       {% for error in form.deadline.errors %}
-                           <p>{{ error }}</p>
-                       {% endfor %}
-                   </div>
-                   {% endif %}
-               </div>
+                <div class="mb-3">
+                    <label for="id_deadline" class="form-label">Due Date</label>
+                    <input
+                        type="date"
+                        id="id_deadline"
+                        name="deadline"
+                        class="form-control"
+                        value="{% if form.is_bound %}{{ form.data.deadline|default:'' }}{% else %}{{ form.initial.deadline|date:'Y-m-d' }}{% endif %}"
+                        min="{{ today_date }}"
+                        {% if form.deadline.errors %} aria-invalid="true" {% endif %}
+                    />
+                    {% if form.deadline.errors %}
+                    <div class="error-message">
+                        {% for error in form.deadline.errors %}
+                            <p>{{ error }}</p>
+                        {% endfor %}
+                    </div>
+                    {% endif %}
+                </div>
+
+
               
                <!-- Category Field -->
                <div class="mb-3">
