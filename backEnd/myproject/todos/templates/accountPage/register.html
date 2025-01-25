@@ -1,0 +1,168 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'todos/css/stylesheet.css' %}">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #fffef2;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        
+        .container {
+            border: 1px solid black;
+            text-align: center;
+            width: 100%;
+            height: 100%;
+            padding: 20px;
+            box-sizing: border-box;
+            position: relative;
+        }
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+            border-bottom: 1px solid black;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+        .left {
+            display: flex;
+            align-items: center;
+        }
+        .right {
+            display: flex;
+            align-items: center;
+            margin-left: auto;
+        }
+        .header div, .header a {
+            color: black;
+            margin-right: 5px;
+        }
+        .button-link {
+            display: inline-block;
+            padding: 10px 15px;
+            font-size: 16px;
+            color: white;
+            background-color: rgb(182, 182, 230);
+            border: none;
+            border-radius: 5px;
+            text-decoration: none;
+            text-align: center;
+            margin-top: 2px;
+        }
+        .form-container {
+            max-width: 400px;
+            margin: 0 auto;
+            background-color: #fff;
+            border: 1px solid #ccc;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            text-align: left;
+        }
+        .form-container h2 {
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        .form-control.is-invalid {
+            border-color: #f5c2c7;
+            background-color: #f8d7da;
+        }
+        .form-label {
+            display: block;
+            margin-bottom: 5px;
+            text-align: left;
+        }
+        .error-message {
+            color: red;
+            font-size: 0.85rem;
+            margin-bottom: 15px;
+            padding: 5px 10px;
+            background-color: #f8d7da;
+            border: 1px solid #f5c2c7;
+            border-radius: 4px;
+        }
+        .buttons {
+            text-align: center;
+            margin-top: 20px;
+        }
+        .buttons button {
+            flex: 1;
+            margin: 0 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="left">
+                <a href="/" class="button-link" style="background: none; padding: 0; border: none; margin-right: 10px; ">
+                    <img src=" {% static 'todos/images/DoersLogo.png' %}" style="width: 120px; height: 74px; object-fit: cover; border-radius: 15%;">
+                </a>
+                <a href="{% url 'about' %}" class="button-link">About</a>
+            </div>
+            <div class="right">
+                <!-- Corrected login link -->
+                <a href="/login" class="button-link button-login">Login</a>
+            </div>
+        </div>
+
+        <div class="form-container">
+            <h2>Register</h2>
+            <form method="POST">
+                {% csrf_token %}
+                <div class="mb-3">
+                    <label for="email" class="form-label">Email</label>
+                    <input
+                        type="email"
+                        id="email"
+                        name="email"
+                        placeholder="Enter your email"
+                        class="form-control {% if errors.email %}is-invalid{% endif %}">
+                    {% if errors.email %}
+                        <div class="text-danger">{{ errors.email }}</div>
+                    {% endif %}
+                </div>
+                <div class="mb-3">
+                    <label for="password" class="form-label">Password</label>
+                    <input
+                        type="password"
+                        id="password"
+                        name="password"
+                        placeholder="Enter your password"
+                        class="form-control {% if errors.password %}is-invalid{% endif %}">
+                    {% if errors.password %}
+                        <div class="text-danger">{{ errors.password }}</div>
+                    {% endif %}
+                </div>
+                <div class="mb-3">
+                    <label for="confirm" class="form-label">Confirm Password</label>
+                    <input
+                        type="password"
+                        id="confirm"
+                        name="confirm"
+                        placeholder="Confirm your password"
+                        class="form-control {% if errors.confirm %}is-invalid{% endif %}">
+                    {% if errors.confirm %}
+                        <div class="text-danger">{{ errors.confirm }}</div>
+                    {% endif %}
+                </div>
+                <button type="submit" class="btn button_logoPurple">Register</button> <!-- i took the onclick off -->
+            </form>
+        </div>
+    </div>
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

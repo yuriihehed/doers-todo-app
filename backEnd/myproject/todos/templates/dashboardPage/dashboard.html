@@ -1,18 +1,15 @@
-<!-- filepath: /Users/gulbanumadiyarova/mini-project-team-three/backEnd/myproject/todos/templates/dashboardPage/dashboard.html -->
+<!-- this is a note in main-->
+{% load static %}
+{% load tz %}
+{% load custom_filters %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <title>Dashboard</title>
+    <link rel="stylesheet" href="{% static 'todos/css/stylesheet.css' %}">
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #fcfcfc;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-        }
+        
         .container {
             border: 1px solid black; 
             text-align: center;
@@ -101,8 +98,9 @@
         }
         .button-edit {
             background-color: rgb(85, 85, 250);
-            color: rgb(255, 245, 245);
+            color: white;
         }
+        
         .button-delete, .button-stop {
             background-color: rgb(212, 39, 39);
             color: rgb(255, 246, 246);
@@ -162,57 +160,71 @@
             font-size: 20px;
             border-radius: 10px;
         }
+        .team-info {
+            background-color: #f0f0f0;
+            padding: 4px 8px;
+            border-radius: 4px;
+            display: inline-block;
+            margin-top: 4px;
+            font-size: 0.9em;
+        }
     </style>
+    <script src="{% static 'todos/js/dashboard-timer.js' %}"></script>
+
 </head>
 <body>
     <div class="container">
         <div class="header">
             <div class="left">
-                <div>$APPNAME</div>
-                <a href="/todos/about" class="button-link">About</a>
+                <a href="/" class="button-link" style="background: none; padding: 0; border: none; margin-right: 10px; ">
+                    <img src=" {% static 'todos/images/DoersLogo.png' %}" style="width: 120px; height: 74px; object-fit: cover; border-radius: 15%;">
+                </a>
+                <a href="/about" class="button-link">About</a>
             </div>
             <div class="right">
-                <a href="/todos/dashboard" class="button-link">Dashboard</a>
-                <a href="/todos" class="button-link">Todos</a>
-                <a href="/teams" class="button-link">Teams</a>
-                <a href="/todos/logout" class="button-link">{{ user.email }}</a> <!-- Display user's email -->
+                <a href="/dashboard" class="button-link">Dashboard</a>
+                <a href="/todos/new" class="button-link">Todos</a>
+                <a href="/teams/new" class="button-link">Teams</a>
+                <a href="/logout" class="button-link">{{ user.email }}</a> <!-- Display user's email -->
             </div>
         </div>
-        <a href="{% url 'create_todo' %}" class="button-create">Create ToDo</a>
         {% for todo in todos %}
-            <div class="todo-item">
-                <div class="timer-ribbon">
-                    {% if todo.state == 'paused' %}
-                        Paused - {{ todo.elapsed_time }}
-                    {% elif todo.state == 'stopped' %}
-                        Stopped - {{ todo.elapsed_time }}
-                    {% else %}
-                        {{ todo.elapsed_time }}
-                    {% endif %}
-                </div>
-                <div>
-                    <h2>{{ todo.title }}</h2>
-                    <p>{{ todo.description }}</p>
-                </div>
-                <div class="todo-buttons">
-                    <div class="left">
-                        {% if todo.state == 'stopped' %}
-                            <a href="{% url 'update_todo_state' todo.id 'active' %}" class="button-link button-start">Start</a>
-                        {% elif todo.state == 'paused' %}
-                            <a href="{% url 'update_todo_state' todo.id 'active' %}" class="button-link button-pause">Resume</a>
-                        {% elif todo.state == 'active' %}
-                            <a href="{% url 'update_todo_state' todo.id 'stopped' %}" class="button-link button-stop">Stop</a>
-                            <a href="{% url 'update_todo_state' todo.id 'paused' %}" class="button-link button-pause">Pause</a>
-                        {% endif %}
-                    </div>
-                    <div class="right">
-                        <a href="#" class="button-link button-edit">Edit</a>
-                        <a href="#" class="button-link button-delete" onclick="openModal('{{ todo.id }}')">Delete</a>
-                    </div>
-                </div>
+    <div class="todo-item">
+        <div class="timer-ribbon" id="timer-{{ todo.id }}" data-state="{{ todo.state }}">
+            {% if todo.state == 'paused' %}
+                Paused - <span id="elapsed-time-{{ todo.id }}">{{ todo.elapsed_time|format_duration }}</span>
+            {% elif todo.state == 'stopped' %}
+                Stopped - <span id="elapsed-time-{{ todo.id }}">{{ todo.elapsed_time|format_duration }}</span>
+            {% else %}
+                <span id="elapsed-time-{{ todo.id }}">{{ todo.elapsed_time }}</span>
+            {% endif %}
+        </div>
+        <div>
+            <h2>{{ todo.title }}</h2>
+            <p>Deadline: {{ todo.deadline }}</p>  <!-- Display the deadline -->
+            <p>Description: {{ todo.description }}</p>
+            <p>Team: {% if todo.team %}{{ todo.team.name }}{% else %}No team assigned{% endif %}</p>
+        </div>
+        <div class="todo-buttons">
+            <div class="left">
+                {% if todo.state == 'active' %}
+                    <a href="{% url 'update_todo_state' todo.id 'stopped' %}" class="button-link button-stop">Stop</a>
+                    <a href="{% url 'update_todo_state' todo.id 'paused' %}" class="button-link button-pause">Pause</a>
+                {% elif todo.state == 'paused' %}
+                    <a href="{% url 'update_todo_state' todo.id 'active' %}" class="button-link button-pause">Resume</a>
+                {% else %}
+                    <a href="{% url 'update_todo_state' todo.id 'active' %}" class="button-link button-start">Start</a>
+                {% endif %}
             </div>
-        {% endfor %}
+        </div>
+
+        <div class="right">
+            <a href="{% url 'edit_todo' todo.id %}" class="button-link button-edit">Edit</a>
+            <a href="#" class="button-link button-delete" onclick="openModal('{{ todo.id }}')">Delete</a>
+        </div>
     </div>
+
+{% endfor %}
 
     <!-- Delete Confirmation Modal -->
     <div id="deleteModal" class="modal">
@@ -259,7 +271,7 @@
         // When the user clicks on the confirm delete button, delete the item
         confirmDeleteButton.onclick = function() {
             // Add your delete logic here, e.g., make an AJAX request to delete the item
-            window.location.href = `/todos/delete/${todoIdToDelete}/`;
+            window.location.href = `/delete/${todoIdToDelete}/`;
             modal.style.display = "none";
         }
 

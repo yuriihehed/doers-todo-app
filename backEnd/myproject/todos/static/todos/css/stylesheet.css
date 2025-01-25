@@ -1,0 +1,87 @@
+/* Do not put periods infront of these class names:
+body
+h1
+h2
+h3
+p */
+
+body {
+    background-color: #fffef2;
+    font-family: Arial, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+.button_logoPurple {
+    background-color: rgb(104, 48, 187);
+    color: rgb(255, 245, 245);
+}
+.button-edit {
+    background-color: rgb(85, 85, 250);
+    color: rgb(255, 245, 245);
+}
+
+.bottom-center-btn {
+    position: fixed;
+    bottom: 70px;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: rgb(182, 182, 230);
+    color: black;
+    padding: 10px 20px;
+    font-size: 18px;
+    border: none;
+    border-radius: 8px;
+    text-decoration: none;
+    text-align: center;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+
+
+.todo-item {
+    border: 1px solid #867c7c;
+    padding: 20px;
+    margin: 20px 0;
+    text-align: left;
+    background-color: #fff;
+    border-radius: 5px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    position: relative;
+}
+.header a {
+    text-decoration: none;
+    color: black;
+    padding: 8px 12px;
+    border-radius: 5px;
+    background-color: rgb(182, 182, 230);
+    font-size: 16px;
+    white-space: nowrap;
+}
+.header a:hover {
+    background-color: rgb(150, 150, 200);
+}
+.description-box {
+    width: 450px; 
+    height: 100px; 
+    font-family: Arial, sans-serif; 
+}
+.form-container {
+    max-width: 500px;
+    margin: 0 auto;
+    background-color: #fff;
+    border: 1px solid #ccc;
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    text-align: left;
+}
+.form-container h2 {
+    margin-bottom: 20px;
+    text-align: center;
+}
