@@ -55,7 +55,7 @@ class ToDo(models.Model):
     start_time = models.DateTimeField(null=True, blank=True)
     elapsed_time = models.DurationField(default=timedelta())
     last_active_time = models.DateTimeField(null=True, blank=True)
-    team = models.ForeignKey('Team', on_delete=models.CASCADE,related_name='todos',null=True, blank=True)
+    team = models.ForeignKey(Team, on_delete=models.CASCADE, null=True, blank=True, related_name='todos') # Reference to the Team
 
     def is_overdue(self):
         return self.deadline and self.deadline < timezone.now()
