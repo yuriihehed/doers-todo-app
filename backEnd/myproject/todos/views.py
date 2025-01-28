@@ -300,13 +300,16 @@ def team_context(request):
 def create_team(request):
    error_team_name = None
    error_description = None
+   error_member_email = None
    team_name = ""
    description = ""
+   team_member_email = ""
 
 
    if request.method == 'POST':
        team_name = request.POST.get('team_name', '').strip()
        description = request.POST.get('description', '').strip()
+       team_member_email = request.POST.get('team_member_email', '').strip()
 
 
        if not team_name:
@@ -319,9 +322,14 @@ def create_team(request):
            error_description = "Description is required."
 
 
-       if not error_team_name and not error_description:
+       if not error_team_name and not error_description and not error_member_email:
            try:
-               Team.objects.create(name=team_name, description=description, created_by=request.user)
+               team = Team.objects.create(name=team_name, description=description, created_by=request.user)
+               
+               if team_member_email:
+                   new_member, _ = Member.objects.get_or_create(name=team_member_email)
+                   team.members.add(new_member)
+                   
                messages.success(request, "Team created successfully.")
                return redirect('teams_list')  # Redirect to teams list
            except IntegrityError:
@@ -333,6 +341,7 @@ def create_team(request):
        'error_description': error_description,
        'team_name': team_name,
        'description': description,
+       'team_member_email': team_member_email,
    })
 
 
