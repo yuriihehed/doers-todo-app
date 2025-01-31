@@ -49,7 +49,7 @@
             display: inline-block;
             padding: 10px 15px;
             font-size: 16px;
-            color: black;
+            color: white;
             background-color: rgb(182, 182, 230);
             border: none;
             border-radius: 5px;
@@ -188,34 +188,6 @@
                 <a href="/logout" class="button-link">{{ user.email }}</a> <!-- Display user's email -->
             </div>
         </div>
-        {% if todos %}
-        <div class="filter-section">
-            <form method="GET" action="{% url 'dashboard' %}">
-                <label for="category-filter">Filter by Category:</label>
-                <select name="category" id="category-filter">
-                    <option value="">All Category</option>
-                    <option value="not_started" {% if request.GET.category == "not_started" %}selected{% endif %}>Not Started</option>
-                    <option value="stopped" {% if request.GET.category == "stopped" %}selected{% endif %}>Stopped</option>
-                    <option value="in_progress" {% if request.GET.category == "in_progress" %}selected{% endif %}>In Progress</option>
-                    <option value="completed" {% if request.GET.category == "completed" %}selected{% endif %}>Completed</option>
-                    <option value="active" {% if request.GET.category == "active" %}selected{% endif %}>Active</option>
-                    <option value="paused" {% if request.GET.category == "paused" %}selected{% endif %}>Paused</option>                  
-                </select>
-            
-                <label for="team-filter">Filter by Team:</label>
-                <select name="team" id="team-filter">
-                    <option value="">All Teams</option>
-                    {% for team in teams %}
-                        <option value="{{ team.id }}" {% if request.GET.team == team.id|stringformat:"s" %}selected{% endif %}>
-                            {{ team.name }}
-                        </option>
-                    {% endfor %}
-                </select>
-            
-                <button type="submit" class="button-link">Apply Filters</button>
-            </form>
-        </div>
-        {% endif %}
         {% for todo in todos %}
     <div class="todo-item">
         <div class="timer-ribbon" id="timer-{{ todo.id }}" data-state="{{ todo.state }}">
