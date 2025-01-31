@@ -36,6 +36,11 @@ class TeamMember(models.Model):
 
 ############################################################################################################
 #######################ToDo Model#######################################################################
+class Category(models.Model):
+    name = models.CharField(max_length=100)
+
+    def __str__(self):
+        return self.name
 class ToDo(models.Model):
     STATE_CHOICES = [
         ('not_started', 'Not Started'),
@@ -56,6 +61,7 @@ class ToDo(models.Model):
     elapsed_time = models.DurationField(default=timedelta())
     last_active_time = models.DateTimeField(null=True, blank=True)
     team = models.ForeignKey(Team, on_delete=models.CASCADE, null=True, blank=True, related_name='todos') # Reference to the Team
+    category = models.ForeignKey(Category, on_delete=models.SET_NULL, null=True, blank=True)
 
     def is_overdue(self):
         return self.deadline and self.deadline < timezone.now()
