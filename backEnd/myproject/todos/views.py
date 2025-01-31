@@ -12,7 +12,6 @@ from django.core.exceptions import ValidationError
 from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse, HttpResponseBadRequest
 from django.utils import timezone
-from .models import ToDo, Category, Team
 
 
 
@@ -45,29 +44,15 @@ def dashboard_empty(request):
 # Dashboard with Todos
 @login_required
 def dashboard(request):
-    if not request.user.is_authenticated:
-        return redirect('login')
-    
+     if not request.user.is_authenticated:
+         return redirect('login')  # Replace 'login' with the correct login URL
 
-    state_filter = request.GET.get('category', '')  # Use 'category' GET param for state filtering
-    team_id = request.GET.get('team', '')
-
-    todos = ToDo.objects.filter(user=request.user).select_related('team').order_by('deadline')
-
-    if state_filter:
-        todos = todos.filter(state=state_filter)  # ✅ Filter by state
-
-    if team_id:
-        todos = todos.filter(team_id=team_id)
-
-    teams = Team.objects.all()  # Fetch all teams for the dropdown
-    if not todos.exists():
+     todos = ToDo.objects.filter(user=request.user).select_related('team').order_by('deadline')
+     if not todos.exists():
          return redirect('dashboard_empty')
+     return render(request, 'dashboardPage/dashboard.html', {'todos': todos})
 
-    return render(request, 'dashboardPage/dashboard.html', {
-        'todos': todos,
-        'teams': teams  # No need to pass 'categories' since we use 'state'
-    })
+
 
 #########################################################################################################################################################################
 ############ Account Views ##############################################################################################################################################
@@ -204,7 +189,7 @@ def user_todos(request):
    # Render the 'dashboard.html' template, passing the user's ToDos as context
 
 
-@login_required
+login_required
 def get_timer(request, todo_id):
    todo = get_object_or_404(ToDo, id=todo_id, user=request.user)
    elapsed = todo.elapsed_time
