@@ -12,7 +12,6 @@ from django.core.exceptions import ValidationError
 from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse, HttpResponseBadRequest
 from django.utils import timezone
-from .models import ToDo, Category, Team
 
 
 
@@ -205,7 +204,7 @@ def user_todos(request):
    # Render the 'dashboard.html' template, passing the user's ToDos as context
 
 
-@login_required
+login_required
 def get_timer(request, todo_id):
    todo = get_object_or_404(ToDo, id=todo_id, user=request.user)
    elapsed = todo.elapsed_time
