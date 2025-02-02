@@ -188,7 +188,6 @@
                 <a href="/logout" class="button-link">{{ user.email }}</a> <!-- Display user's email -->
             </div>
         </div>
-<<<<<<< HEAD
         {% if todos or request.GET.category or request.GET.team %}
         <div class="filter-section">
             <form method="GET" action="{% url 'dashboard' %}">
@@ -217,8 +216,6 @@
             </form>
         </div>
         {% endif %}
-=======
->>>>>>> refs/remotes/origin/main
         {% for todo in todos %}
     <div class="todo-item">
         <div class="timer-ribbon" id="timer-{{ todo.id }}" data-state="{{ todo.state }}">
