@@ -188,7 +188,7 @@
                 <a href="/logout" class="button-link">{{ user.email }}</a> <!-- Display user's email -->
             </div>
         </div>
-        {% if todos %}
+        {% if todos or request.GET.category or request.GET.team %}
         <div class="filter-section">
             <form method="GET" action="{% url 'dashboard' %}">
                 <label for="category-filter">Filter by Category:</label>
