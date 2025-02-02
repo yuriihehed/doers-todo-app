@@ -215,26 +215,27 @@
 
         <!-- Team Members List -->
         <ul class="list-group mb-3">
-            {% for member in team.members.all %}
-            <li class="list-group-item d-flex justify-content-between align-items-center">
-                {{ member.name }}
-                <div>
-                    <!-- Edit Member -->
-                    <a href="{% url 'edit_teammember' team.id member.id %}" class="btn btn-primary btn-sm">Edit</a>
+            {% for member in team_members %}
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    {{ member.user.email }}  <!-- Show the team member's email -->
+                    <div>
+                        <!-- Edit Member -->
+                        <a href="{% url 'edit_teammember' team.id member.id %}" class="btn btn-primary btn-sm">Edit</a>
 
-                    <!-- Delete Member -->
-                    <form action="{% url 'delete_teammember' team.id member.id %}" method="post"
-                        style="display:inline;">
-                        {% csrf_token %}
-                        <button type="submit" class="btn btn-danger btn-sm"
-                            onclick="return confirm('Are you sure you want to delete this member?')">Delete</button>
-                    </form>
-                </div>
-            </li>
+                        <!-- Delete Member -->
+                        <form action="{% url 'delete_teammember' team.id member.id %}" method="post" style="display:inline;">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-danger btn-sm"
+                                onclick="return confirm('Are you sure you want to delete this member?')">
+                                Delete
+                            </button>
+                        </form>
+                    </div>
+                </li>
             {% empty %}
-            <li class="list-group-item">No members have been added yet.</li>
+                <li class="list-group-item">No members have been added yet.</li>
             {% endfor %}
-        </ul>
+            </ul>
 
         <div class="action-buttons">
             <a href="{% url 'teams_list' %}" class="btn btn-secondary">Back to Teams</a>

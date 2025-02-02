@@ -171,12 +171,12 @@
 </head>
 <body>
     <div class="container mt-5">
-        <h2>Edit Member: {{ member.name }}</h2>
+        <h2>Edit Member: {{member.user.email}}</h2>
         <form method="POST">
             {% csrf_token %}
             <div class="mb-3">
                 <label for="name" class="form-label">Member Name</label>
-                <input type="text" id="name" name="name" class="form-control" value="{{ member.name }}" required>
+                <input type="text" id="name" name="name" class="form-control" value="{{member.user.email }}" required>
             </div>
             <button type="submit" class="btn btn-success">Save Changes</button>
             <a href="{% url 'team_details' team.id %}" class="btn btn-secondary">Cancel</a>
