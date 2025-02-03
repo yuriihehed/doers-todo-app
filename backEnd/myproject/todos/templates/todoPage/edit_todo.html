@@ -211,6 +211,17 @@
                        {% endfor %}
                    </select>
                </div>
+               <!-- Assigned to Field -->
+               <div class="mb-3">
+                <label for="id_assigned_to" class="form-label">Assigned To</label>
+                <select name="assigned_to" id="id_assigned_to" class="form-control" required>
+                    {% if assigned_user %}
+                        <option value="{{ assigned_user.id }}" selected>{{ assigned_user.username }}</option>
+                    {% else %}
+                        <option value="{{ request.user.id }}" selected>{{ request.user.username }}</option>
+                    {% endif %}
+                </select>
+                </div>
               
               
                <!-- Action Buttons -->
@@ -221,6 +232,54 @@
            </form>
        </div>
    </div>
+   <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const teamSelect = document.getElementById('id_team');
+        const assignedToSelect = document.getElementById('id_assigned_to');
+    
+        teamSelect.addEventListener('change', function() {
+            const teamId = this.value;
+    
+            if (teamId) {
+                // Fetch team members for the selected team
+                fetch(`/get_team_members/${teamId}/`)
+                    .then(response => response.json())
+                    .then(data => {
+                        // Clear existing options
+                        assignedToSelect.innerHTML = '';
+    
+                        // Add team members as options
+                        data.members.forEach(member => {
+                            const option = document.createElement('option');
+                            option.value = member.id;
+                            option.textContent = member.username;
+                            assignedToSelect.appendChild(option);
+                        });
+    
+                        // Set the selected option to the assigned user (if available)
+                        const assignedUserId = "{{ assigned_user.id }}";
+                        if (assignedUserId) {
+                            assignedToSelect.value = assignedUserId;
+                        }
+    
+                        // Enable the select field
+                        assignedToSelect.disabled = false;
+                    });
+            } else {
+                // If no team is selected, default to current user and disable the field
+                assignedToSelect.innerHTML = '';
+                const currentUserOption = document.createElement('option');
+                currentUserOption.value = "{{ request.user.id }}";
+                currentUserOption.textContent = "{{ request.user.username }}";
+                assignedToSelect.appendChild(currentUserOption);
+                assignedToSelect.disabled = true;
+            }
+        });
+    
+        // Trigger the change event to populate the "Assigned to" field initially
+        teamSelect.dispatchEvent(new Event('change'));
+    });
+    </script>
 
 
    <!-- Bootstrap JS -->

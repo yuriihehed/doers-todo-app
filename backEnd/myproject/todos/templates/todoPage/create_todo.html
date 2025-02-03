@@ -186,16 +186,24 @@
                    {{ form.state }} <!-- Assuming the state field in the model corresponds to category -->
                </div>
 
-               <!-- Team Field -->
-               <div class="mb-3">
+                <!-- Team Field -->
+                <div class="mb-3">
                    <label for="id_team" class="form-label">Select a Team</label>
                    <select name="team" id="id_team" class="form-control" required>
                        <option value="" disabled selected>Select a team</option>
                        {% for team in teams %}
                            <option value="{{ team.id }}">{{ team.name }}</option>
                        {% endfor %}
-                   </select>
-               </div>
+                    </select>
+                </div>
+
+               <!-- Assigned to Field -->
+                <div class="mb-3">
+                    <label for="id_assigned_to" class="form-label">Assigned To</label>
+                    <select name="assigned_to" id="id_assigned_to" class="form-control" required>
+                        <option value="{{ request.user.id }}" selected>{{ request.user.username }}</option>
+                    </select>
+                </div>
 
                <!-- Action Buttons -->
                <div class="d-flex justify-content-end">
@@ -205,6 +213,51 @@
            </form>
        </div>
    </div>
+   <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const teamSelect = document.getElementById('id_team');
+        const assignedToSelect = document.getElementById('id_assigned_to');
+    
+        teamSelect.addEventListener('change', function() {
+            const teamId = this.value;
+    
+            if (teamId) {
+                // Fetch team members for the selected team
+                fetch(`/get_team_members/${teamId}/`)
+                    .then(response => response.json())
+                    .then(data => {
+                        // Clear existing options
+                        assignedToSelect.innerHTML = '';
+    
+                        // Add current user as an option
+                        const currentUserOption = document.createElement('option');
+                        currentUserOption.value = "{{ request.user.id }}";
+                        currentUserOption.textContent = "{{ request.user.username }}";
+                        assignedToSelect.appendChild(currentUserOption);
+    
+                        // Add team members as options
+                        data.members.forEach(member => {
+                            const option = document.createElement('option');
+                            option.value = member.id;
+                            option.textContent = member.username;
+                            assignedToSelect.appendChild(option);
+                        });
+    
+                        // Enable the select field
+                        assignedToSelect.disabled = false;
+                    });
+            } else {
+                // If no team is selected, default to current user and disable the field
+                assignedToSelect.innerHTML = '';
+                const currentUserOption = document.createElement('option');
+                currentUserOption.value = "{{ request.user.id }}";
+                currentUserOption.textContent = "{{ request.user.username }}";
+                assignedToSelect.appendChild(currentUserOption);
+                assignedToSelect.disabled = true;
+            }
+        });
+    });
+    </script>
 
 
    <!-- Bootstrap JS -->

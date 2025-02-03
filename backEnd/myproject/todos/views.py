@@ -174,23 +174,26 @@ def logout_user(request):
 #########################################################################################################################################################################
 ############ Todos Views ################################################################################################################################################
 #########################################################################################################################################################################
-
+def get_team_members(request, team_id):
+    users = User.objects.all()  
+    members_data = [{'id': user.id, 'username': user.username} for user in users]
+    return JsonResponse({'members': members_data})
 
 # Create Todo Item
 @login_required
 def create_todo(request):
-   if request.method == 'POST':  # Check if the request is a POST request (form submission)
-       form = TodoForm(request.POST)  # Bind the submitted data to the TodoForm
-       if form.is_valid():  # Check if the form data is valid
-           todo = form.save(commit=False)  # Create a ToDo object but don't save it to the database yet
-           todo.user = request.user  # Assign the logged-in user as the owner of the ToDo
-           todo.save()  # Save the ToDo to the database
-           return redirect('dashboard')  # Redirect to the dashboard or list of user's ToDos
-   else:  # If the request is not POST (likely a GET request)
-       form = TodoForm()  # Create an empty form instance for the user to fill out
-   teams = Team.objects.all()
-   return render(request, 'todoPage/create_todo.html', {'form': form, 'teams': teams})
-   # Render the 'create_todo.html' template with the empty or pre-filled form
+    if request.method == 'POST':  
+        form = TodoForm(request.POST)  # Pass 'user' argument correctly
+        if form.is_valid():
+            todo = form.save(commit=False)  
+            todo.user = request.user  
+            todo.save()
+            return redirect('dashboard')
+    else:
+        form = TodoForm()  # Ensure user is passed even on GET requests
+
+    teams = Team.objects.all()
+    return render(request, 'todoPage/create_todo.html', {'form': form, 'teams': teams})
 
 
 
