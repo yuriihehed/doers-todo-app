@@ -31,6 +31,8 @@ class Migration(migrations.Migration):
                 ('created_at', models.DateTimeField(auto_now_add=True)),
                 ('created_by', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='created_teams', to=settings.AUTH_USER_MODEL)),
                 ('members', models.ManyToManyField(blank=True, related_name='teams_joined', to=settings.AUTH_USER_MODEL)),
+                ('created_by', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='created_teams', to=settings.AUTH_USER_MODEL)),
+                ('members', models.ManyToManyField(blank=True, related_name='teams_joined', to=settings.AUTH_USER_MODEL)),
             ],
         ),
         migrations.CreateModel(
@@ -61,6 +63,7 @@ class Migration(migrations.Migration):
                 ('name', models.CharField(max_length=100)),
                 ('joined_at', models.DateTimeField(auto_now_add=True)),
                 ('team', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='team_members', to='todos.team')),
+                ('user', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='team_membership', to=settings.AUTH_USER_MODEL)),
                 ('user', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='team_membership', to=settings.AUTH_USER_MODEL)),
             ],
             options={
