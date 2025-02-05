@@ -84,4 +84,7 @@ body {
 .form-container h2 {
     margin-bottom: 20px;
     text-align: center;
+}.form-control.is-invalid {
+    border-color: #f5c2c7;
+    background-color: #f8d7da;
 }
