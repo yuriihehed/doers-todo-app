@@ -188,14 +188,28 @@
 
                <!-- Team Field -->
                <div class="mb-3">
-                   <label for="id_team" class="form-label">Select a Team</label>
-                   <select name="team" id="id_team" class="form-control" required>
-                       <option value="" disabled selected>Select a team</option>
-                       {% for team in teams %}
-                           <option value="{{ team.id }}">{{ team.name }}</option>
-                       {% endfor %}
-                   </select>
-               </div>
+                <label for="id_team" class="form-label">Select a Team</label>
+                <select name="team" id="id_team" class="form-control" required>
+                    <option value="" disabled selected>Select a team</option>
+                    {% for team in teams %}
+                        <option value="{{ team.id }}" data-members='[
+                            {% for member in team.team_members.all %}
+                                {"id": "{{ member.user.id }}", "email": "{{ member.user.email }}"}
+                                {% if not forloop.last %},{% endif %}
+                            {% endfor %}
+                        ]'>{{ team.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+               <!-- Assigned to Field -->
+                <div class="mb-3">
+                    <label for="id_assigned_to" class="form-label">Assigned To</label>
+                    <select name="assigned_to" id="id_assigned_to" class="form-control" required>
+                        <option value="" disabled selected>Select a team first</option>
+                    </select>
+                </div>
+
 
                <!-- Action Buttons -->
                <div class="d-flex justify-content-end">
@@ -205,7 +219,36 @@
            </form>
        </div>
    </div>
+   <script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const teamSelect = document.getElementById("id_team");
+        const assignedToSelect = document.getElementById("id_assigned_to");
 
+        teamSelect.addEventListener("change", function () {
+            assignedToSelect.innerHTML = "";  // Clear previous options
+
+            // Get selected option
+            const selectedOption = teamSelect.options[teamSelect.selectedIndex];
+
+            // Get team members from data attribute
+            const members = JSON.parse(selectedOption.getAttribute("data-members"));
+
+            if (members.length > 0) {
+                members.forEach(member => {
+                    let option = document.createElement("option");
+                    option.value = member.id;
+                    option.textContent = member.email;
+                    assignedToSelect.appendChild(option);
+                });
+            } else {
+                let option = document.createElement("option");
+                option.value = "";
+                option.textContent = "No members in this team";
+                assignedToSelect.appendChild(option);
+            }
+        });
+    });
+</script>
 
    <!-- Bootstrap JS -->
    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>

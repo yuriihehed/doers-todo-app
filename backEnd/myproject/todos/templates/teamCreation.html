@@ -2,11 +2,12 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Create Team</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="{% static 'todos/css/stylesheet.css' %}">
     <style>
-       
         .container {
             border: 1px solid black;
             text-align: center;
@@ -54,6 +55,7 @@
             color: red;
             font-size: 14px;
             margin-top: 5px;
+            display: block;
         }
         .form-container {
             max-width: 500px;
@@ -80,7 +82,7 @@
     <div class="container">
         <div class="header">
             <div class="left">
-                <a href="/" class="button-link" style="background: none; padding: 0; border: none; margin-right: 10px; ">
+                <a href="/" class="button-link" style="background: none; padding: 0; border: none; margin-right: 10px;">
                     <img src=" {% static 'todos/images/DoersLogo.png' %}" style="width: 120px; height: 74px; object-fit: cover; border-radius: 15%;">
                 </a>
                 <a href="/about" class="button-link button-login">About</a>
@@ -95,8 +97,9 @@
 
         <div class="form-container">
             <h2>Create Team</h2>
-            <form method="post">
+            <form method="POST" id="createTeamForm">
                 {% csrf_token %}
+                
                 <!-- Team Name -->
                 <div class="mb-3">
                     <div class="d-flex justify-content-start">
@@ -106,8 +109,13 @@
                         class="form-control {% if error_team_name %}is-invalid{% endif %}" 
                         placeholder="Enter team name" value="{{ team_name }}">
                     {% if error_team_name %}
-                        <div class="error-message">{{ error_team_name }}</div>
+                        <div class="error-message">This team name is already in use.</div>
                     {% endif %}
+                </div>
+
+                <!-- Display Team Owner -->
+                <div class="mb-3">
+                    <strong>Team Owner:</strong> {{ user.email }}
                 </div>
 
                 <!-- Description -->
@@ -119,8 +127,17 @@
                             class="form-control {% if error_description %}is-invalid{% endif %}" 
                             placeholder="Enter description">{{ description }}</textarea>
                     {% if error_description %}
-                        <div class="error-message">{{ error_description }}</div>
+                        <div class="error-message">Description is required.</div>
                     {% endif %}
+                </div>
+
+                <!-- Add Team Member -->
+                <div class="mb-3">
+                    <div class="d-flex justify-content-start">
+                        <label for="team_member_email" class="form-label">Add Team Member (Email)</label>
+                    </div>
+                    <input type="email" name="team_member_email" id="team_member_email" class="form-control" placeholder="Enter team member's email">
+                    <div id="duplicate-email-error" class="error-message" style="display: none;">This email is already in the team.</div>
                 </div>
 
                 <div class="d-flex justify-content-end">
@@ -130,5 +147,52 @@
             </form>
         </div>    
     </div>
+
+    <!-- Error Modal -->
+    <div id="errorModal" class="modal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Error</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <p id="errorModalMessage"></p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript for validation -->
+    <script>
+        document.getElementById("createTeamForm").addEventListener("submit", function(event) {
+            let emailInput = document.getElementById("team_member_email").value.trim();
+            let duplicateEmailError = document.getElementById("duplicate-email-error");
+
+            // Example list of already added emails (Replace with actual server data)
+            let existingEmails = ["existing@example.com", "team@domain.com"];  
+
+            // Reset error message display
+            duplicateEmailError.style.display = "none";
+
+            // Allow adding any email but prevent duplicates
+            if (emailInput.length > 0) {
+                if (existingEmails.includes(emailInput)) {
+                    event.preventDefault();
+                    duplicateEmailError.style.display = "block";
+                    showModal("This email is already in the team.");
+                }
+            }
+        });
+
+        function showModal(message) {
+            document.getElementById('errorModalMessage').innerText = message;
+            new bootstrap.Modal(document.getElementById('errorModal')).show();
+        }
+    </script>
+
 </body>
 </html>

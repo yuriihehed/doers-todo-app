@@ -5,7 +5,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
 from datetime import timedelta
 from .forms import TodoForm, TeamForm
-from .models import Team, ToDo, Member
+from .models import Team, ToDo, TeamMember
 from .forms import TodoForm
 from django.core.validators import validate_email
 from django.core.exceptions import ValidationError
@@ -44,15 +44,30 @@ def dashboard_empty(request):
 # Dashboard with Todos
 @login_required
 def dashboard(request):
-     if not request.user.is_authenticated:
-         return redirect('login')  # Replace 'login' with the correct login URL
+    if not request.user.is_authenticated:
+        return redirect('login')
 
-     todos = ToDo.objects.filter(user=request.user).select_related('team').order_by('deadline')
-     if not todos.exists():
-         return redirect('dashboard_empty')
-     return render(request, 'dashboardPage/dashboard.html', {'todos': todos})
+    state_filter = request.GET.get('category', '')  
+    team_id = request.GET.get('team', '')
 
+    all_todos = ToDo.objects.filter(user=request.user)  
+    if not all_todos.exists():
+        return redirect('dashboard_empty')  
 
+    todos = all_todos.select_related('team').order_by('deadline')
+
+    if state_filter:
+        todos = todos.filter(state=state_filter)
+
+    if team_id:
+        todos = todos.filter(team_id=team_id)
+
+    teams = Team.objects.all()  # Fetch all teams for the dropdown
+
+    return render(request, 'dashboardPage/dashboard.html', {
+        'todos': todos,  
+        'teams': teams
+    })
 
 #########################################################################################################################################################################
 ############ Account Views ##############################################################################################################################################
@@ -159,23 +174,47 @@ def logout_user(request):
 #########################################################################################################################################################################
 ############ Todos Views ################################################################################################################################################
 #########################################################################################################################################################################
+def get_team_members(request, team_id):
+    users = Team.objects.all()  
+    members_data = [{'id': user.id, 'username': user.username} for user in users]
+    return JsonResponse({'members': members_data})
 
 
 # Create Todo Item
 @login_required
 def create_todo(request):
-   if request.method == 'POST':  # Check if the request is a POST request (form submission)
-       form = TodoForm(request.POST)  # Bind the submitted data to the TodoForm
-       if form.is_valid():  # Check if the form data is valid
-           todo = form.save(commit=False)  # Create a ToDo object but don't save it to the database yet
-           todo.user = request.user  # Assign the logged-in user as the owner of the ToDo
-           todo.save()  # Save the ToDo to the database
-           return redirect('dashboard')  # Redirect to the dashboard or list of user's ToDos
-   else:  # If the request is not POST (likely a GET request)
-       form = TodoForm()  # Create an empty form instance for the user to fill out
-   teams = Team.objects.all()
-   return render(request, 'todoPage/create_todo.html', {'form': form, 'teams': teams})
-   # Render the 'create_todo.html' template with the empty or pre-filled form
+    if request.method == 'POST':  
+        form = TodoForm(request.POST)
+        if form.is_valid():
+            todo = form.save(commit=False)  # Do not save yet
+
+            # Assign the current user as the creator
+            todo.user = request.user  
+
+            # Get selected team from form
+            team_id = request.POST.get('team')
+            if team_id:
+                todo.team = get_object_or_404(Team, id=team_id)
+
+            # Get selected assigned user from form
+            assigned_user_id = request.POST.get('assigned_to')
+            if assigned_user_id:
+                assigned_user = get_object_or_404(User, id=assigned_user_id)
+                todo.assigned_user = assigned_user  # Set assigned user
+            else:
+                todo.assigned_user = None  # Handle if no user is selected
+
+            todo.save()  # Save to database
+            messages.success(request, "ToDo created successfully.")
+            return redirect('dashboard')
+
+    else:
+        form = TodoForm()
+
+    teams = Team.objects.all()
+    return render(request, 'todoPage/create_todo.html', {'form': form, 'teams': teams})
+
+
 
 
 
@@ -244,26 +283,40 @@ def delete_todo(request, todo_id):
 
 @login_required
 def edit_todo(request, todo_id):
-   # Fetch the ToDo item or return a 404 if not found
-   todo = get_object_or_404(ToDo, pk=todo_id, user=request.user)
+    todo = get_object_or_404(ToDo, pk=todo_id, user=request.user)
+    
+    if request.method == 'POST':
+        form = TodoForm(request.POST, instance=todo)
+        if form.is_valid():
+            # Save the form but do NOT commit yet
+            todo = form.save(commit=False)
 
+            # Retrieve assigned user from the form submission
+            assigned_user_id = request.POST.get('assigned_to')
+            if assigned_user_id:
+                assigned_user = get_object_or_404(User, id=assigned_user_id)
+                todo.assigned_user = assigned_user  # Set assigned user
+            else:
+                todo.assigned_user = None  # Clear assigned user if none selected
 
-   if request.method == 'POST':
-       form = TodoForm(request.POST, instance=todo)
-       if form.is_valid():
-           form.save()
-           return redirect('dashboard')  # Redirect to the dashboard after saving
-   else:
-       form = TodoForm(instance=todo)
-   teams = Team.objects.all()
+            todo.save()  # Now save to DB with the assigned user
+            messages.success(request, "ToDo updated successfully.")
+            return redirect('dashboard')
 
-   # Render the edit page with pre-filled form data
-   return render(request, 'todoPage/edit_todo.html', {
-       'form': form,
-       'todo': todo,
-       'user_email': request.user.email,
-       'teams': teams
-   })
+    else:
+        form = TodoForm(instance=todo)
+
+    teams = Team.objects.all()
+    team_members = TeamMember.objects.filter(team=todo.team) if todo.team else []
+    
+    return render(request, 'todoPage/edit_todo.html', {
+        'form': form,
+        'todo': todo,
+        'user_email': request.user.email,
+        'teams': teams,
+        'team_members': team_members,
+        'assigned_user': todo.assigned_user,  # Ensure assigned_user is passed
+    })
 # Team Members (for dropdown menu in the form)
 @login_required
 def teams_id(request):
@@ -298,42 +351,57 @@ def team_context(request):
 # Create Team Page
 @login_required
 def create_team(request):
-   error_team_name = None
-   error_description = None
-   team_name = ""
-   description = ""
+    error_team_name = None
+    error_description = None
+    error_member_email = None
+    team_name = ""
+    description = ""
+    team_member_email = ""
 
+    if request.method == 'POST':
+        team_name = request.POST.get('team_name', '').strip()
+        description = request.POST.get('description', '').strip()
+        team_member_email = request.POST.get('team_member_email', '').strip()
 
-   if request.method == 'POST':
-       team_name = request.POST.get('team_name', '').strip()
-       description = request.POST.get('description', '').strip()
+        # Validation
+        if not team_name:
+            error_team_name = "Team Name is required."
+        elif Team.objects.filter(name=team_name).exists():
+            error_team_name = "A team with this name already exists."
 
+        if not description:
+            error_description = "Description is required."
 
-       if not team_name:
-           error_team_name = "Team Name is required."
-       elif Team.objects.filter(name=team_name).exists():
-           error_team_name = "A team with this name already exists."  # Prevent duplicate team names
+        # If no errors, proceed to create the team
+        if not error_team_name and not error_description:
+            try:
+                team = Team.objects.create(name=team_name, description=description, created_by=request.user)
 
+                # Check if the user exists
+                user = User.objects.filter(email=team_member_email).first()
 
-       if not description:
-           error_description = "Description is required."
+                if user:
+                    # Create a TeamMember entry to link the user to the team
+                    team_member, created = TeamMember.objects.get_or_create(team=team, user=user)
 
+                    messages.success(request, f"Team '{team_name}' created successfully, and '{user.email}' was added as a member.")
+                else:
+                    error_member_email = "No user found with this email."
 
-       if not error_team_name and not error_description:
-           try:
-               Team.objects.create(name=team_name, description=description, created_by=request.user)
-               messages.success(request, "Team created successfully.")
-               return redirect('teams_list')  # Redirect to teams list
-           except IntegrityError:
-               error_team_name = "A team with this name already exists."
+                # Redirect to the team details page after creation
+                return redirect('teams_list')
 
+            except IntegrityError:
+                error_team_name = "A team with this name already exists."
 
-   return render(request, 'teamCreation.html', {
-       'error_team_name': error_team_name,
-       'error_description': error_description,
-       'team_name': team_name,
-       'description': description,
-   })
+    return render(request, 'teamCreation.html', {
+        'error_team_name': error_team_name,
+        'error_description': error_description,
+        'error_member_email': error_member_email,
+        'team_name': team_name,
+        'description': description,
+        'team_member_email': team_member_email,
+    })
 
 
 @login_required
@@ -351,33 +419,40 @@ def teams_default(request):
    
 @login_required
 def team_details(request, id):
-    try:
-        # Get the specific team for the given ID
-        team = Team.objects.get(id=id, created_by=request.user)
-        errors = {}
-        
-        if request.method == 'POST':
-            # Get the new member name from the form
-            new_member_name = request.POST.get('new_member').strip()
-            
-            # Validation checks
-            if not new_member_name:
-                errors['new_member'] = "Member name is required."
-            elif team.members.filter(name=new_member_name).exists():
-                errors['new_member'] = "This member is already in the team."
-            else:
-                # Add the new member to the team
-                new_member, _ = Member.objects.get_or_create(name=new_member_name)
-                team.members.add(new_member)
-                messages.success(request, f"'{new_member_name}' added to the team.")
-        
-        # Render the team details template
-        return render(request, 'teamsPage/team_details.html', {'team': team, 'errors': errors})
+    errors = {}  # Initialize the error dictionary
     
-    except Team.DoesNotExist:
-        # Handle the case where the team does not exist
-        messages.error(request, "Team not found. Please create a new team.")
-        return redirect('create_team')
+    # Get the specific team for the given ID
+    team = get_object_or_404(Team, id=id)
+    team_members = TeamMember.objects.filter(team=team)
+
+    if request.method == 'POST':
+        # Get the new member's username or email from the form
+        new_member_name = request.POST.get('new_member', '').strip()
+
+        # Validation checks
+        if not new_member_name:
+            errors['new_member'] = "Member name is required."
+        else:
+            # Try to find the user by username or email
+            user = User.objects.filter(username=new_member_name).first()
+
+            if not user:
+                user = User.objects.filter(email=new_member_name).first()
+            
+            if not user:
+                errors['new_member'] = "User does not exist."
+                
+            else:
+                # Check if the user is already in the team
+                if team.team_members.filter(user=user).exists():
+                    errors['new_member'] = "This member is already in the team."
+                else:
+                    # Add the new member to the team
+                    new_member, created = TeamMember.objects.get_or_create(team=team, user=user)
+                    messages.success(request, f"'{user.username}' added to the team.")
+                    
+    # Render the team details template
+    return render(request, 'teamsPage/team_details.html', {'team': team,'team_members': team_members, 'errors': errors})
 
 
 # Teams List
@@ -411,30 +486,39 @@ def edit_team(request, team_id):
 @login_required
 # I want to make a function call edit_teammember for the team_details page 
 def edit_teammember(request, team_id, member_id):
-    team = get_object_or_404(Team, id=team_id, created_by=request.user)  # Fetch the specific team
-    member = get_object_or_404(Member, id=member_id, teams=team)  # Fetch the specific team
-    
+    team = get_object_or_404(Team, id=team_id, created_by=request.user)  # Fetch the team
+    member = get_object_or_404(TeamMember, id=member_id, team=team)  # Fetch the team member
+
     if request.method == "POST":
-        # get the updated name from the form 
-        updated_name = request.POST.get('name')
-        if updated_name:
-            member.name = updated_name # update the member's name
-            member.save()  # Save the updated team
-            messages.success(request, f"Member '{member.name}' updated successfully.")
-            return redirect('team_details', id=team_id)  # Redirect to the team details
-    # render a simple form for editing the member's name
+        updated_email = request.POST.get('email')  # Get updated email from form
+
+        if updated_email:
+            # Ensure no duplicate emails exist before updating
+            if User.objects.exclude(id=member.user.id).filter(email=updated_email).exists():
+                messages.error(request, "This email is already in use by another member.")
+            else:
+                member.user.email = updated_email  # Update user's email
+                member.user.save()  # Save user model update
+                messages.success(request, f"Member '{member.user.username}' updated successfully.")
+                return redirect('team_details', id=team_id)  # Redirect to the team details
+
+    # Render a simple form for editing the member's email
     return render(request, 'teamsPage/edit_member.html', {'member': member, 'team': team})
 
 @login_required
 # used for team_list html to delete teammember
 def delete_teammember(request, team_id, member_id):
-    team = get_object_or_404(Team, id=team_id, created_by=request.user)  # Fetch the specific team
-    member = get_object_or_404(Member, id=member_id, teams=team)  # Fetch the specific team
-    
+    team = get_object_or_404(Team, id=team_id, created_by=request.user)  # Fetch the team
+    member = get_object_or_404(TeamMember, id=member_id, team=team)  # Fetch the team member
+
     if request.method == "POST":
-        team.members.remove(member)  # Delete the member from the team
-        messages.success(request, f"Member '{member.name}' removed from the team.")
-        return redirect('team_details', id=team_id)  # Redirect to the list of teams
+        member_email = member.user.email  # Get the member's email before deletion
+        member.delete()  # Correctly delete the TeamMember entry
+
+        messages.success(request, f"Member '{member_email}' removed from the team.")
+        return redirect('team_details', id=team_id)  # Redirect back to the team details page
+
+    return redirect('team_details', id=team_id)  # Redirect to the list of teams
     
     #return render(request, 'confirm_delete.html', {'team': team})   <--- This is a confirm delete page that I need to create
 

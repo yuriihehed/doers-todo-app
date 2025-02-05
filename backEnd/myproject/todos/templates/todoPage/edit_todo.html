@@ -170,25 +170,27 @@
 
 
                <!-- Due Date Field -->
-               <div class="mb-3">
-                   <label for="id_deadline" class="form-label">Due Date</label>
-                   <input
-                       type="date"
-                       id="id_deadline"
-                       name="deadline"
-                       class="form-control"
-                       value="{{ form.deadline.value|default:'' }}"
-                       min="{{ today_date }}"
-                       {% if form.deadline.errors %} aria-invalid="true" {% endif %}
-                   />
-                   {% if form.deadline.errors %}
-                   <div class="error-message">
-                       {% for error in form.deadline.errors %}
-                           <p>{{ error }}</p>
-                       {% endfor %}
-                   </div>
-                   {% endif %}
-               </div>
+                <div class="mb-3">
+                    <label for="id_deadline" class="form-label">Due Date</label>
+                    <input
+                        type="date"
+                        id="id_deadline"
+                        name="deadline"
+                        class="form-control"
+                        value="{% if form.is_bound %}{{ form.data.deadline|default:'' }}{% else %}{{ form.initial.deadline|date:'Y-m-d' }}{% endif %}"
+                        min="{{ today_date }}"
+                        {% if form.deadline.errors %} aria-invalid="true" {% endif %}
+                    />
+                    {% if form.deadline.errors %}
+                    <div class="error-message">
+                        {% for error in form.deadline.errors %}
+                            <p>{{ error }}</p>
+                        {% endfor %}
+                    </div>
+                    {% endif %}
+                </div>
+
+
               
                <!-- Category Field -->
                <div class="mb-3">
@@ -198,17 +200,38 @@
 
 
                <!-- Team Field -->
-               <div class="mb-3">
-                   <label for="id_team" class="form-label">Select a Team</label>
-                   <select name="team" id="id_team" class="form-control" required>
-                       <option value="" {% if not todo.team %}selected{% endif %}>Select a team</option>
-                       {% for team in teams %}
-                           <option value="{{ team.id }}" {% if todo.team and todo.team.id == team.id %}selected{% endif %}>
-                               {{ team.name }}
-                           </option>
-                       {% endfor %}
-                   </select>
-               </div>
+                <div class="mb-3">
+                    <label for="id_team" class="form-label">Select a Team</label>
+                    <select name="team" id="id_team" class="form-control" required>
+                        <option value="" {% if not todo.team %}selected{% endif %}>Select a team</option>
+                        {% for team in teams %}
+                            <option value="{{ team.id }}" 
+                                data-members='[
+                                    {% for member in team.team_members.all %}
+                                        {"id": "{{ member.user.id }}", "email": "{{ member.user.email }}"}
+                                        {% if not forloop.last %},{% endif %}
+                                    {% endfor %}
+                                ]'
+                                {% if todo.team and todo.team.id == team.id %}selected{% endif %}>
+                                {{ team.name }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <!-- Assigned to Field -->
+                <div class="mb-3">
+                    <label for="id_assigned_to" class="form-label">Assigned To</label>
+                    <select name="assigned_to" id="id_assigned_to" class="form-control" required>
+                        {% if assigned_user %}
+                            <option value="{{ assigned_user.id }}" selected>{{ assigned_user.email }}</option>
+                        {% else %}
+                            <option value="" disabled selected>Select a team first</option>
+                        {% endif %}
+                    </select>
+                </div>
+
+
               
               
                <!-- Action Buttons -->
@@ -219,6 +242,53 @@
            </form>
        </div>
    </div>
+   <script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const teamSelect = document.getElementById("id_team");
+        const assignedToSelect = document.getElementById("id_assigned_to");
+
+        function updateAssignedToDropdown() {
+            assignedToSelect.innerHTML = "";  // Clear previous options
+
+            // Get selected team
+            const selectedOption = teamSelect.options[teamSelect.selectedIndex];
+            if (!selectedOption || !selectedOption.getAttribute("data-members")) return;
+
+            // Parse team members from the selected option
+            const members = JSON.parse(selectedOption.getAttribute("data-members"));
+
+            if (members.length > 0) {
+                members.forEach(member => {
+                    let option = document.createElement("option");
+                    option.value = member.id;
+                    option.textContent = member.email;
+                    assignedToSelect.appendChild(option);
+                });
+
+                // Ensure the previously selected user is retained
+                const assignedUserId = "{{ assigned_user.id }}";
+                if (assignedUserId) {
+                    let selectedOption = assignedToSelect.querySelector(`option[value='${assignedUserId}']`);
+                    if (selectedOption) {
+                        selectedOption.selected = true;
+                    }
+                }
+            } else {
+                let option = document.createElement("option");
+                option.value = "";
+                option.textContent = "No members in this team";
+                assignedToSelect.appendChild(option);
+            }
+        }
+
+        // Ensure team members are loaded when the page loads
+        updateAssignedToDropdown();
+
+        // Update team members when the team selection changes
+        teamSelect.addEventListener("change", updateAssignedToDropdown);
+    });
+</script>
+
 
 
    <!-- Bootstrap JS -->

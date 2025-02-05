@@ -10,7 +10,7 @@ class TodoForm(forms.ModelForm):
             'description': forms.Textarea(attrs={
                 'cols': 55,  
                 'rows': 5, 
-                'class': 'description-box',  
+                #'class': 'description-box',  
             }),
         }
         
