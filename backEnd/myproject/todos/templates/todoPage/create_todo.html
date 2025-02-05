@@ -189,8 +189,8 @@
                <!-- Team Field -->
                <div class="mb-3">
                 <label for="id_team" class="form-label">Select a Team</label>
-                <select name="team" id="id_team" class="form-control" required>
-                    <option value="" disabled selected>Select a team</option>
+                <select name="team" id="id_team" class="form-control">
+                    <option value="" selected>None</option>
                     {% for team in teams %}
                         <option value="{{ team.id }}" data-members='[
                             {% for member in team.team_members.all %}
@@ -205,8 +205,8 @@
                <!-- Assigned to Field -->
                 <div class="mb-3">
                     <label for="id_assigned_to" class="form-label">Assigned To</label>
-                    <select name="assigned_to" id="id_assigned_to" class="form-control" >
-                        <option value="" disabled selected>Select a team first</option>
+                    <select name="assigned_to" id="id_assigned_to" class="form-control" required>
+                        <option value="{{ request.user.id }}" selected>{{ request.user.username }}</option>
                     </select>
                 </div>
 
