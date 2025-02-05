@@ -186,24 +186,30 @@
                    {{ form.state }} <!-- Assuming the state field in the model corresponds to category -->
                </div>
 
-                <!-- Team Field -->
-                <div class="mb-3">
-                   <label for="id_team" class="form-label">Select a Team</label>
-                   <select name="team" id="id_team" class="form-control" required>
-                       <option value="" disabled selected>Select a team</option>
-                       {% for team in teams %}
-                           <option value="{{ team.id }}">{{ team.name }}</option>
-                       {% endfor %}
-                    </select>
-                </div>
+               <!-- Team Field -->
+               <div class="mb-3">
+                <label for="id_team" class="form-label">Select a Team</label>
+                <select name="team" id="id_team" class="form-control" required>
+                    <option value="" disabled selected>Select a team</option>
+                    {% for team in teams %}
+                        <option value="{{ team.id }}" data-members='[
+                            {% for member in team.team_members.all %}
+                                {"id": "{{ member.user.id }}", "email": "{{ member.user.email }}"}
+                                {% if not forloop.last %},{% endif %}
+                            {% endfor %}
+                        ]'>{{ team.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
 
                <!-- Assigned to Field -->
                 <div class="mb-3">
                     <label for="id_assigned_to" class="form-label">Assigned To</label>
                     <select name="assigned_to" id="id_assigned_to" class="form-control" required>
-                        <option value="{{ request.user.id }}" selected>{{ request.user.username }}</option>
+                        <option value="" disabled selected>Select a team first</option>
                     </select>
                 </div>
+
 
                <!-- Action Buttons -->
                <div class="d-flex justify-content-end">
@@ -214,51 +220,35 @@
        </div>
    </div>
    <script>
-    document.addEventListener('DOMContentLoaded', function() {
-        const teamSelect = document.getElementById('id_team');
-        const assignedToSelect = document.getElementById('id_assigned_to');
-    
-        teamSelect.addEventListener('change', function() {
-            const teamId = this.value;
-    
-            if (teamId) {
-                // Fetch team members for the selected team
-                fetch(`/get_team_members/${teamId}/`)
-                    .then(response => response.json())
-                    .then(data => {
-                        // Clear existing options
-                        assignedToSelect.innerHTML = '';
-    
-                        // Add current user as an option
-                        const currentUserOption = document.createElement('option');
-                        currentUserOption.value = "{{ request.user.id }}";
-                        currentUserOption.textContent = "{{ request.user.username }}";
-                        assignedToSelect.appendChild(currentUserOption);
-    
-                        // Add team members as options
-                        data.members.forEach(member => {
-                            const option = document.createElement('option');
-                            option.value = member.id;
-                            option.textContent = member.username;
-                            assignedToSelect.appendChild(option);
-                        });
-    
-                        // Enable the select field
-                        assignedToSelect.disabled = false;
-                    });
+    document.addEventListener("DOMContentLoaded", function () {
+        const teamSelect = document.getElementById("id_team");
+        const assignedToSelect = document.getElementById("id_assigned_to");
+
+        teamSelect.addEventListener("change", function () {
+            assignedToSelect.innerHTML = "";  // Clear previous options
+
+            // Get selected option
+            const selectedOption = teamSelect.options[teamSelect.selectedIndex];
+
+            // Get team members from data attribute
+            const members = JSON.parse(selectedOption.getAttribute("data-members"));
+
+            if (members.length > 0) {
+                members.forEach(member => {
+                    let option = document.createElement("option");
+                    option.value = member.id;
+                    option.textContent = member.email;
+                    assignedToSelect.appendChild(option);
+                });
             } else {
-                // If no team is selected, default to current user and disable the field
-                assignedToSelect.innerHTML = '';
-                const currentUserOption = document.createElement('option');
-                currentUserOption.value = "{{ request.user.id }}";
-                currentUserOption.textContent = "{{ request.user.username }}";
-                assignedToSelect.appendChild(currentUserOption);
-                assignedToSelect.disabled = true;
+                let option = document.createElement("option");
+                option.value = "";
+                option.textContent = "No members in this team";
+                assignedToSelect.appendChild(option);
             }
         });
     });
-    </script>
-
+</script>
 
    <!-- Bootstrap JS -->
    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>

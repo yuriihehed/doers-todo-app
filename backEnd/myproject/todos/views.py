@@ -175,6 +175,11 @@ def logout_user(request):
 ############ Todos Views ################################################################################################################################################
 #########################################################################################################################################################################
 def get_team_members(request, team_id):
+    users = Team.objects.all()  
+    members_data = [{'id': user.id, 'username': user.username} for user in users]
+    return JsonResponse({'members': members_data})
+
+def get_team_members(request, team_id):
     users = User.objects.all()  
     members_data = [{'id': user.id, 'username': user.username} for user in users]
     return JsonResponse({'members': members_data})
@@ -183,17 +188,37 @@ def get_team_members(request, team_id):
 @login_required
 def create_todo(request):
     if request.method == 'POST':  
-        form = TodoForm(request.POST)  # Pass 'user' argument correctly
+        form = TodoForm(request.POST)
         if form.is_valid():
-            todo = form.save(commit=False)  
+            todo = form.save(commit=False)  # Do not save yet
+
+            # Assign the current user as the creator
             todo.user = request.user  
-            todo.save()
+
+            # Get selected team from form
+            team_id = request.POST.get('team')
+            if team_id:
+                todo.team = get_object_or_404(Team, id=team_id)
+
+            # Get selected assigned user from form
+            assigned_user_id = request.POST.get('assigned_to')
+            if assigned_user_id:
+                assigned_user = get_object_or_404(User, id=assigned_user_id)
+                todo.assigned_user = assigned_user  # Set assigned user
+            else:
+                todo.assigned_user = None  # Handle if no user is selected
+
+            todo.save()  # Save to database
+            messages.success(request, "ToDo created successfully.")
             return redirect('dashboard')
+
     else:
-        form = TodoForm()  # Ensure user is passed even on GET requests
+        form = TodoForm()
 
     teams = Team.objects.all()
     return render(request, 'todoPage/create_todo.html', {'form': form, 'teams': teams})
+
+
 
 
 
@@ -262,26 +287,40 @@ def delete_todo(request, todo_id):
 
 @login_required
 def edit_todo(request, todo_id):
-   # Fetch the ToDo item or return a 404 if not found
-   todo = get_object_or_404(ToDo, pk=todo_id, user=request.user)
+    todo = get_object_or_404(ToDo, pk=todo_id, user=request.user)
+    
+    if request.method == 'POST':
+        form = TodoForm(request.POST, instance=todo)
+        if form.is_valid():
+            # Save the form but do NOT commit yet
+            todo = form.save(commit=False)
 
+            # Retrieve assigned user from the form submission
+            assigned_user_id = request.POST.get('assigned_to')
+            if assigned_user_id:
+                assigned_user = get_object_or_404(User, id=assigned_user_id)
+                todo.assigned_user = assigned_user  # Set assigned user
+            else:
+                todo.assigned_user = None  # Clear assigned user if none selected
 
-   if request.method == 'POST':
-       form = TodoForm(request.POST, instance=todo)
-       if form.is_valid():
-           form.save()
-           return redirect('dashboard')  # Redirect to the dashboard after saving
-   else:
-       form = TodoForm(instance=todo)
-   teams = Team.objects.all()
+            todo.save()  # Now save to DB with the assigned user
+            messages.success(request, "ToDo updated successfully.")
+            return redirect('dashboard')
 
-   # Render the edit page with pre-filled form data
-   return render(request, 'todoPage/edit_todo.html', {
-       'form': form,
-       'todo': todo,
-       'user_email': request.user.email,
-       'teams': teams
-   })
+    else:
+        form = TodoForm(instance=todo)
+
+    teams = Team.objects.all()
+    team_members = TeamMember.objects.filter(team=todo.team) if todo.team else []
+    
+    return render(request, 'todoPage/edit_todo.html', {
+        'form': form,
+        'todo': todo,
+        'user_email': request.user.email,
+        'teams': teams,
+        'team_members': team_members,
+        'assigned_user': todo.assigned_user,  # Ensure assigned_user is passed
+    })
 # Team Members (for dropdown menu in the form)
 @login_required
 def teams_id(request):
