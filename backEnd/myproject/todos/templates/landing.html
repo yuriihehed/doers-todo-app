@@ -54,12 +54,7 @@
             text-align: center;
             margin-top: 2px;
         }
-        .button-login{
-            padding: 25px 35px;
-            margin-top: 10px;
-            font-size: 20px;
-            border-radius: 10px;
-        }
+        
     </style>
 </head>
 <body>
@@ -69,13 +64,18 @@
                 <a href="/" class="button-link" style="background: none; padding: 0; border: none; margin-right: 10px; ">
                     <img src=" {% static 'todos/images/DoersLogo.png' %}" style="width: 120px; height: 74px; object-fit: cover; border-radius: 15%;">
                 </a>
-                <a href="/about" class="button-link button-login">About</a>
+                <a href="/about" class="button-link">About</a>
             </div>
+            <div class="right">
             {% if user.is_authenticated %}
-            <a href="/logout" class="button-link button-login">{{ user.email }}</a> <!-- Display user's email -->
+            <a href="/dashboard" class="button-link">Dashboard</a>
+            <a href="/todos/new" class="button-link">Todos</a>
+            <a href="/teams/new" class="button-link">Teams</a>
+            <a href="/logout" class="button-link button-login">{{ user.email }}</a>
         {% else %}
             <a href="/login" class="button-link button-login">Login</a>
         {% endif %}
+            </div>
         </div>
         <div class="container">
             <img src=" {% static 'todos/images/DoersLogo.png' %}" alt="DoersLogo" class="logo">    
