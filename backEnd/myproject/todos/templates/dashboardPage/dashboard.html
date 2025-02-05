@@ -232,6 +232,7 @@
             <p>Deadline: {{ todo.deadline }}</p>  <!-- Display the deadline -->
             <p>Description: {{ todo.description }}</p>
             <p>Team: {% if todo.team %}{{ todo.team.name }}{% else %}No team assigned{% endif %}</p>
+            <p>Assigned to: {% if todo.assigned_user %}{{ todo.assigned_user.username }}{% else %}No one assigned{% endif %}</p>
         </div>
         <div class="todo-buttons">
             <div class="left">
