@@ -159,7 +159,23 @@ def registration_page(request):
 
 # Forgot Password Page
 def forgot_password(request):
-   return render(request, 'accountPage/forgot_password.html')
+    if request.method == 'POST':
+        email = request.POST.get('email')
+        errors = {}
+
+        if not email:
+            errors['email'] = 'Email is required.'
+        else:
+            if not User.objects.filter(email=email).exists():
+                errors['email'] = 'Email does not exist in our system.'
+
+        if errors:
+            return render(request, 'accountPage/forgot_password.html', {'errors': errors, 'email': email})
+
+        # Here you would typically send a password reset email
+        messages.success(request, 'Password reset instructions have been sent to your email.')
+        return redirect('login')
+    return render(request, 'accountPage/forgot_password.html')
 
 
 # Logout Page
@@ -179,6 +195,10 @@ def get_team_members(request, team_id):
     members_data = [{'id': user.id, 'username': user.username} for user in users]
     return JsonResponse({'members': members_data})
 
+def get_team_members(request, team_id):
+    users = User.objects.all()  
+    members_data = [{'id': user.id, 'username': user.username} for user in users]
+    return JsonResponse({'members': members_data})
 
 # Create Todo Item
 def create_todo(request):
@@ -344,7 +364,6 @@ def team_context(request):
        return redirect('login.html')  # Redirect to the login page if the user is not logged in
    teams_exist = Team.objects.filter(created_by=request.user).exists()
    if not teams_exist:
-       messages.info(request, "No teams are available. Please create a new team.")
        return redirect('create_team')
    return redirect('teams_list')  # Redirect to the teams list if the user has created a team
 
@@ -377,6 +396,8 @@ def create_team(request):
         if not error_team_name and not error_description:
             try:
                 team = Team.objects.create(name=team_name, description=description, created_by=request.user)
+                
+                TeamMember.objects.create(team=team, user=request.user)  # Add the creator as a team member
 
                 # Check if the user exists
                 user = User.objects.filter(email=team_member_email).first()

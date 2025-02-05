@@ -85,14 +85,30 @@ class TodoForm(forms.ModelForm):
         queryset=User.objects.none(),  # Start with an empty queryset
         required=True
     )
+    team = forms.ModelChoiceField(
+       queryset=Team.objects.none(),  # Start with empty queryset
+       required=False,
+       empty_label="No team selected"
+       )
+    assigned_to = forms.ModelChoiceField(
+        queryset=User.objects.none(),  # Start with an empty queryset
+        required=True
+    )
+
 
     class Meta:
         model = ToDo  # Link this form to the ToDo model
         fields = ['title', 'description', 'deadline', 'state', 'team', 'assigned_to']  
         # Specify the fields to be included in the form
         # These fields will correspond to the fields defined in the ToDo model
+    class Meta:
+       model = ToDo  # Link this form to the ToDo model
+       fields = ['title', 'description', 'deadline', 'state', 'team','assigned_to'] 
+       # Specify the fields to be included in the form
+       # These fields will correspond to the fields defined in the ToDo model
 
-        widgets = {
+
+    widgets = {
             'deadline': forms.DateTimeInput(attrs={'type': 'datetime-local'}),
         }
 
@@ -112,3 +128,16 @@ class TodoForm(forms.ModelForm):
                     pass
             elif self.instance.pk:
                 self.fields['assigned_to'].queryset = self.instance.team.members.all()
+            self.fields['team'].queryset = Team.objects.filter(
+                Q(members=self.user) | Q(created_by=self.user)).distinct()
+            if 'team' in self.data:
+                try:
+                    team_id = int(self.data.get('team'))
+                    team = Team.objects.get(id=team_id)
+                    self.fields['assigned_to'].queryset = team.members.all()
+                except (ValueError, Team.DoesNotExist):
+                    pass
+            elif self.instance.pk:
+                self.fields['assigned_to'].queryset = self.instance.team.members.all()
+
+
