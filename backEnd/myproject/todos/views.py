@@ -200,6 +200,7 @@ def get_team_members(request, team_id):
     members_data = [{'id': user.id, 'username': user.username} for user in users]
     return JsonResponse({'members': members_data})
 
+@login_required
 # Create Todo Item
 def create_todo(request):
 
@@ -357,11 +358,11 @@ def teams_id(request):
 
 
 
-
+@login_required
 # Check if the logged-in user has created a team
 def team_context(request):
    if not request.user.is_authenticated:
-       return redirect('login.html')  # Redirect to the login page if the user is not logged in
+       return redirect('login')  # Redirect to the login page if the user is not logged in
    teams_exist = Team.objects.filter(created_by=request.user).exists()
    if not teams_exist:
        return redirect('create_team')
