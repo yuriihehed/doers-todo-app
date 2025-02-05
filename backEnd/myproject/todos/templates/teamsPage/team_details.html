@@ -1,248 +1,113 @@
-<!-- This file is the functionality for the specified team with its team members -->
+{% extends "base.html" %}
 {% load static %}
-<!DOCTYPE html>
-<html lang="en">
 
-<head>
-    <title>Team Details</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css">
-    <link rel="stylesheet" href="{% static 'todos/css/stylesheet.css' %}">
-    <style>
-        
-        .container {
-        
-            text-align: center;
-            width: 100%; 
-            height: 100%;
-            padding: 20px;
-            box-sizing: border-box;
-            position: relative; 
-        }
+{% block title %}Team Details{% endblock %}
 
-        /* Header styling */
-        .header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            width: 100%;
-            /* Full width of the container */
-            border-bottom: 1px solid #ccc;
-            padding-bottom: 10px;
-            padding: 10px 0;
-            /* Add padding for spacing */
-            margin-bottom: 20px;
-        }
+{% block extra_head %}
+  <style>
+    /* Team Details Page – Unique Styles */
+    .team-details {
+      max-width: 800px;
+      margin: 0 auto;
+      text-align: center;
+    }
+    .team-name {
+      font-size: 28px;
+      font-weight: bold;
+      margin-bottom: 10px;
+    }
+    .team-description {
+      font-size: 18px;
+      color: gray;
+      margin-bottom: 20px;
+    }
+    /* Add Member Section */
+    .add-member-container {
+      text-align: left;
+      margin: 20px auto;
+      max-width: 800px;
+    }
+    .add-member-container input {
+      width: 100%;
+      padding: 10px;
+      margin-top: 5px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+    /* Team Members List Table */
+    table {
+      margin-top: 20px;
+      width: 50%;
+      margin-left: auto;
+      margin-right: auto;
+      border-collapse: collapse;
+    }
+    th, td {
+      padding: 10px;
+      border: 1px solid #ccc;
+      text-align: left;
+    }
+    th {
+      background-color: #f4f4f4;
+    }
+    /* Action Buttons */
+    .action-buttons {
+      margin-top: 20px;
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+    }
+  </style>
+{% endblock %}
 
-        .left {
-            display: flex;
-            /* Use flexbox for alignment */
-            align-items: center;
-            /* Center items vertically */
-            gap: 10px;
-            /* Add spacing between items */
-        }
-
-        .right {
-            display: flex;
-            /* Use flexbox for alignment */
-            align-items: center;
-            /* Center items vertically */
-            gap: 10px;
-            /* Add spacing between links */
-            margin-left: auto;
-            /* Push the right side to the edge */
-        }
-
-        .header-left img {
-            width: 120px;
-            height: auto;
-            border-radius: 10%;
-            /* Slightly rounded edges */
-            margin-right: 10px;
-            /* Add space between the logo and text */
-        }
-
-        .button-link {
-            padding: 10px 15px;
-            font-size: 16px;
-            color: white;
-            background-color: rgb(182, 182, 230);
-            border: none;
-            border-radius: 5px;
-            text-decoration: none;
-            text-align: center;
-        }
-
-        .header a {
-            text-decoration: none;
-            /* Remove underline from links */
-            color: black;
-            /* Set text color to black */
-            padding: 8px 12px;
-            /* Add padding for a button-like feel */
-            border-radius: 5px;
-            /* Rounded corners */
-            background-color: rgb(182, 182, 230);
-            /* Light purple background */
-            font-size: 16px;
-            /* Font size for readability */
-            white-space: nowrap;
-        }
-        .header a:hover {
-            background-color: rgb(150, 150, 200);
-            /* Darker purple on hover */
-        }
-
-
-
-        /* Team details section */
-        .team-details {
-            max-width: 800px;
-            margin: 0 auto;
-            text-align: center;
-        }
-
-        .team-name {
-            font-size: 28px;
-            font-weight: bold;
-            margin-bottom: 10px;
-        }
-
-        .team-description {
-            font-size: 18px;
-            color: gray;
-            margin-bottom: 20px;
-        }
-
-        /* Members section */
-        .members-section {
-            display: flex;
-            justify-content: space-between;
-            margin-top: 20px;
-        }
-
-        .members-list {
-            flex: 2;
-            margin-left: 20px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            padding: 10px;
-        }
-
-        /* Add member form */
-        .add-member-form {
-            flex: 3;
-        }
-
-        .add-member-form .input-group {
-            margin-bottom: 10px;
-        }
-
-        /* Action buttons styling */
-        .action-buttons {
-            display: flex;
-            justify-content: flex-end;
-            margin-top: 20px;
-        }
-
-        .action-buttons button,
-        .action-buttons a {
-            margin-left: 10px;
-            padding: 10px 20px;
-            font-size: 16px;
-            border-radius: 5px;
-            border: none;
-        }
-
-        .btn-cancel {
-            background-color: red;
-            color: white;
-        }
-
-        .btn-update {
-            background-color: green;
-            color: white;
-        }
-
-        .btn-delete {
-            background-color: #d9534f;
-            color: white;
-        }
-    </style>
-</head>
-
-<body>
-    <!-- Buttons to make it functional-->
-    <div class="container">
-        <div class="header">
-            <div class="left">
-                <a href="/" class="button-link"
-                    style="background: none; padding: 0; border: none; margin-right: 10px; ">
-                    <img src=" {% static 'todos/images/DoersLogo.png' %}"
-                        style="width: 120px; height: 74px; object-fit: cover; border-radius: 15%;">
-                </a>
-                <a href="/about" class="button-link button-login">About</a>
-            </div>
-            <div class="right">
-
-                <a href="/dashboard" class="button-link">Dashboard</a>
-                <a href="/todos/new" class="button-link">Todos</a>
-                <a href="/teams/new" class="button-link">Teams</a>
-                <a href="/logout" class="button-link">{{ user.email }}</a>
-            </div>
-        </div>
-
-        <!-- Team Name and Description -->
-        <h1>{{ team.name }}</h1>
-        <div class="mb-3">
-            <strong>Team Owner:</strong> {{ team.created_by }}
-        </div>
-        <p>{{ team.description }}</p>
-
-        <!-- Add Team Member Section -->
-        <h3>Team Members</h3>
-        <form method="POST" action="{% url 'team_details' team.id %}">
-            {% csrf_token %}
-            <div class="input-group mb-3">
-                <input type="text" name="new_member"
-                    class="form-control {% if errors.new_member %}is-invalid{% endif %}" placeholder="Add team member">
-                <button type="submit" class="btn button_logoPurple">Add Member</button>
-            </div>
-            {% if errors.new_member %}
-                <div class="text-danger">{{ errors.new_member }}</div>
-            {% endif %}
-        </form>
-
-        <!-- Team Members List -->
-        <ul class="list-group mb-3">
-            {% for member in team_members %}
-                <li class="list-group-item d-flex justify-content-between align-items-center">
-                    {{ member.user.email }}  <!-- Show the team member's email -->
-                    <div>
-                        <!-- Edit Member -->
-                        <a href="{% url 'edit_teammember' team.id member.id %}" class="btn btn-primary btn-sm">Edit</a>
-
-                        <!-- Delete Member -->
-                        <form action="{% url 'delete_teammember' team.id member.id %}" method="post" style="display:inline;">
-                            {% csrf_token %}
-                            <button type="submit" class="btn btn-danger btn-sm"
-                                onclick="return confirm('Are you sure you want to delete this member?')">
-                                Delete
-                            </button>
-                        </form>
-                    </div>
-                </li>
-            {% empty %}
-                <li class="list-group-item">No members have been added yet.</li>
-            {% endfor %}
-            </ul>
-
-        <div class="action-buttons">
-            <a href="{% url 'teams_list' %}" class="btn btn-secondary">Back to Teams</a>
-        </div>
+{% block content %}
+  <!-- Team Details Section -->
+  <div class="team-details">
+    <h1 class="team-name">{{ team.name }}</h1>
+    <div class="mb-3">
+      <strong>Team Owner:</strong> {{ team.created_by }}
     </div>
+    <p class="team-description">{{ team.description }}</p>
+  </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-</body>
+  <!-- Add Member Section -->
+  <div class="add-member-container">
+    <h3>Team Members</h3>
+    <form method="POST" action="{% url 'team_details' team.id %}">
+      {% csrf_token %}
+      <div class="input-group mb-3">
+        <input type="text" name="new_member" class="form-control {% if errors.new_member %}is-invalid{% endif %}" placeholder="Add team member">
+        <button type="submit" class="btn button_logoPurple">Add Member</button>
+      </div>
+      {% if errors.new_member %}
+        <div class="text-danger">{{ errors.new_member }}</div>
+      {% endif %}
+    </form>
+  </div>
 
-</html>
+  <!-- Team Members List -->
+  <table>
+    <thead>
+      <tr>
+        <th>Team Members</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for member in team_members %}
+        <tr>
+          <td>{{ member.user.email }}</td>
+        </tr>
+      {% empty %}
+        <tr>
+          <td>No members have been added yet.</td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+  <!-- Action Buttons -->
+  <div class="action-buttons">
+    <a href="{% url 'teams_list' %}" class="btn btn-secondary">Cancel</a>
+    <a href="#" class="btn btn-success">Update</a>
+  </div>
+{% endblock %}
