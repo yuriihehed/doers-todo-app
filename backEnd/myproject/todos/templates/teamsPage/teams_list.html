@@ -134,29 +134,28 @@
             <div class="teams-container">
                 <!-- Loop through each team -->
                 {% for team in teams %}
-                    <!-- Card for each individual team -->
-                    <div class="team-card">
-                        <!-- Display team number and name with a link -->
-                        <h3> <a href="{% url 'team_details' team.id %}">{{ team.name }}</a></h3>
-                        <!-- Display team description -->
-                        <p>{{ team.description }}</p>
-                        <!-- Display the number of members in the team -->
-                        <!--<p class="member-count">Members: {{ members }}</p>  I REMOVED THIS TILL MEMBERS WORK-->
+                        <!-- Card for each individual team -->
+                        <div class="team-card">
+                            <!-- Display team number and name with a link -->
+                            <h3> <a href="{% url 'team_details' team.id %}">{{ team.name }}</a></h3>
+                            <!-- Display team description -->
+                            <p>{{ team.description }}</p>
+                            <strong>Team Owner:</strong><p>{{team.created_by }}</p>
+                            <!-- Display the number of members in the team -->
 
-
-                        <!-- Buttons for editing and deleting the team -->
-                        <div class="team-actions">
-                            <!-- Edit button -->
-                            <a href="{% url 'edit_team' team.id %}" class="btn button-edit btn-sm">Edit</a>
-                            <!-- Delete button -->
-                            <form action="{% url 'delete_team' team.id %}" method="post" style="display: inline;">
-                                {% csrf_token %}
-                                <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure you want to delete this team?');">
-                                    Delete
-                                </button>
-                            </form>
+                            <!-- Buttons for editing and deleting the team -->
+                            <div class="team-actions">
+                                <!-- Edit button -->
+                                <a href="{% url 'edit_team' team.id %}" class="btn button-edit btn-sm">Edit</a>
+                                <!-- Delete button -->
+                                <form action="{% url 'delete_team' team.id %}" method="post" style="display: inline;">
+                                    {% csrf_token %}
+                                    <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure you want to delete this team?');">
+                                        Delete
+                                    </button>
+                                </form>
+                            </div>
                         </div>
-                    </div>
                 {% endfor %}
             </div>
         {% endif %}

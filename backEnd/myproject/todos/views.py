@@ -181,8 +181,9 @@ def get_team_members(request, team_id):
 
 
 # Create Todo Item
-@login_required
 def create_todo(request):
+
+    # Handle POST request
     if request.method == 'POST':  
         form = TodoForm(request.POST)
         if form.is_valid():
@@ -202,7 +203,7 @@ def create_todo(request):
                 assigned_user = get_object_or_404(User, id=assigned_user_id)
                 todo.assigned_user = assigned_user  # Set assigned user
             else:
-                todo.assigned_user = None  # Handle if no user is selected
+                todo.assigned_user = request.user  # Default to the current user if no one is selected
 
             todo.save()  # Save to database
             messages.success(request, "ToDo created successfully.")
@@ -210,8 +211,8 @@ def create_todo(request):
 
     else:
         form = TodoForm()
-
     teams = Team.objects.all()
+
     return render(request, 'todoPage/create_todo.html', {'form': form, 'teams': teams})
 
 
@@ -456,13 +457,18 @@ def team_details(request, id):
 
 
 # Teams List
-@login_required
 def teams_list(request):
-   teams = Team.objects.all()
+    teams = Team.objects.all()
 
+    # Create a list of teams where the user is either the owner or a member
+    user_teams = [
+        team for team in teams if team.created_by == request.user or team.team_members.filter(user=request.user).exists()
+    ]
 
-   return render(request, 'teamsPage/teams_list.html', {'teams': teams})
+    # Optionally, sort teams by created date or name
+    user_teams.sort(key=lambda team: team.created_at, reverse=True)  # Sort by creation date (most recent first)
 
+    return render(request, 'teamsPage/teams_list.html', {'teams': user_teams})
 
 #########################################################################################################################################################################
 ############ END ########################################################################################################################################################
