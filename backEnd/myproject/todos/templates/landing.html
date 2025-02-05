@@ -1,85 +1,21 @@
+{% extends "base.html" %}
 {% load static %}
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Landing Page</title>
-    <link rel="stylesheet" href="{% static 'todos/css/stylesheet.css' %}">
-    <style>
-        
-        .container {
-            border: 1px solid black; 
-            text-align: center;
-            width: 100%; 
-            height: 100%;
-            padding: 20px;
-            box-sizing: border-box;
-            position: relative; 
-        }
-        .header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            width: 100%;
-            border-bottom: 1px solid black; 
-            padding-bottom: 10px;
-            margin-bottom: 20px;
-        }
-        .left {
-            display: flex;
-            align-items: center;
-        }
-        .right {
-            display: flex;
-            align-items: center;
-            margin-left: auto; 
-        }
-        .header div, .header a {
-            color: black;
-            margin-right: 5px;
-        }
-        .logo {
-            max-width: 600px; 
-            margin-top: 80px; 
-        }
-        .button-link {
-            display: inline-block;
-            padding: 10px 15px;
-            font-size: 16px;
-            color: white;
-            background-color: rgb(182, 182, 230);
-            border: none;
-            border-radius: 5px;
-            text-decoration: none;
-            text-align: center;
-            margin-top: 2px;
-        }
-        
-    </style>
-</head>
-<body>
-    <div class="container">
-        <div class="header">
-            <div class="left">
-                <a href="/" class="button-link" style="background: none; padding: 0; border: none; margin-right: 10px; ">
-                    <img src=" {% static 'todos/images/DoersLogo.png' %}" style="width: 120px; height: 74px; object-fit: cover; border-radius: 15%;">
-                </a>
-                <a href="/about" class="button-link">About</a>
-            </div>
-            <div class="right">
-            {% if user.is_authenticated %}
-            <a href="/dashboard" class="button-link">Dashboard</a>
-            <a href="/todos/new" class="button-link">Todos</a>
-            <a href="/teams/new" class="button-link">Teams</a>
-            <a href="/logout" class="button-link button-login">{{ user.email }}</a>
-        {% else %}
-            <a href="/login" class="button-link button-login">Login</a>
-        {% endif %}
-            </div>
-        </div>
-        <div class="container">
-            <img src=" {% static 'todos/images/DoersLogo.png' %}" alt="DoersLogo" class="logo">    
-            <!--img src="https://www.organizationalpsychologydegrees.com/wp-content/uploads/2019/01/depaul-university.jpg" alt="DePaul University" class="logo"-->
-    </div>
-</body>
-</html>
+
+{% block title %}Landing Page{% endblock %}
+
+{% block extra_head %}
+  <style>
+    /* Landing page–specific styles */
+    .logo {
+      max-width: 600px;
+      margin-top: 80px;
+    }
+    /* If additional landing page styles are needed, include them here */
+  </style>
+{% endblock %}
+
+{% block content %}
+  <!-- Unique landing page content -->
+  <img src="{% static 'todos/images/DoersLogo.png' %}" alt="DoersLogo" class="logo">
+  {# You can add more landing page content here if needed #}
+{% endblock %}

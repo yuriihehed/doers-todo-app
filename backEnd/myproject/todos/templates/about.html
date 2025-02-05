@@ -1,191 +1,125 @@
-<!-- filepath: /Users/gulbanumadiyarova/mini-project-team-three/backEnd/myproject/todos/templates/about.html -->
+{% extends "base.html" %}
 {% load static %}
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>About Page</title>
-    <!-- Bootstrap CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="{% static 'todos/css/stylesheet.css' %}">
-    <style>
-        
-        .container {
-        
-            text-align: center;
-            width: 100%; 
-            height: 100%;
-            padding: 20px;
-            box-sizing: border-box;
-            position: relative; 
-        }
-        .header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            width: 100%;
-            border-bottom: 1px solid black; 
-            padding-bottom: 10px;
-            margin-bottom: 20px;
-        }
-        .left {
-            display: flex;
-            align-items: center;
-        }
-        .right {
-            display: flex;
-            align-items: center;
-            margin-left: auto; 
-        }
-        .header div, .header a {
-            color: black;
-            margin-right: 5px; 
-        }
-        .button-link {
-            display: inline-block;
-            padding: 10px 15px;
-            font-size: 16px;
-            color: white;
-            background-color: rgb(182, 182, 230);
-            border: none;
-            border-radius: 5px;
-            text-decoration: none;
-            text-align: center;
-            margin-top: 2px;
-        }
-        .content {
-            text-align: left;
-            background-color: #fff;
-            padding: 20px;
-            border-radius: 5px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            margin-bottom: 20px; /* Add margin-bottom for spacing */
-        }
-        .card {
-            margin-top: 20px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        }
-        .card-img-top {
-            height: 150px;
-            background-color: #6c757d;
-            color: white;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border-top-left-radius: 5px;
-            border-top-right-radius: 5px;
-        }
-        .card-body {
-            padding: 15px;
-        }
-    </style>
-</head>
-<body>
-    <div class="container">
-        <div class="header">
-            <div class="left">
-                <a href="/" class="button-link" style="background: none; padding: 0; border: none; margin-right: 10px; ">
-                    <img src=" {% static 'todos/images/DoersLogo.png' %}" style="width: 120px; height: 74px; object-fit: cover; border-radius: 15%;">
-                </a>
-                <a href="/about" class="button-link">About</a>
-            </div>
-            <div class="right">
-            {% if user.is_authenticated %}
-            <a href="/dashboard" class="button-link">Dashboard</a>
-            <a href="/todos/new" class="button-link">Todos</a>
-            <a href="/teams/new" class="button-link">Teams</a>
-            <a href="/logout" class="button-link button-login">{{ user.email }}</a>
-        {% else %}
-            <a href="/login" class="button-link button-login">Login</a>
-        {% endif %}
-            </div>
+
+{% block title %}About Page{% endblock %}
+
+{% block extra_head %}
+  <style>
+    /* About-page–specific styles */
+    .content {
+      text-align: left;
+      background-color: #fff;
+      padding: 20px;
+      border-radius: 5px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      margin-bottom: 20px;
+    }
+    .card {
+      margin-top: 20px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+    .card-img-top {
+      height: 150px;
+      object-fit: cover;
+      border-top-left-radius: 5px;
+      border-top-right-radius: 5px;
+    }
+    .card-body {
+      padding: 15px;
+    }
+  </style>
+{% endblock %}
+
+{% block content %}
+  <!-- Unique About-page content -->
+  <div class="content">
+    <h2>About</h2>
+    <p>
+      We are Team 3, creators of DOERS—a to-do app developed by six dedicated students with big dreams of becoming engineers.
+      We've crafted this app to work seamlessly across all devices, ensuring a positive user experience wherever you use it.
+      Check out the team members' info and responsibilities below. Enjoy!
+    </p>
+  </div>
+  <div class="row">
+    <!-- Yurii -->
+    <div class="col-md-4">
+      <div class="card">
+        <img src="{% static 'todos/images/YuriiPFP.png' %}" class="card-img-top" alt="Yurii">
+        <div class="card-body">
+          <h5 class="card-title">Yurii</h5>
+          <p class="card-text">
+            Bio: DePaul Student Senior<br>
+            Role: Testing Manager
+          </p>
         </div>
-        <div class="content">
-            <h2>About</h2>
-            <p>We are Team 3, creators of DOERS—a to-do app developed by six dedicated students with big dreams of becoming engineers. We've crafted this app to work seamlessly across all devices, ensuring a positive user experience wherever you use it. Check out the team members' info and responsibilities below. Enjoy!</p>
-        </div>
-        <div class="row">
-
-            
-            <!-- Yurii -->
-            <div class="col-md-4">
-                <div class="card">
-                    <img src=" {% static 'todos/images/YuriiPFP.png' %}">
-                    <div class="card-body">
-                        <h5 class="card-title">Yurii</h5>
-                        <p class="card-text">Bio: DePaul Student Senior<br>
-                            Role: Testing Manager<br></p>
-                    </div>
-                </div>
-            </div>
-            
-            <!-- Gulbanu -->
-            <div class="col-md-4">
-                <div class="card">
-                    <img src=" {% static 'todos/images/GulbanuPFP.png' %}">
-                    <div class="card-body">
-                        <h5 class="card-title">Gulbanu</h5>
-                        <p class="card-text">Bio: DePaul Student Senior<br>
-                            Role: Project Manager</p>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Vanessa -->
-            <div class="col-md-4">
-                <div class="card">
-                    <img src=" {% static 'todos/images/VanessaPFP.png' %}">
-                    <div class="card-body">
-                        <h5 class="card-title">Vanessa</h5>
-                        <p class="card-text">Bio: DePaul Student Senior<br>
-                            Role: Design Manager</p>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Asad -->
-            <div class="col-md-4">
-                <div class="card">
-                    <img src=" {% static 'todos/images/AsadPFP.png' %}">
-                    <div class="card-body">
-                        <h5 class="card-title">Asad</h5>
-                        <p class="card-text">Bio: DePaul Student Senior<br>
-                            Role: Testing Manager // Presentation Manager // Requirement Manager</p>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Kanchanjit -->
-            <div class="col-md-4">
-                <div class="card">
-                    <img src=" {% static 'todos/images/KanchanjitPFP.png' %}">
-                    <div class="card-body">
-                        <h5 class="card-title">Kanchanjit</h5>
-                        <p class="card-text">Bio: DePaul Student Senior<br>
-                            Role: Requirement Manager // <br>Documentation Manager</p>
-                    </div>
-                </div>
-            </div>
-
-            <!-- John -->
-            <div class="col-md-4">
-                <div class="card">
-                    <img src=" {% static 'todos/images/JohnPFP1.png' %}">
-                    <div class="card-body">
-                        <h5 class="card-title">John</h5>
-                        <p class="card-text">Bio: DePaul Student Senior<br>
-                            Role: Presentation Manager // <br>Testing Manager</p>
-                    </div>
-                </div>
-            </div>
-
-
-        </div>
+      </div>
     </div>
-    <!-- Bootstrap JS -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-</body>
-</html>
+    <!-- Gulbanu -->
+    <div class="col-md-4">
+      <div class="card">
+        <img src="{% static 'todos/images/GulbanuPFP.png' %}" class="card-img-top" alt="Gulbanu">
+        <div class="card-body">
+          <h5 class="card-title">Gulbanu</h5>
+          <p class="card-text">
+            Bio: DePaul Student Senior<br>
+            Role: Project Manager
+          </p>
+        </div>
+      </div>
+    </div>
+    <!-- Vanessa -->
+    <div class="col-md-4">
+      <div class="card">
+        <img src="{% static 'todos/images/VanessaPFP.png' %}" class="card-img-top" alt="Vanessa">
+        <div class="card-body">
+          <h5 class="card-title">Vanessa</h5>
+          <p class="card-text">
+            Bio: DePaul Student Senior<br>
+            Role: Design Manager
+          </p>
+        </div>
+      </div>
+    </div>
+    <!-- Asad -->
+    <div class="col-md-4">
+      <div class="card">
+        <img src="{% static 'todos/images/AsadPFP.png' %}" class="card-img-top" alt="Asad">
+        <div class="card-body">
+          <h5 class="card-title">Asad</h5>
+          <p class="card-text">
+            Bio: DePaul Student Senior<br>
+            Role: Testing Manager // Presentation Manager // Requirement Manager
+          </p>
+        </div>
+      </div>
+    </div>
+    <!-- Kanchanjit -->
+    <div class="col-md-4">
+      <div class="card">
+        <img src="{% static 'todos/images/KanchanjitPFP.png' %}" class="card-img-top" alt="Kanchanjit">
+        <div class="card-body">
+          <h5 class="card-title">Kanchanjit</h5>
+          <p class="card-text">
+            Bio: DePaul Student Senior<br>
+            Role: Requirement Manager // Documentation Manager
+          </p>
+        </div>
+      </div>
+    </div>
+    <!-- John -->
+    <div class="col-md-4">
+      <div class="card">
+        <img src="{% static 'todos/images/JohnPFP1.png' %}" class="card-img-top" alt="John">
+        <div class="card-body">
+          <h5 class="card-title">John</h5>
+          <p class="card-text">
+            Bio: DePaul Student Senior<br>
+            Role: Presentation Manager // Testing Manager
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}
