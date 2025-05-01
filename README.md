@@ -1,6 +1,6 @@
-# Team-3 Mini Project
+# Team Project
 
-# This is the Team-3 mini project, a simple to-do application.
+# This is the Team-3 project, a simple to-do application.
 
 # Getting Started
 To run the project, you'll need to set up a local development environment using Docker.
