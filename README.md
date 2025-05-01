@@ -1,6 +1,7 @@
 # Team Project
 
-# This is the Team-3 project, a simple to-do application.
+# This is the Team-3 project, a to-do application.
+This project was built to demonstrate full-stack web development skills while solving a real-world problem — managing daily tasks efficiently.
 
 # Getting Started
 To run the project, you'll need to set up a local development environment using Docker.
